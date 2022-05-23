@@ -62,20 +62,20 @@ When a vector field point propagates into a shape, rather than extending to a ne
 Setting this value higher means flames break things more when they touch things. 
 #### Maximum player damage per tick (max_player_hurt)
 The maximum fraction of a player’s health that can be taken away when they are in range of flame effects. This scales as a fraction of the normalized metafield vector force at that coordinate. Setting this higher will hurt the player more when they are near flame effects. 
-## Bomb tool options
+### Bomb tool options
 #### Explosion fireball radius (explosion_fireball_radius)
 Bomb explosions are seeded with a number of force points that kick off vector field propagation waves. This parameter controls the distance those points are around the explosion point. Setting this number larger will result in a blast that starts instantaneously larger, but will require more points to fill out. Setting it to zero will spawn all seeds from a single point. 
 #### Explosion seed points (explosion_seeds)
 The number of seed sparks that set up effect propagation. Setting this smaller will result in more uneven explosions. Setting it large than the default will produce a more even fireball at the start of the explosion, but not much practical effect.
 Rocket tool options
-## Rocket options
+### Rocket options
 #### Rate of fire (rate_of_fire)
 The pause (in seconds) between when the player can fire rockets. Setting this lower will result in more rapid fire. 
 #### Speed (speed)
 The speed that a rocket flies. Setting this higher will result in a faster rocket. NOTE: in order for rockets to properly penetrate the outer surface of an object, a minimum speed of 1 should be used. Slower than that and most rocket detonations will occur at the surface of objects. Higher than the default will result in rockets penetrating deeper into them before detonating.
 #### Max flight distance (max_dist)
 The maximum distance the rocket can travel before it self-destructs.
-## Flamethrower tool options
+### Flamethrower tool options
 #### Rate of fire (rate_of_fire)
 The pause between spray being fired. A higher value will result in small fireball-puffs being emitted instead of a steady stream. Could be interesting… with the right flame settings…
 #### Spray velocity (speed)
