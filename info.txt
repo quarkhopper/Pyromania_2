@@ -1,0 +1,4 @@
+name = Pyromania
+author = quarkhopper
+description = Three tools in one: Drop remotely detonated bombs (B) and blow them up (X). Fire a bunker busting rocket (LMB) or incinerate with the flamethrower (RMB). Each weapon has several paramters to play with to customize the explosions (O), and because you asked for it, RAINBOW MODE.
+tags = Tool
