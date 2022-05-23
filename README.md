@@ -41,15 +41,15 @@ The HSV color of a flame when the controlling vector field force is at its maxim
 The HSV color of a flame when the controlling vector field force is at its minimum (flame_dead_force).
 #### Rainbow mode (rainbow_mode)
 All flames and resulting smoke particles in the pyro field cycle hue values. 
-#### Min smoke particle size (min_smoke_size)
+#### Hot smoke particle size (min_smoke_size)
 The size of smoke particles when the underlying vector force magnitude is at its maximum. NOTE: calling this “min” assumes that hot flame particles are smaller, but there’s nothing stopping you from setting this larger than max_smoke_size and seeing particles shrink. 
-#### Max smoke particle size (max_smoke_size)
+#### Cool smoke particle size (max_smoke_size)
 The size of smoke particles when the underlying vector force magnitude is at flame_dead_force.
 #### Lifetime of smoke particles (smoke_life)
 How long black, lingering smoke particles remain (seconds).
-#### Impulse constant (impulse_const)
+#### Impulse (pushing) constant (impulse_const)
 A constant multiplied by the normalized metafield vector force magnitude to push something dynamic when it is inside the impulse_radius of a metafield vector point. Setting this higher will push things more when they get near effects. 
-#### Impulse radius (impulse_radius)
+#### Impulse (pushing) radius (impulse_radius)
 The maximum range of influence from a metafield vector point that will be affected through impulse (pushing). Setting this higher will push entities from longer distances from the effects.
 #### Fire ignition radius (fire_ignition_radius)
 The radius of effect for spawning native teardown fire. A higher value means that fires can start further from flame effects.  

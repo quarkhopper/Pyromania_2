@@ -302,7 +302,7 @@ function create_mode_option_set(name, display_name)
 		option_type.numeric, 
 		0.3,
 		"min_smoke_size",
-		"Minimum smoke particle size")
+		"Hot smoke particle size")
 	oSet.min_smoke_size.range.lower = 0.1
 	oSet.min_smoke_size.range.upper = 10
 	oSet.min_smoke_size.step = 0.1
@@ -312,7 +312,7 @@ function create_mode_option_set(name, display_name)
 		option_type.numeric, 
 		0.8,
 		"max_smoke_size",
-		"Max smoke particle size")
+		"Cool smoke particle size")
 	oSet.max_smoke_size.range.lower = 0.1
 	oSet.max_smoke_size.range.upper = 10
 	oSet.max_smoke_size.step = 0.1
@@ -332,7 +332,7 @@ function create_mode_option_set(name, display_name)
 		option_type.numeric, 
 		80,
 		"impulse_const",
-		"Impulse constant")
+		"Impulse (pushing) constant")
 	oSet.impulse_const.range.lower = 0
 	oSet.impulse_const.range.upper = 1000
 	oSet.impulse_const.step = 1
@@ -342,7 +342,7 @@ function create_mode_option_set(name, display_name)
 		option_type.numeric, 
 		5,
 		"impulse_radius",
-		"Impulse radius")
+		"Impulse (pushing) radius")
 	oSet.impulse_radius.range.lower = 0
 	oSet.impulse_radius.range.upper = 100
 	oSet.impulse_radius.step = 0.1
