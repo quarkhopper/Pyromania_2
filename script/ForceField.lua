@@ -127,7 +127,7 @@ function propagate_point_force(ff, point)
         local dir = VecAdd(point_prime.vec, point.vec)
         dir = VecAdd(dir, Vec(0, ff.heat_rise, 0))
         dir = VecNormalize(dir)
-        local mag = (VecLength(point_prime.vec) + VecLength(point.vec)) / 2 -- math.max(VecLength(point_prime.vec), VecLength(point.vec))
+        local mag = (VecLength(point_prime.vec) + VecLength(point.vec)) / 2
         point.vec = VecScale(point.vec, (1 - ff.decay)) 
         point_prime.vec = VecScale(dir, mag)
     end
