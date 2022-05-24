@@ -456,7 +456,7 @@ function create_rocket_option_set()
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
 
 	oSet.f_max.value = 5
-	oSet.dead_force.value = 0.5
+	oSet.dead_force.value = 0.25
 	oSet.decay.value = 0.03
 	oSet.point_split.value = 5
 	oSet.extend_spread.value = 45
@@ -515,7 +515,7 @@ function create_thrower_option_set()
 	oSet.decay.value = 0.15
 	oSet.heat_rise.value = 1
 	oSet.point_split.value = 4
-	oSet.extend_spread.value = 10
+	oSet.extend_spread.value = 30
 	oSet.field_resolution.value = 0.1
 	oSet.meta_resolution.value = 1
 	oSet.flames_per_point.value = 1
