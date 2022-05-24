@@ -37,7 +37,12 @@ function thrower_tick(dt)
 				local point_force = VecScale(fireball.dir,  TOOL.THROWER.pyro.ff.f_max) 
 				apply_force(TOOL.THROWER.pyro.ff, fireball.pos, point_force)
 				table.insert(fireballs_next_tick, fireball)
-			end
+            else
+                local hit_point = VecAdd(fireball.pos, VecScale(fireball.dir, dist))
+                for j = 1, 10 do
+                    apply_force(TOOL.THROWER.pyro.ff, fireball.pos, VecScale(random_vec(1), TOOL.THROWER.pyro.ff.f_max))
+                end
+            end
 		end
     end
     fireballs = fireballs_next_tick
