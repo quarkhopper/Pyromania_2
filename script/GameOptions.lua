@@ -370,7 +370,7 @@ function create_mode_option_set(name, display_name)
 
 	oSet.contact_damage_scale = create_mode_option(
 		option_type.numeric, 
-		0.1,
+		0.3,
 		"contact_damage_scale",
 		"Field contact damage scale")
 	oSet.contact_damage_scale.range.lower = 0.01
@@ -524,6 +524,7 @@ function create_thrower_option_set()
 	oSet.max_smoke_size.value = 0.3
 	oSet.impulse_const.value = 100
 	oSet.impulse_radius.value = 2
+	oSet.contact_damage_scale.value = 0.1
 	oSet.fire_ignition_radius.value = 2
 	oSet.fire_density.value = 10
 	
