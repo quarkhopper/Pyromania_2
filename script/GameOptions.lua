@@ -178,7 +178,7 @@ function create_mode_option_set(name, display_name)
 
 	oSet.dead_force = create_mode_option(
 		option_type.numeric, 
-		0.1,
+		0.5,
 		"dead_force",
 		"Minimum field force per point")
 	oSet.dead_force.range.lower = 0
@@ -188,7 +188,7 @@ function create_mode_option_set(name, display_name)
 
 	oSet.decay = create_mode_option(
 		option_type.numeric, 
-		0.04,
+		0.03,
 		"decay",
 		"Field decay per tick")
 	oSet.decay.range.lower = 0
