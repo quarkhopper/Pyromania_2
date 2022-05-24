@@ -218,7 +218,7 @@ function create_mode_option_set(name, display_name)
 
 	oSet.extend_spread = create_mode_option(
 		option_type.numeric, 
-		45,
+		60,
 		"extend_spread",
 		"Field propagation angle of spread (degrees)")
 	oSet.extend_spread.range.lower = 0
@@ -458,8 +458,8 @@ function create_rocket_option_set()
 	oSet.f_max.value = 5
 	oSet.dead_force.value = 0.25
 	oSet.decay.value = 0.03
-	oSet.point_split.value = 5
-	oSet.extend_spread.value = 45
+	oSet.point_split.value = 3
+	oSet.extend_spread.value = 60
 	oSet.flame_dead_force.value = 0.6
 	oSet.min_smoke_size.value = 0.3
 	oSet.max_smoke_size.value = 0.8
