@@ -517,6 +517,7 @@ function create_thrower_option_set()
 	oSet.flame_light_intensity.value = 1
 	oSet.min_smoke_size.value = 0.1
 	oSet.max_smoke_size.value = 0.3
+	oSet.impulse_const.value = 100
 	oSet.impulse_radius.value = 2
 	oSet.fire_ignition_radius.value = 2
 	oSet.fire_density.value = 10
