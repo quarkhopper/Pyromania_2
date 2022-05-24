@@ -339,7 +339,7 @@ function handle_input(dt)
 			not InputDown("LMB") then
 				make_gun_effect()
 				local trans = GetPlayerTransform()
-				PlayLoop(thrower_sound, trans.pos, 10)
+				PlayLoop(thrower_sound, trans.pos, 50)
 				if secondary_shoot_timer == 0 then
 					shoot_thrower()
 					secondary_shoot_timer = TOOL.THROWER.rate_of_fire.value
