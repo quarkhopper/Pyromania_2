@@ -330,7 +330,7 @@ function create_mode_option_set(name, display_name)
 
 	oSet.impulse_const = create_mode_option(
 		option_type.numeric, 
-		80,
+		500,
 		"impulse_const",
 		"Impulse (pushing) constant")
 	oSet.impulse_const.range.lower = 0
