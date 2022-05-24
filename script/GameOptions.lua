@@ -414,6 +414,11 @@ function create_bomb_option_set()
 	oSet.explosion_seeds.step = 1
 	oSet.options[#oSet.options + 1] = oSet.explosion_seeds	
 
+	oSet.dead_force.value = 0.25
+	oSet.decay.value = 0.02
+	oSet.point_split.value = 6
+	oSet.flame_dead_force.value = 0.5
+
 	return oSet
 end
 
