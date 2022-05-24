@@ -15,7 +15,7 @@ end
 
 function shoot_thrower()
     local camera = GetPlayerCameraTransform()
-	local gun_end = TransformToParentPoint(camera, Vec(0.2, -0.2, -2))
+	local gun_end = TransformToParentPoint(camera, Vec(0.2, -0.2, -2.2))
     local forward = TransformToParentPoint(camera, Vec(0, 0, -10))
     local fireball_dir = VecNormalize(VecSub(forward, camera.pos))
     local fireball = inst_fireball(gun_end, fireball_dir)
