@@ -484,7 +484,7 @@ function create_thrower_option_set()
 
 	oSet.speed = create_mode_option(
 		option_type.numeric, 
-		0.8,
+		1.8,
 		"speed",
 		"Spray velocity")
 	oSet.speed.range.lower = 0.1
@@ -494,7 +494,7 @@ function create_thrower_option_set()
 
 	oSet.max_dist = create_mode_option(
 		option_type.numeric, 
-		30,
+		50,
 		"max_dist",
 		"Max distance")
 	oSet.max_dist.range.lower = 10

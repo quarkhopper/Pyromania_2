@@ -179,7 +179,7 @@ function draw_option(option)
 			elseif option.type == option_type.bool then
 				UiText(line..tostring(option.value))
 			else
-				UiText(line..round_to_place(option.value, 2))
+				UiText(line..round_to_place(option.value, 3))
 			end
 		UiPop()
 		UiPush()
