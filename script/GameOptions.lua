@@ -414,10 +414,11 @@ function create_bomb_option_set()
 	oSet.explosion_seeds.step = 1
 	oSet.options[#oSet.options + 1] = oSet.explosion_seeds	
 
-	oSet.dead_force.value = 0.25
+	oSet.dead_force.value = 0.2
 	oSet.decay.value = 0.05
+	oSet.heat_rise.value = 0.5
 	oSet.point_split.value = 6
-	oSet.flame_dead_force.value = 0.5
+	oSet.flame_dead_force.value = 0.2
 
 	return oSet
 end
@@ -456,11 +457,12 @@ function create_rocket_option_set()
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
 
 	oSet.f_max.value = 5
-	oSet.dead_force.value = 0.25
+	oSet.dead_force.value = 0.2
 	oSet.decay.value = 0.06
+	oSet.heat_rise.value = 0.5
 	oSet.point_split.value = 3
 	oSet.extend_spread.value = 60
-	oSet.flame_dead_force.value = 0.6
+	oSet.flame_dead_force.value = 0.2
 	oSet.min_smoke_size.value = 0.3
 	oSet.max_smoke_size.value = 0.8
 
