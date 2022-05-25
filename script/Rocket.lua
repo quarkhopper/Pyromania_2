@@ -46,9 +46,9 @@ function rocket_tick(dt)
             if hit then 
                 -- just blow the charge. You can't bust this.
                 rocket.fuse = 0
-            else
-                -- fuse to allow penetration
-                rocket.fuse = 1
+            elseif rocket.fuse == -1 then
+                -- fuse to allow penetration    
+                rocket.fuse = 2
             end
         end
         if rocket.fuse == 0 then 
