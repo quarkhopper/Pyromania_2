@@ -65,23 +65,23 @@ function make_flame_effect(pyro, flame, dt)
     ParticleGravity(pyro.gravity)
     SpawnParticle(flame.pos, Vec(), 1)
 
-    if math.random(1, math.ceil(PYRO.MAX_FLAMES / 100)) == 1 then
-        -- smoke puff
-        ParticleReset()
-        ParticleType("smoke")
-        ParticleDrag(0.5)
-        ParticleAlpha(0.5, 0.9, "linear", 0.05, 0.5)
-        ParticleRadius(smoke_size)
-        if pyro.rainbow_mode == on_off.on then
-            smoke_color = PYRO.RAINBOW
-            smoke_color[3] = 1
-            smoke_color = HSVToRGB(smoke_color)
-        else
-            smoke_color = HSVToRGB(Vec(0, 0, 0.1))
-        end
-        ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
-        ParticleGravity(pyro.gravity)
-        SpawnParticle(VecAdd(flame.pos, random_vec(0.1)), Vec(), pyro.smoke_life)
+    if math.random(1, 10) == 1 then
+            -- smoke puff
+            ParticleReset()
+            ParticleType("smoke")
+            ParticleDrag(0.5)
+            ParticleAlpha(0.5, 0.9, "linear", 0.05, 0.5)
+            ParticleRadius(smoke_size)
+            if pyro.rainbow_mode == on_off.on then
+                smoke_color = PYRO.RAINBOW
+                smoke_color[3] = 1
+                smoke_color = HSVToRGB(smoke_color)
+            else
+                smoke_color = HSVToRGB(Vec(0, 0, 0.1))
+            end
+            ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
+            ParticleGravity(pyro.gravity)
+            SpawnParticle(VecAdd(flame.pos, random_vec(0.1)), Vec(), pyro.smoke_life)
     end
 end
 

@@ -45,9 +45,23 @@ function inst_field_point(coord, resolution)
     inst.coord = coord
     local half_res = resolution/2
     inst.pos = VecAdd(VecScale(coord, inst.resolution), VecScale(Vec(1,1,1), half_res))
-    inst.vec = Vec()
+    inst.dir = Vec(0,1,0)
+    inst.mag = 1
+    inst.vec = Vec(0,1,0)
     inst.edge = false
     return inst
+end
+
+function set_point_vec(point, vec)
+    point.vec = vec
+    point.dir = VecNormalize(vec)
+    point.mag = VecLength(vec)
+end
+
+function set_point_dir_mag(point, dir, mag)
+    point.dir = dir
+    point.mag = mag
+    point.vec = VecScale(dir, mag)
 end
 
 function apply_force(ff, pos, force)
@@ -58,7 +72,7 @@ function apply_force(ff, pos, force)
         point.edge = true
         field_put(ff.field, point, point.coord)
     end
-    point.vec = VecAdd(point.vec, force)
+    set_point_vec(point, VecAdd(point.vec, force))
 end
 
 function extend_field(ff)
@@ -74,7 +88,7 @@ function extend_field(ff)
                 -- extension
                 local extend_dir = extend_dirs[i]
                 local temp_point = inst_field_point(point.coord, ff.resolution)
-                temp_point.vec = VecScale(extend_dir, VecLength(point.vec))
+                set_point_vec(temp_point, VecScale(extend_dir, point.mag))
                 extend_point(ff, temp_point)
             end   
             point.edge = false 
@@ -83,7 +97,7 @@ function extend_field(ff)
 end
 
 function extend_point(ff, point, new_extensions)
-    local extend_dir = VecNormalize(point.vec)
+    local extend_dir = point.dir
     local extend_coord = round_vec(VecAdd(point.coord, extend_dir))
     local extension_point = field_get(ff.field, extend_coord)
     -- only put a point where there isn't one already
@@ -97,7 +111,7 @@ function extend_point(ff, point, new_extensions)
         else 
             -- extend into the new space
             extension_point = inst_field_point(extend_coord, ff.resolution)
-            extension_point.vec = point.vec -- VecScale(point.vec, 1 - ff.decay) 
+            set_point_vec(extension_point, point.vec)
             extension_point.edge = true
             field_put(ff.field, extension_point, extension_point.coord)
         end
@@ -113,42 +127,46 @@ function propagate_field_forces(ff)
         for i = 1, #prop_dirs do
             local prop_dir = prop_dirs[i]
             local temp_point = inst_field_point(point.coord, ff.resolution)
-            temp_point.vec = VecScale(prop_dir, VecLength(point.vec))
+            set_point_vec(temp_point, VecScale(prop_dir, point.mag))
             propagate_point_force(ff, temp_point)
         end
     end
 end
 
 function propagate_point_force(ff, point)
-    local force_dir = VecNormalize(point.vec)
+    local force_dir = point.dir
     local coord_prime = round_vec(VecAdd(point.coord, force_dir))
     local point_prime = field_get(ff.field, coord_prime)
     if point_prime ~= nil then 
         local dir = VecAdd(point_prime.vec, point.vec)
         dir = VecAdd(dir, Vec(0, ff.heat_rise, 0))
         dir = VecNormalize(dir)
-        local mag = (VecLength(point_prime.vec) + VecLength(point.vec)) / 2
-        point.vec = VecScale(point.vec, (1 - ff.decay)) 
-        point_prime.vec = VecScale(dir, mag)
+        local mag = (point_prime.mag + point.mag) / 2
+        set_point_vec(point, VecScale(point.vec, (1 - ff.decay))) 
+        set_point_dir_mag(point_prime, dir, mag)
     end
 end
 
 function normalize_field(ff)
     local points = flatten(ff.field)
-    while #points > FF.MAX_SIM_POINTS do
-        local index = math.random(#points)
-        local remove_point = points[index]
-        field_put(ff.field, nil, remove_point.coord)
-        table.remove(points, index)
+    if #points > FF.MAX_SIM_POINTS then
+        table.sort(points, function (p1, p2) return p1.mag < p2.mag end )
+        while #points > FF.MAX_SIM_POINTS do
+            local index = math.ceil((1.6 * math.random() - 1)^2 * #points)
+            if index ~= 0 then 
+                local remove_point = points[index]
+                field_put(ff.field, nil, remove_point.coord)
+                table.remove(points, index)
+            end
+        end
     end
     local points = flatten(ff.field)
     for i = 1, #points do
         local point = points[i]
-        local mag = VecLength(point.vec)
-        point.vec = VecScale(point.vec, (1 - ff.decay))
-        if mag > ff.f_max then 
-            point.vec = VecScale(VecNormalize(point.vec), ff.f_max)
-        elseif mag < ff.f_dead then 
+        set_point_vec(point, VecScale(point.vec, (1 - ff.decay)))
+        if point.mag > ff.f_max then 
+            set_point_vec(point, VecScale(point.dir, ff.f_max))
+        elseif point.mag < ff.f_dead then 
             field_put(ff.field, nil, point.coord)
         end
     end
@@ -169,7 +187,7 @@ function refresh_metafield(ff)
             meta_point.vec = point.vec
             field_put(new_metafield, meta_point, meta_point.coord)
         else
-            meta_point.vec = VecScale(VecAdd(meta_point.vec, point.vec), 0.5)
+            set_point_vec(meta_point, VecScale(VecAdd(meta_point.vec, point.vec), 0.5))
         end
     end
     ff.metafield = new_metafield
