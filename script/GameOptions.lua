@@ -416,7 +416,7 @@ function create_bomb_option_set()
 
 	oSet.dead_force.value = 0.15
 	oSet.decay.value = 0.05
-	oSet.heat_rise.value = 0.4
+	oSet.heat_rise.value = 0.7
 	oSet.point_split.value = 6
 	oSet.extend_spread.value = 55
 	oSet.flame_dead_force.value = 0.2
