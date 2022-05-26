@@ -254,5 +254,6 @@ function blend_color(fraction, color_a, color_b)
     local a = fraction_to_range_value(fraction, color_a[1], color_b[1])
     local b = fraction_to_range_value(fraction, color_a[2], color_b[2])
     local c = fraction_to_range_value(fraction, color_a[3], color_b[3])
-    return Vec(a, b, c)
+    local color = Vec(a, b, c)
+    return color
 end

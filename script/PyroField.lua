@@ -108,13 +108,13 @@ function spawn_flames(pyro)
     local points = flatten(pyro.ff.field)
     for i = 1, #points do
         local point = points[i]
-        local force_mag = VecLength(point.vec)
+        local force_mag = point.mag
         if force_mag > pyro.flame_dead_force then 
             for i = 1, pyro.flames_per_spawn do
                 local offset_dir = VecNormalize(random_vec(1))
                 local flame_pos = VecAdd(point.pos, VecScale(pyro.ff.resolution, offset_dir))
                 local flame = inst_flame(point.pos)
-                flame.life_n = range_value_to_fraction(force_mag, pyro.flame_dead_force, pyro.ff.f_max)
+                flame.life_n = math.min(1, range_value_to_fraction(force_mag, pyro.flame_dead_force, pyro.ff.f_max))
                 flame.motion_vec = point.vec
                 table.insert(new_flames, flame)
             end

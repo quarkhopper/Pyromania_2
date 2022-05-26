@@ -28,20 +28,20 @@ function thrower_tick(dt)
     for i = 1, #fireballs do
         local fireball = fireballs[i]
 		if fireball.dist_left > 0 then 
-			local hit, dist = QueryRaycast(fireball.pos, fireball.dir, fireball.speed + 0.1, 0.025)
-			if not hit then 
-				fireball.dir = VecNormalize(VecAdd(fireball.dir, Vec(0, -TOOL.THROWER.gravity.value, 0)))
-				local advance = VecScale(fireball.dir, fireball.speed)
-				fireball.pos = VecAdd(fireball.pos, advance)
-				fireball.dist_left = fireball.dist_left - fireball.speed
-				local point_force = VecScale(fireball.dir,  TOOL.THROWER.pyro.ff.f_max) 
-				apply_force(TOOL.THROWER.pyro.ff, fireball.pos, point_force)
-				table.insert(fireballs_next_tick, fireball)
-            else
-                local hit_point = VecAdd(fireball.pos, VecScale(fireball.dir, dist))
-                for j = 1, 10 do
-                    apply_force(TOOL.THROWER.pyro.ff, fireball.pos, VecScale(random_vec(1), TOOL.THROWER.pyro.ff.f_max))
+			local hit, dist, normal = QueryRaycast(fireball.pos, fireball.dir, fireball.speed + 0.1, 0.025)
+            if hit then 
+                local new_dirs = radiate(fireball.dir, 90, 4)
+                for j = 1, #new_dirs do
+                    apply_force(TOOL.THROWER.pyro.ff, fireball.pos, VecScale(new_dirs[j], TOOL.THROWER.pyro.ff.f_max))
                 end
+            else
+                fireball.dir = VecNormalize(VecAdd(fireball.dir, Vec(0, -TOOL.THROWER.gravity.value, 0)))
+                local advance = VecScale(fireball.dir, fireball.speed)
+                fireball.pos = VecAdd(fireball.pos, advance)
+                fireball.dist_left = fireball.dist_left - fireball.speed
+                local point_force = VecScale(fireball.dir,  TOOL.THROWER.pyro.ff.f_max) 
+                apply_force(TOOL.THROWER.pyro.ff, fireball.pos, point_force)
+                table.insert(fireballs_next_tick, fireball)
             end
 		end
     end
