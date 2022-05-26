@@ -36,11 +36,13 @@ function inst_flame(pos)
     local inst = {}
     inst.pos = pos
     inst.life_n = 1
+    inst.parent = nil
     inst.motion_vec = Vec()
     return inst
 end
 
 function make_flame_effect(pyro, flame, dt)
+    flame.life_n = math.min(1, range_value_to_fraction(flame.parent.mag, pyro.flame_dead_force, pyro.ff.f_max))
     local color = Vec()
     local intensity = pyro.flame_light_intensity
     if pyro.rainbow_mode == on_off.on then
@@ -48,17 +50,27 @@ function make_flame_effect(pyro, flame, dt)
         color = HSVToRGB(PYRO.RAINBOW)
         intensity = 0.5
     else
-        color = HSVToRGB(blend_color(flame.life_n^2, pyro.color_cool, pyro.color_hot))
+        if flame.life_n >= 0 then 
+            color = HSVToRGB(blend_color(flame.life_n^2, pyro.color_cool, pyro.color_hot))
+        else
+            color = HSVToRGB(pyro.color_cool)
+        end
     end
-    
+    if flame.life_n < 0 then 
+        intensity = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force)
+    end
     PointLight(flame.pos, color[1], color[2], color[3], intensity)
-    local smoke_size = fraction_to_range_value((1 - flame.life_n), pyro.min_smoke_size, pyro.max_smoke_size)
-    
     -- fire puff
     ParticleReset()
     ParticleType("smoke")
-    ParticleDrag(0.25)
+    local smoke_size = 0
     ParticleAlpha(1, 0, "easeout", 0, 0.5)
+    if flame.life_n >= 0 then
+        smoke_size = fraction_to_range_value((1 - flame.life_n), pyro.min_smoke_size, pyro.max_smoke_size)
+    else
+        smoke_size = pyro.max_smoke_size
+    end
+    ParticleDrag(0.25)
     ParticleRadius(smoke_size)
     local smoke_color = HSVToRGB(Vec(0, 0, 1))
     ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
@@ -108,22 +120,24 @@ function spawn_flames(pyro)
     local points = flatten(pyro.ff.field)
     for i = 1, #points do
         local point = points[i]
-        local force_mag = point.mag
-        if force_mag > pyro.flame_dead_force then 
-            for i = 1, pyro.flames_per_spawn do
-                local offset_dir = VecNormalize(random_vec(1))
-                local flame_pos = VecAdd(point.pos, VecScale(pyro.ff.resolution, offset_dir))
-                local flame = inst_flame(point.pos)
-                flame.life_n = math.min(1, range_value_to_fraction(force_mag, pyro.flame_dead_force, pyro.ff.f_max))
-                flame.motion_vec = point.vec
-                table.insert(new_flames, flame)
-            end
-        end
+        spawn_flame_group(pyro, point, new_flames)
     end
-    for i = 1, #new_flames - PYRO.MAX_FLAMES do
+    table.sort(new_flames, function (f1, f2) return f1.life_n < f2.life_n end )
+    while #new_flames > PYRO.MAX_FLAMES do
         table.remove(new_flames, math.random(#new_flames))
     end
     pyro.flames = new_flames
+end
+
+function spawn_flame_group(pyro, point, flame_table)
+    for i = 1, pyro.flames_per_spawn do
+        local offset_dir = VecNormalize(random_vec(1))
+        local flame_pos = VecAdd(point.pos, VecScale(pyro.ff.resolution, offset_dir))
+        local flame = inst_flame(point.pos)
+        flame.parent = point
+        flame.motion_vec = point.vec
+        table.insert(flame_table, flame)
+    end
 end
 
 function impulse_fx(pyro)

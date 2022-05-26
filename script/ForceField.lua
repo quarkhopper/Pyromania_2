@@ -49,6 +49,7 @@ function inst_field_point(coord, resolution)
     inst.mag = 1
     inst.vec = Vec(0,1,0)
     inst.edge = false
+    inst.type = point_type.base
     return inst
 end
 
@@ -184,6 +185,7 @@ function refresh_metafield(ff)
         local meta_point = field_get(new_metafield, meta_coord)
         if meta_point == nil then 
             meta_point = inst_field_point(meta_coord, ff.meta_resolution)
+            meta_point.type = point_type.meta
             meta_point.vec = point.vec
             field_put(new_metafield, meta_point, meta_point.coord)
         else
@@ -302,3 +304,8 @@ function force_field_ff_tick(ff, dt)
     end
     ff.tick_count = ff.tick_count - 1
 end
+
+point_type = enum {
+	"base",
+	"meta"
+}
