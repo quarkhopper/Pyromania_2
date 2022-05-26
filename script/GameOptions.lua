@@ -517,7 +517,7 @@ function create_thrower_option_set()
 	oSet.dead_force.value = 0.1
 	oSet.decay.value = 0.15
 	oSet.heat_rise.value = 1
-	oSet.point_split.value = 4
+	oSet.point_split.value = 2
 	oSet.extend_spread.value = 30
 	oSet.field_resolution.value = 0.1
 	oSet.meta_resolution.value = 1
