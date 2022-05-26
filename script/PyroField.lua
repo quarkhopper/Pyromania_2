@@ -68,7 +68,7 @@ function make_flame_effect(pyro, flame, dt)
     if flame.life_n >= 0 then
         smoke_size = fraction_to_range_value((1 - flame.life_n), pyro.min_smoke_size, pyro.max_smoke_size)
     else
-        smoke_size = pyro.max_smoke_size
+        smoke_size = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force)
     end
     ParticleDrag(0.25)
     ParticleRadius(smoke_size)
