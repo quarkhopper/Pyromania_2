@@ -30,8 +30,8 @@ Game units to vector coordinates. One game unit = 10 voxels, so a field resoluti
 #### Metafield resolution (meta_resolution)
 Game units to metafield vector coordinates. This value should be higher than the base field resolution for performance reasons. This field is an averaging of base field vectors in a the metafield coordinate frame, producing a smaller field to iterate over when considering certain effects. A larger metafield resolution will result in better performance but some effects, such as impulse (push), fire spawning, and player damage will not match as closely to the actual fire effects. 
 #### Flame dead force (flame_dead_force)
-Fire effects will only appear above this vector field magnitude. Setting this higher will result in fewer flame effect (though other effects, such as impulse, fire spawning, and player damage will still continue beyond the extent of the visible flames). This should generally remain close to, if only slightly higher, than the dead_force.
-Flames spawn per field point (flames_per_point)
+Full fire effects will only appear above this vector field magnitude, and when the magnitude falls below this the flames will turn to embers. Setting this higher will result in fewer flame effect (though other effects, such as impulse, fire spawning, and player damage will still continue beyond the extent of the visible flames). This should generally remain close to, if only slightly higher, than the dead_force.
+#### Flames spawn per field point (flames_per_point)
 The pyro field will spawn this many flame particles per base vector field point, above the flame_dead_force.
 #### Flame light intensity (flame_light_intensity)
 The light intensity of point lights use in flame particles. Larger values produce brighter flames. This should be thought of as a gain control only - actual flame brightness should be controlled through the flame_color_hot and flame_color_cool. 

@@ -57,7 +57,7 @@ function make_flame_effect(pyro, flame, dt)
         end
     end
     if flame.life_n < 0 then 
-        intensity = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force)
+        intensity = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force) * 0.8
     end
     PointLight(flame.pos, color[1], color[2], color[3], intensity)
     -- fire puff
@@ -68,7 +68,7 @@ function make_flame_effect(pyro, flame, dt)
     if flame.life_n >= 0 then
         smoke_size = fraction_to_range_value((1 - flame.life_n), pyro.min_smoke_size, pyro.max_smoke_size)
     else
-        smoke_size = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force)
+        smoke_size = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force) + 0.1
         flame.pos = VecAdd(flame.pos, random_vec(pyro.ff.resolution))
     end
     ParticleDrag(0.25)
