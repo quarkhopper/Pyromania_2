@@ -69,7 +69,7 @@ function make_flame_effect(pyro, flame, dt)
         smoke_size = fraction_to_range_value((1 - flame.life_n), pyro.min_smoke_size, pyro.max_smoke_size)
     else
         smoke_size = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force) + 0.1
-        flame.pos = VecAdd(flame.pos, random_vec(pyro.ff.resolution))
+        flame.pos = VecAdd(flame.pos, random_vec(pyro.ff.resolution / 2))
     end
     ParticleDrag(0.25)
     ParticleRadius(smoke_size)
