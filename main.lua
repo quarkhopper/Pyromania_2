@@ -373,14 +373,18 @@ end
 function make_gun_effect()
 	local body = GetToolBody()
 	local trans = GetBodyTransform(body)
-	local light_point = TransformToParentPoint(trans, Vec(0.1, -0.1, -1))
-	light_point = VecAdd(light_point, random_vec(0.1))
-	ParticleReset()
-    ParticleType("smoke")
-    ParticleRadius(0.3)
-    local smoke_color = HSVToRGB(Vec(0, 0, 1))
-    ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
-    SpawnParticle(light_point, Vec(), 0.2)
-	PointLight(light_point, 1, 0, 0, 0.1)
+	for i = 1, 10 do
+		local light_point = TransformToParentPoint(trans, Vec(0.3, -0.8, -2 - (0.2*i)))
+		light_point = VecAdd(light_point, random_vec(0.1))
+		ParticleReset()
+		ParticleType("smoke")
+		ParticleTile(0)
+		ParticleAlpha(1)
+		ParticleRadius(0.1 + (0.06 * i))
+		local smoke_color = HSVToRGB(Vec(0, 0, 1))
+		ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
+		SpawnParticle(light_point, Vec(), 0.2)
+		PointLight(light_point, 1, 0.3, 0.1, 1)
+	end
 end
 
