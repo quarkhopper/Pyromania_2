@@ -103,8 +103,13 @@ function burn_fx(pyro)
     local num_fires = round((pyro.fire_density / pyro.fire_ignition_radius)^3)
     for i = 1, #points do
         local point = points[i]
-        for i = 1, num_fires do
-            SpawnFire(VecAdd(point.pos, random_vec(pyro.fire_ignition_radius)))
+        for j = 1, num_fires do
+            local random_dir = random_vec(1)
+            local hit, dist = QueryRaycast(point.pos, random_dir, pyro.fire_ignition_radius)
+            if hit then 
+                local burn_at = VecAdd(point.pos, VecScale(random_dir, dist))
+                SpawnFire(burn_at)
+            end
         end
     end
 end
