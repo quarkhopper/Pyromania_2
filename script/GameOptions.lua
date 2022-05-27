@@ -420,6 +420,8 @@ function create_bomb_option_set()
 	oSet.point_split.value = 6
 	oSet.extend_spread.value = 55
 	oSet.flame_dead_force.value = 0.6
+	oSet.min_smoke_size.value = 0.3
+	oSet.max_smoke_size.value = 0.6
 
 	return oSet
 end
@@ -465,7 +467,7 @@ function create_rocket_option_set()
 	oSet.extend_spread.value = 55
 	oSet.flame_dead_force.value = 0.6
 	oSet.min_smoke_size.value = 0.3
-	oSet.max_smoke_size.value = 0.8
+	oSet.max_smoke_size.value = 0.6
 
 	return oSet
 end
