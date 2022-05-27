@@ -21,22 +21,18 @@ function detonate(bomb)
 		SpawnFire(VecAdd(bomb_pos, random_vec(1)))
 	end
 	local explosion_seeds = TOOL.BOMB.explosion_seeds.value
-	local tries = 0
-	-- if there needs to be more than 100 tries to place a seed then give up
-    while explosion_seeds > 0 and tries < 100 do
+    for i = 1, explosion_seeds do
         local spawn_dir = VecNormalize(random_vec(1))
         local spawn_offset = VecScale(spawn_dir, fireball_rad)
         local point_position = VecAdd(bomb_pos, spawn_offset)
         local force_dir = VecNormalize(VecSub(point_position, bomb_pos))
         local hit, dist, normal, shape = QueryRaycast(bomb_pos, force_dir, fireball_rad + 0.1, 0.025)
-        if not hit then 
-        	local point_force = VecScale(force_dir, force_mag)
-			apply_force(TOOL.BOMB.pyro.ff, point_position, point_force)
-			tries = 0
-			explosion_seeds = explosion_seeds - 1
-		else
-			tries = tries + 1
+        if hit then
+            local hit_point = VecAdd(bomb_pos, VecScale(force_dir, dist)) 
+            local force_dir = reflection_vector(force_dir, normal)
 		end
+        local point_force = VecScale(force_dir, force_mag)
+        apply_force(TOOL.BOMB.pyro.ff, point_position, point_force)
     end
     PlaySound(boom_sound, bomb_pos, 100)
     PlaySound(rumble_sound, bomb_pos, 100)
