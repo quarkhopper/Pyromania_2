@@ -68,6 +68,10 @@ Bomb explosions are seeded with a number of force points that kick off vector fi
 #### Explosion seed points (explosion_seeds)
 The number of seed sparks that set up effect propagation. Setting this smaller will result in more uneven explosions. Setting it large than the default will produce a more even fireball at the start of the explosion, but not much practical effect.
 Rocket tool options
+#### Maximum radius of random explosions (max_random_radius)
+Sets a bounding box for where a random explosion can spawn to a box centered on the player with sides this far from the player.
+#### Minimum radius of random explosions (min_random_radius)
+The minimum distance from the player that a random explosion can spawn. 
 ### Rocket options
 #### Rate of fire (rate_of_fire)
 The pause (in seconds) between when the player can fire rockets. Setting this lower will result in more rapid fire. 
