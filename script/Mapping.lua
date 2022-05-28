@@ -57,7 +57,6 @@ function set_spawn_area_parameters()
 	end
 	spawn_area_center = VecLerp(spawn_area_bounds[1], spawn_area_bounds[2], 0.5)
 	spawn_area_size = get_bounds_size(spawn_area_bounds)
-    -- DebugPrint(bounds_to_string(spawn_area_bounds))
 end
 
 function find_spawn_location()
@@ -65,11 +64,9 @@ function find_spawn_location()
 		local test_point = get_random_spawn_area_point()
 		local location = find_suitable_spawn_nearby(test_point)
 		if location ~= nil then 
-            DebugPrint(vec_to_string(location))
 			return location             
         end
 	end
-    DebugPrint("Didn't find anything")
 end
 
 function find_suitable_spawn_nearby(test_point)
