@@ -1,4 +1,4 @@
-CURRENT_VERSION = "1"
+CURRENT_VERSION = "1.1"
 TOOL_NAME = "Pyromania"
 
 -- delimeters

@@ -414,6 +414,26 @@ function create_bomb_option_set()
 	oSet.explosion_seeds.step = 1
 	oSet.options[#oSet.options + 1] = oSet.explosion_seeds	
 
+	oSet.min_random_radius = create_mode_option(
+		option_type.numeric, 
+		15,
+		"min_random_radius",
+		"Minimum radius of random explosions")
+	oSet.min_random_radius.range.lower = 0
+	oSet.min_random_radius.range.upper = 100
+	oSet.min_random_radius.step = 1
+	oSet.options[#oSet.options + 1] = oSet.min_random_radius
+	
+	oSet.max_random_radius = create_mode_option(
+		option_type.numeric, 
+		30,
+		"max_random_radius",
+		"Maximum radius of random explosions")
+	oSet.max_random_radius.range.lower = 0
+	oSet.max_random_radius.range.upper = 100
+	oSet.max_random_radius.step = 1
+	oSet.options[#oSet.options + 1] = oSet.max_random_radius
+
 	oSet.dead_force.value = 0.15
 	oSet.decay.value = 0.05
 	oSet.heat_rise.value = 0.7

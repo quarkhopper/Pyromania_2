@@ -37,9 +37,6 @@ function init()
 	-- true while the player has the options editor open
 	editing_options = false
 	option_page = 1
-
-	-- Mapping lib call to find the bounds we can random explode at
-	set_spawn_area_parameters()
 end
 
 -------------------------------------------------
@@ -55,7 +52,7 @@ function draw()
 	end
 
 	-- on screen display to help the player remember what keys do what
-	UiTranslate(0, UiHeight() - UI.OPTION_TEXT_SIZE * 3)
+	UiTranslate(0, UiHeight() - UI.OPTION_TEXT_SIZE * 5)
 	UiAlign("left")
 	UiFont("bold.ttf", UI.OPTION_TEXT_SIZE)
 	UiTextOutline(0,0,0,1,0.5)
@@ -63,8 +60,8 @@ function draw()
 	UiText(KEY.PLANT_BOMB.key.." to plant bomb", true)
 	UiText(KEY.DETONATE.key.." to detonate", true)
 	UiText(KEY.OPTIONS.key.." for options", true)
-	UiText(KEY.STOP_FIRE.key.." to stop all flame effects")
-	UiText(KEY.RANDOM_BOOM.key.." to randomly explode something on the map")
+	UiText(KEY.STOP_FIRE.key.." to stop all flame effects", true)
+	UiText(KEY.RANDOM_BOOM.key.." to randomly explode something in your area")
 end
 
 -- draw the option editor
@@ -332,7 +329,9 @@ function handle_input(dt)
 			-- Random boom
 			if boom_timer == 0 and
 			InputPressed(KEY.RANDOM_BOOM.key) then
-				local boom_pos = find_spawn_location()
+				local player_trans = GetPlayerTransform()
+				set_spawn_area_parameters(player_trans.pos, TOOL.BOMB.max_random_radius.value)
+				local boom_pos = find_spawn_location(player_trans.pos, TOOL.BOMB.min_random_radius.value)
 				boom_pos = VecAdd(boom_pos, Vec(spawn_block_h_size/2,0,spawn_block_h_size/2))
 				blast_at(boom_pos)
 				boom_timer = 1

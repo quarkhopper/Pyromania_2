@@ -23,6 +23,7 @@ spawn_area_center = nil
 spawn_area_size = nil
 test_max_cast_dist = 10
 test_max_tries = 10
+spawn_area_near_box = 100
 
 function bounds_to_string(bounds)
 	return vec_to_string(bounds[1]).."->"..vec_to_string(bounds[2])
@@ -44,12 +45,18 @@ function get_bounds_size(bounds)
 		bounds[2][3] - bounds[1][3])
 end
 
-function set_spawn_area_parameters()
-	if spawn_area_bounds == nil then
+function set_spawn_area_parameters(center_pos, size)
+	if center_pos ~= nil then 
+		spawn_area_bounds = {
+			VecAdd(center_pos, Vec(-1 * size, -1 * size, -1 * size)),
+			VecAdd(center_pos, Vec(size, size, size))
+		}
+	else
 		spawn_area_bounds = { Vec(9999,9999,9999), Vec(-9999,-9999,-9999) }
+
 		local shapes = QueryAabbShapes(shape_scan_bounds[1], shape_scan_bounds[2])
 		for i=1, #shapes do
-			shape = shapes[i]
+			local shape = shapes[i]
 			local min, max = GetShapeBounds(shape)
 			spawn_area_bounds = adjust_bounds(spawn_area_bounds, min, max)
 		end
@@ -59,11 +66,14 @@ function set_spawn_area_parameters()
 	spawn_area_size = get_bounds_size(spawn_area_bounds)
 end
 
-function find_spawn_location()
+function find_spawn_location(exclude_pos, exclusion_rad)
+	local exclude_pos = exclude_pos or Vec()
+	local exclusion_rad = exclusion_rad or 0
 	for i=1, max_spawn_tries, 1 do
 		local test_point = get_random_spawn_area_point()
 		local location = find_suitable_spawn_nearby(test_point)
-		if location ~= nil then 
+		local dist = VecLength(VecSub(exclude_pos, location))
+		if location ~= nil and dist > exclusion_rad then 
 			return location             
         end
 	end
