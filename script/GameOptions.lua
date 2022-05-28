@@ -507,7 +507,7 @@ function create_thrower_option_set()
 
 	oSet.speed = create_mode_option(
 		option_type.numeric, 
-		1.8,
+		1,
 		"speed",
 		"Spray velocity")
 	oSet.speed.range.lower = 0.1
