@@ -333,6 +333,7 @@ function handle_input(dt)
 			if boom_timer == 0 and
 			InputPressed(KEY.RANDOM_BOOM.key) then
 				local boom_pos = find_spawn_location()
+				boom_pos = VecAdd(boom_pos, Vec(spawn_block_h_size/2,0,spawn_block_h_size/2))
 				blast_at(boom_pos)
 				boom_timer = 1
 			end
