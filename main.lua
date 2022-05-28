@@ -8,6 +8,7 @@
 #include "script/Bomb.lua"
 #include "script/Thrower.lua"
 #include "script/Rocket.lua"
+#include "script/Mapping.lua"
 
 ------------------------------------------------
 -- INIT
@@ -24,6 +25,7 @@ function init()
 	-- rate per second you're allowed to plant bombs
 	plant_rate = 1
 	plant_timer = 0
+	boom_timer = 0
 	primary_shoot_timer = 0
 	secondary_shoot_timer = 0
 	-- prevent shooting while the player is grabbing things, etc
@@ -35,6 +37,9 @@ function init()
 	-- true while the player has the options editor open
 	editing_options = false
 	option_page = 1
+
+	-- Mapping lib call to find the bounds we can random explode at
+	set_spawn_area_parameters()
 end
 
 -------------------------------------------------
@@ -59,6 +64,7 @@ function draw()
 	UiText(KEY.DETONATE.key.." to detonate", true)
 	UiText(KEY.OPTIONS.key.." for options", true)
 	UiText(KEY.STOP_FIRE.key.." to stop all flame effects")
+	UiText(KEY.RANDOM_BOOM.key.." to randomly explode something on the map")
 end
 
 -- draw the option editor
@@ -292,9 +298,9 @@ end
 function handle_input(dt)
 	if editing_options then return end
 	plant_timer = math.max(plant_timer - dt, 0)
+	boom_timer = math.max(boom_timer - dt, 0)
 	primary_shoot_timer = math.max(primary_shoot_timer - dt, 0)
 	secondary_shoot_timer = math.max(secondary_shoot_timer - dt, 0)
-
 
 	if GetString("game.player.tool") == REG.TOOL_KEY and
 	GetPlayerVehicle() == 0 then 
@@ -318,9 +324,17 @@ function handle_input(dt)
 				stop_all_flames()
 			end
 		
-			-- DETONATE
+			-- detonate bomb
 			if InputPressed(KEY.DETONATE.key) then
 				detonate_all()
+			end
+
+			-- Random boom
+			if boom_timer == 0 and
+			InputPressed(KEY.RANDOM_BOOM.key) then
+				local boom_pos = find_spawn_location()
+				blast_at(boom_pos)
+				boom_timer = 1
 			end
 
 			--primary fire

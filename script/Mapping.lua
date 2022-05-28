@@ -57,7 +57,7 @@ function set_spawn_area_parameters()
 	end
 	spawn_area_center = VecLerp(spawn_area_bounds[1], spawn_area_bounds[2], 0.5)
 	spawn_area_size = get_bounds_size(spawn_area_bounds)
-    DebugPrint(bounds_to_string(spawn_area_bounds))
+    -- DebugPrint(bounds_to_string(spawn_area_bounds))
 end
 
 function find_spawn_location()
@@ -75,17 +75,18 @@ end
 function find_suitable_spawn_nearby(test_point)
 	-- raycast at random angles downward
 	for i=1, test_max_tries do
-		dir = Vec(math.random() * 1 - 0.5, -- [-0.5, 0.5]
+		local dir = Vec(math.random() * 1 - 0.5, -- [-0.5, 0.5]
 			math.random() * -0.5 - 0.5, -- [-0.5, -1]
 			math.random() * 1 - 0.5) -- [-0.5, 0.5]
-		hit, dist, normal, shape = QueryRaycast(test_point, dir, test_max_cast_dist)
-		local hit_point = VecAdd(test_point, VecScale(dir, dist))
-		local mat = GetShapeMaterialAtPosition(shape, hit_point)
-		if hit and 
-			allowed_spawn_mats[mat] and 
+		local hit, dist, normal, shape = QueryRaycast(test_point, dir, test_max_cast_dist)
+		if hit then
+            local hit_point = VecAdd(test_point, VecScale(dir, dist))
+            local mat = GetShapeMaterialAtPosition(shape, hit_point)
+			if allowed_spawn_mats[mat] and 
 			not IsPointInWater(hit_point) and
 			block_is_suitable(hit_point) then
 				return hit_point --VecAdd(hit_point, Vec(0, spawn_block_v_size / 2, 0))
+            end
 		end
 	end
 end
@@ -96,13 +97,13 @@ function block_is_suitable(test_position)
 	-- a smerp
 
 	-- scan for clear level surface
-	local hit, dist = QueryRaycast(VecAdd(test_position, Vec(0, spawn_block_v_size, 0)), down, spawnBlockVSize)
+	local hit, dist = QueryRaycast(VecAdd(test_position, Vec(0, spawn_block_v_size, 0)), Vec(0, -1, 0), spawn_block_v_size)
 	if math.abs(dist - spawn_block_v_size) > 0.1 then return false end
 	local ref_height = dist
 	for x=1, 10, 1 do
 		for z=1, 10, 1 do
 			local pos = VecAdd(test_position, Vec((x/10), spawn_block_v_size, (z/10)))
-			hit, dist = QueryRaycast(pos, down, spawn_block_v_size)
+			hit, dist = QueryRaycast(pos,  Vec(0, -1, 0), spawn_block_v_size)
 			if not hit or dist ~= ref_height then return false end
 		end
 	end

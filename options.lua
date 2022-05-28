@@ -1,7 +1,7 @@
 #include "script/Defs.lua"
 
 function init()
-    keybind_options = {KEY.PLANT_BOMB, KEY.DETONATE, KEY.STOP_FIRE, KEY.OPTIONS}
+    keybind_options = {KEY.PLANT_BOMB, KEY.DETONATE, KEY.STOP_FIRE, KEY.OPTIONS, KEY.RANDOM_BOOM}
     updating_key = nil
 end
 
@@ -11,7 +11,8 @@ function draw()
         UiAlign("center middle")
         UiFont("bold.ttf", 40)
         UiText("Pyromania Keybinds", true)
-        UiText("Press a key to change the binding")
+        UiText("Press a key to change the binding", true)
+        UiText("Press esc to exit")
 
         UiTranslate(0, 200)
 
@@ -62,7 +63,7 @@ function draw_set_key_modal()
                 UiText("Press any key to set binding for: "..updating_key.name)
             UiPop()
             local key_pressed = InputLastPressedKey()
-            if key_pressed ~= "" then 
+            if key_pressed ~= "" and key_pressed ~= "esc" then 
                 updating_key.key = key_pressed
                 SetString(REG.PREFIX_TOOL_KEYBIND..REG.DELIM..updating_key.reg, key_pressed)
                 updating_key = nil

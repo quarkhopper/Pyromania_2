@@ -35,6 +35,7 @@ KEY.PLANT_BOMB = setup_keybind("Plant bomb", "plant_bomb", "B")
 KEY.DETONATE = setup_keybind("Detonate bomb", "detonate", "X")
 KEY.STOP_FIRE = setup_keybind("Stop fire", "stop_fire", "V")
 KEY.OPTIONS = setup_keybind("Options", "options", "O")
+KEY.RANDOM_BOOM = setup_keybind("Random boom", "random_boom", "M")
 
 CONSTS = {}
 CONSTS.FLAME_COLOR_DEFAULT = Vec(7.7, 1, 0.8)
