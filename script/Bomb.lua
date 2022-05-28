@@ -33,7 +33,7 @@ function blast_at(pos)
         local hit, dist, normal, shape = QueryRaycast(pos, force_dir, fireball_rad + 0.1, 0.025)
         if hit then
             local hit_point = VecAdd(pos, VecScale(force_dir, dist)) 
-            local force_dir = VecScale(force_dir, -1)
+            local force_dir = normal
 		end
         local point_force = VecScale(force_dir, force_mag)
         apply_force(TOOL.BOMB.pyro.ff, point_position, point_force)
