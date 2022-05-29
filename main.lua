@@ -309,7 +309,7 @@ function tick(dt)
 	end
 
 	if action_mode and
-	action_timer == 0 then
+	#TOOL.BOMB.pyro.flames == 0 then
 		action_timer = action_rate
 		local tries = 1000
 		local player_trans = GetPlayerTransform()
@@ -338,81 +338,81 @@ function handle_input(dt)
 	primary_shoot_timer = math.max(primary_shoot_timer - dt, 0)
 	secondary_shoot_timer = math.max(secondary_shoot_timer - dt, 0)
 
-	if GetString("game.player.tool") == REG.TOOL_KEY and
-	GetPlayerVehicle() == 0 then 
+	if GetString("game.player.tool") == REG.TOOL_KEY  then 
+		--action mode toggle
+		if InputPressed(KEY.ACTION_MOVIE.key) then
+			action_mode = not action_mode
+		end
+		if GetPlayerVehicle() == 0 then 
 
-		-- options menus
-		if InputPressed(KEY.OPTIONS.key) then 
-			editing_options = true
-		else
-			-- plant bomb
-			if plant_timer == 0 and
-			InputPressed(KEY.PLANT_BOMB.key) then
-				local camera = GetPlayerCameraTransform()
-				local drop_pos = TransformToParentPoint(camera, Vec(0.2, -0.2, -1.25))
-				local bomb = Spawn("MOD/prefab/pyro_bomb.xml", Transform(drop_pos))[2]
-				table.insert(bombs, bomb)
-				plant_timer = plant_rate
-			end
-			
-			-- end all flame effects
-			if InputPressed(KEY.STOP_FIRE.key) then
-				stop_all_flames()
-			end
-		
-			-- detonate bomb
-			if InputPressed(KEY.DETONATE.key) then
-				detonate_all()
-			end
-
-			-- Random boom
-			if boom_timer == 0 and
-			InputPressed(KEY.RANDOM_BOOM.key) then
-				local player_trans = GetPlayerTransform()
-				set_spawn_area_parameters(player_trans.pos, TOOL.BOMB.max_random_radius.value)
-				local boom_pos = find_spawn_location(player_trans.pos, TOOL.BOMB.min_random_radius.value)
-				boom_pos = VecAdd(boom_pos, Vec(spawn_block_h_size/2,0,spawn_block_h_size/2))
-				blast_at(boom_pos)
-				boom_timer = 1
-			end
-
-			--action mode toggle
-			if InputPressed(KEY.ACTION_MOVIE.key) then
-				action_mode = not action_mode
-			end
-
-			--primary fire
-			if not shoot_lock and
-			primary_shoot_timer == 0 and
-			InputDown("LMB") and 
-			not InputDown("RMB") then
-				fire_rocket()
-				primary_shoot_timer = TOOL.ROCKET.rate_of_fire.value
-			end
-			
-			-- secondary fire
-			if not shoot_lock and
-			GetPlayerGrabShape() == 0 and
-			InputDown("RMB") and 
-			not InputDown("LMB") then
-				make_gun_effect()
-				local trans = GetPlayerTransform()
-				PlayLoop(thrower_sound, trans.pos, 50)
-				if secondary_shoot_timer == 0 then
-					shoot_thrower()
-					secondary_shoot_timer = TOOL.THROWER.rate_of_fire.value
+			-- options menus
+			if InputPressed(KEY.OPTIONS.key) then 
+				editing_options = true
+			else
+				-- plant bomb
+				if plant_timer == 0 and
+				InputPressed(KEY.PLANT_BOMB.key) then
+					local camera = GetPlayerCameraTransform()
+					local drop_pos = TransformToParentPoint(camera, Vec(0.2, -0.2, -1.25))
+					local bomb = Spawn("MOD/prefab/pyro_bomb.xml", Transform(drop_pos))[2]
+					table.insert(bombs, bomb)
+					plant_timer = plant_rate
 				end
-			end
-		
-			-- shoot lock for when the player is grabbing and 
-			-- throwing things
-			if GetPlayerGrabShape() ~= 0 then
-				shoot_lock = true
-			elseif shoot_lock == true and
-			GetPlayerGrabShape() == 0 and
-			not InputDown("RMB") and
-			not InputDown("LMB") then
-				shoot_lock = false
+				
+				-- end all flame effects
+				if InputPressed(KEY.STOP_FIRE.key) then
+					stop_all_flames()
+				end
+			
+				-- detonate bomb
+				if InputPressed(KEY.DETONATE.key) then
+					detonate_all()
+				end
+
+				-- Random boom
+				if boom_timer == 0 and
+				InputPressed(KEY.RANDOM_BOOM.key) then
+					local player_trans = GetPlayerTransform()
+					set_spawn_area_parameters(player_trans.pos, TOOL.BOMB.max_random_radius.value)
+					local boom_pos = find_spawn_location(player_trans.pos, TOOL.BOMB.min_random_radius.value)
+					boom_pos = VecAdd(boom_pos, Vec(spawn_block_h_size/2,0,spawn_block_h_size/2))
+					blast_at(boom_pos)
+					boom_timer = 1
+				end
+
+				--primary fire
+				if not shoot_lock and
+				primary_shoot_timer == 0 and
+				InputDown("LMB") and 
+				not InputDown("RMB") then
+					fire_rocket()
+					primary_shoot_timer = TOOL.ROCKET.rate_of_fire.value
+				end
+				
+				-- secondary fire
+				if not shoot_lock and
+				GetPlayerGrabShape() == 0 and
+				InputDown("RMB") and 
+				not InputDown("LMB") then
+					make_gun_effect()
+					local trans = GetPlayerTransform()
+					PlayLoop(thrower_sound, trans.pos, 50)
+					if secondary_shoot_timer == 0 then
+						shoot_thrower()
+						secondary_shoot_timer = TOOL.THROWER.rate_of_fire.value
+					end
+				end
+			
+				-- shoot lock for when the player is grabbing and 
+				-- throwing things
+				if GetPlayerGrabShape() ~= 0 then
+					shoot_lock = true
+				elseif shoot_lock == true and
+				GetPlayerGrabShape() == 0 and
+				not InputDown("RMB") and
+				not InputDown("LMB") then
+					shoot_lock = false
+				end
 			end
 		end
 	end
