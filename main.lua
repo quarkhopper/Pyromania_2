@@ -26,6 +26,9 @@ function init()
 	plant_rate = 1
 	plant_timer = 0
 	boom_timer = 0
+	action_timer = 0
+	action_rate = 3
+	action_mode = false
 	primary_shoot_timer = 0
 	secondary_shoot_timer = 0
 	-- prevent shooting while the player is grabbing things, etc
@@ -44,6 +47,17 @@ end
 -------------------------------------------------
 
 function draw()
+	if action_mode then 
+		UiPush()
+			UiTranslate(UiCenter(), 27)
+			UiAlign("center")
+			UiFont("bold.ttf", 25)
+			UiTextOutline(0,0,0,1,1)
+			UiColor(1,0,0)
+			UiText("DANGER ! ACTION MOVIE MODE ON ! DANGER")
+		UiPop()
+	end
+
 	if GetString("game.player.tool") ~= REG.TOOL_KEY or
 		GetPlayerVehicle() ~= 0 then return end
 	
@@ -52,16 +66,19 @@ function draw()
 	end
 
 	-- on screen display to help the player remember what keys do what
-	UiTranslate(0, UiHeight() - UI.OPTION_TEXT_SIZE * 5)
-	UiAlign("left")
-	UiFont("bold.ttf", UI.OPTION_TEXT_SIZE)
-	UiTextOutline(0,0,0,1,0.5)
-	UiColor(1,1,1)
-	UiText(KEY.PLANT_BOMB.key.." to plant bomb", true)
-	UiText(KEY.DETONATE.key.." to detonate", true)
-	UiText(KEY.OPTIONS.key.." for options", true)
-	UiText(KEY.STOP_FIRE.key.." to stop all flame effects", true)
-	UiText(KEY.RANDOM_BOOM.key.." to randomly explode something in your area")
+	UiPush()
+		UiTranslate(0, UiHeight() - UI.OPTION_TEXT_SIZE * 6)
+		UiAlign("left")
+		UiFont("bold.ttf", UI.OPTION_TEXT_SIZE)
+		UiTextOutline(0,0,0,1,0.5)
+		UiColor(1,1,1)
+		UiText(KEY.PLANT_BOMB.key.." to plant bomb", true)
+		UiText(KEY.DETONATE.key.." to detonate", true)
+		UiText(KEY.OPTIONS.key.." for options", true)
+		UiText(KEY.STOP_FIRE.key.." to stop all flame effects", true)
+		UiText(KEY.RANDOM_BOOM.key.." to randomly explode something in your area", true)
+		UiText(KEY.ACTION_MOVIE.key.. " = DANGER !! ACTION MOVIE MODE ON/OFF")
+	UiPop()
 end
 
 -- draw the option editor
@@ -286,6 +303,26 @@ function tick(dt)
 	flame_tick(TOOL.ROCKET.pyro, dt)
 	rocket_tick(dt)
 	thrower_tick(dt)
+
+	if GetPlayerHealth() == 0 then
+		action_mode = false 
+	end
+
+	if action_mode and
+	action_timer == 0 then
+		action_timer = action_rate
+		local tries = 1000
+		local player_trans = GetPlayerTransform()
+		while tries > 0 do
+			local dir = VecNormalize(Vec(random_vec_component(1), 0, random_vec_component(1)))
+			local pos = VecAdd(player_trans.pos, VecScale(dir, TOOL.BOMB.min_random_radius.value))
+			local hit = QueryRaycast(pos, Vec(0,0,1), 0)
+			if not hit then
+				blast_at(VecAdd(pos, Vec(0, 1, 0)))
+				break
+			end
+		end
+	end
 end
 
 -------------------------------------------------
@@ -296,6 +333,7 @@ function handle_input(dt)
 	if editing_options then return end
 	plant_timer = math.max(plant_timer - dt, 0)
 	boom_timer = math.max(boom_timer - dt, 0)
+	action_timer = math.max(action_timer - dt, 0)
 	primary_shoot_timer = math.max(primary_shoot_timer - dt, 0)
 	secondary_shoot_timer = math.max(secondary_shoot_timer - dt, 0)
 
@@ -335,6 +373,11 @@ function handle_input(dt)
 				boom_pos = VecAdd(boom_pos, Vec(spawn_block_h_size/2,0,spawn_block_h_size/2))
 				blast_at(boom_pos)
 				boom_timer = 1
+			end
+
+			--action mode toggle
+			if InputPressed(KEY.ACTION_MOVIE.key) then
+				action_mode = not action_mode
 			end
 
 			--primary fire
