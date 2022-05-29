@@ -316,9 +316,10 @@ function tick(dt)
 		while tries > 0 do
 			local dir = VecNormalize(Vec(random_vec_component(1), 0, random_vec_component(1)))
 			local pos = VecAdd(player_trans.pos, VecScale(dir, TOOL.BOMB.min_random_radius.value))
-			local hit = QueryRaycast(pos, Vec(0,0,1), 0)
+			local pos = VecAdd(pos, Vec(0, 1, 0))
+			local hit = QueryClosestPoint(pos, 0.5)
 			if not hit then
-				blast_at(VecAdd(pos, Vec(0, 1, 0)))
+				blast_at(pos)
 				break
 			end
 		end
