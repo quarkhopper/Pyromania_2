@@ -35,7 +35,7 @@ function thrower_tick(dt)
                 for j = 1, #new_dirs do
                     local new_fireball = inst_fireball(fireball.pos, new_dirs[j])
                     new_fireball.dist_left = 2
-                    new_fireball.speed = 1
+                    new_fireball.speed = 0.5
                     new_fireball.splits_remaining = fireball.splits_remaining - 1
                     table.insert(fireballs_next_tick, new_fireball) 
                     -- apply_force(TOOL.THROWER.pyro.ff, fireball.pos, VecScale(new_dirs[j], TOOL.THROWER.pyro.ff.f_max))
