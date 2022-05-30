@@ -46,6 +46,7 @@ function init_pyro(tool)
     pyro.ff.f_max = tool.f_max.value
     pyro.ff.f_dead = tool.dead_force.value
     pyro.ff.decay = tool.decay.value
+    pyro.ff.prop_decay = tool.prop_decay.value
     pyro.ff.heat_rise = tool.heat_rise.value
     pyro.ff.point_split = tool.point_split.value
     pyro.ff.extend_spread = tool.extend_spread.value

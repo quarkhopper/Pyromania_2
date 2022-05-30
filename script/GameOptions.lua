@@ -190,11 +190,21 @@ function create_mode_option_set(name, display_name)
 		option_type.numeric, 
 		0.03,
 		"decay",
-		"Field decay per tick")
+		"Whole field normalization decay per tick")
 	oSet.decay.range.lower = 0
 	oSet.decay.range.upper = 0.3
-	oSet.decay.step = 0.01
+	oSet.decay.step = 0.001
 	oSet.options[#oSet.options + 1] = oSet.decay
+
+	oSet.prop_decay = create_mode_option(
+		option_type.numeric, 
+		0.01,
+		"prop_decay",
+		"Field propagation decay per tick")
+	oSet.prop_decay.range.lower = 0
+	oSet.prop_decay.range.upper = 0.3
+	oSet.prop_decay.step = 0.001
+	oSet.options[#oSet.options + 1] = oSet.prop_decay
 
 	oSet.heat_rise = create_mode_option(
 		option_type.numeric, 

@@ -91,7 +91,7 @@ function draw_option_modal()
 
 		local box = {
 			width = (margins.x1 - margins.x0) - 300,
-			height = (margins.y1 - margins.y0) - 300
+			height = (margins.y1 - margins.y0) - 200
 		}
 
 		UiModalBegin()
@@ -129,19 +129,21 @@ function draw_option_modal()
 			UiPush()
 				-- title
 				UiAlign("center middle")
-				UiTranslate(UiCenter(), 180)
+				UiTranslate(UiCenter(), 140)
+				UiFont("bold.ttf", UI.OPTION_MODAL_HEADING_SIZE)
 				UiText("Options: "..page_options.display_name)
 			UiPop()
 			UiPush()
 				-- instructions
 				UiAlign("center middle")
-				UiTranslate(UiCenter(), UiHeight() - 180)
+				UiTranslate(UiCenter(), UiHeight() - 140)
+				UiFont("bold.ttf", UI.OPTION_MODAL_HEADING_SIZE)
 				UiText("Press [Return/Enter] to save, [Backspace] to cancel, [Delete] to reset to defaults")
 			UiPop()
 			if option_page > 1 then 
 				UiPush()
 					-- page back
-					UiTranslate(UiCenter(), UiHeight() - 190)
+					UiTranslate(UiCenter(), UiHeight() - 150)
 					UiAlign("left")
 					UiTranslate((box.width / -2) + 10, -10)
 					if UiImageButton("MOD/img/left.png") then
@@ -154,7 +156,7 @@ function draw_option_modal()
 			if option_page < #all_option_sets then
 				UiPush()
 					-- page next
-					UiTranslate(UiCenter(), UiHeight() - 190)
+					UiTranslate(UiCenter(), UiHeight() - 150)
 					UiAlign("right")
 					UiTranslate((box.width / 2) - 10, -10)
 					if UiImageButton("MOD/img/right.png") then

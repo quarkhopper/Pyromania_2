@@ -18,6 +18,7 @@ function inst_force_field_ff()
     inst.f_max = 2
     inst.f_dead = 0.1
     inst.decay = 0.02
+    inst.prop_decay  = 0.01
     inst.point_split = 6
     inst.extend_spread = 45
 
@@ -143,7 +144,7 @@ function propagate_point_force(ff, point)
         dir = VecAdd(dir, Vec(0, ff.heat_rise, 0))
         dir = VecNormalize(dir)
         local mag = (point_prime.mag + point.mag) / 2
-        set_point_vec(point, VecScale(point.vec, (1 - ff.decay))) 
+        set_point_vec(point, VecScale(point.vec, (1 - ff.prop_decay))) 
         set_point_dir_mag(point_prime, dir, mag)
     end
 end
