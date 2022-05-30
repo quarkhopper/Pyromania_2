@@ -17,8 +17,10 @@ Common tool options
 The maximum magnitude of a vector in the vector field. The fraction of this maximum is commonly used in calculations throughout the mod. This is the force that is added to the field array when a flame effect is triggered and propagates away from that point. This value, with the decay, dead_force, and flame_dead_force parameters determine the length and intensity of flame effects. 
 Minimum field force per point (dead_force)
 A vector below this magnitude will be culled from the simulation. Setting this higher will result in shorter flame effects.  
-#### Field decay per tick (decay)
-A universal amount subtracted from the magnitude of all vectors in the field per tick, and from the parent vector when propagating force to children. Setting this higher will result in shorter flame effects.
+#### Whole field normalization decay per tick (decay)
+A universal amount subtracted from the magnitude of all vectors in the field per tick. Setting this higher will result in shorter flame effects.
+#### Field propagation decay per tick (prop_decay)
+The amount of decay applied to a vector point when it propagates force to a child. Setting this higher will result in a less volumous explosion with a thinner front.
 #### Field heat rise dir adjust (heat_rise)
 An upward-pointing vector of this magnitude is added to the unit vector of all points in the field per tick. Setting this higher will result in flame effects that rise faster. Note: This is in the ForceField module for convenience even though it is technically specific to fire effects.
 #### Field propagation splits (point_split)
