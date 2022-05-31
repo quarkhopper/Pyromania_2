@@ -41,6 +41,25 @@ function rocket_tick(dt)
                 local offset = i * 0.1
                 MakeHole(VecAdd(rocket.trans.pos, VecScale(rocket.dir, offset)), 1, 1, 1)
             end
+            local puff_spokes = 12
+            local puff_size_start = 0.6
+            local puff_size_end = 0.1
+            local puff_steps = 15
+            local puff_color_value = 0.8
+            for k = 1, puff_spokes do
+                local puff_dist = math.random(2, 8)
+                local puff_dir = VecAdd(VecScale(rocket.dir, -1), random_vec(0.5))
+                for j = 1, puff_steps do
+                    local puff_rad = (puff_dist * j) / puff_steps
+                    local puff_pos = VecAdd(rocket.trans.pos, VecScale(puff_dir, puff_rad))
+                    ParticleReset()
+                    ParticleType("smoke")
+                    ParticleRadius(fraction_to_range_value(j/puff_steps, puff_size_start, puff_size_end))
+                    local smoke_color = VecScale(Vec(1,1,1), puff_color_value)
+                    ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
+                    SpawnParticle(puff_pos, Vec(), 2)                    
+                end
+            end
             -- check again in case we're hitting the ground
             local hit, dist = QueryRaycast(rocket.trans.pos, rocket.dir, rocket.speed, 0.025)
             if hit then 
