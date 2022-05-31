@@ -16,6 +16,10 @@ function inst_pyro()
     inst.max_smoke_size = 1
     inst.min_smoke_size = 0.3
     inst.smoke_life = 3
+    inst.flame_puff_life = 1
+    inst.flame_jitter = 1
+    inst.flame_tile = 0
+    inst.flame_opacity = 1
     inst.impulse_const = 70
     inst.impulse_radius = 5
     inst.fire_ignition_radius = 1
@@ -64,21 +68,23 @@ function make_flame_effect(pyro, flame, dt)
     ParticleReset()
     ParticleType("smoke")
     local smoke_size = 0
-    ParticleAlpha(1, 0, "easeout", 0, 0.5)
+    ParticleAlpha(pyro.flame_opacity, 0, "easeout", 0, 0.5)
     if flame.life_n >= 0 then
         smoke_size = fraction_to_range_value((1 - flame.life_n), pyro.min_smoke_size, pyro.max_smoke_size)
     else
         smoke_size = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force) + 0.1
-        flame.pos = VecAdd(flame.pos, random_vec(pyro.ff.resolution / 2))
+        local jitter = random_vec(pyro.ff.resolution/2)
+        flame.pos = VecAdd(flame.pos, jitter)
     end
     ParticleDrag(0.25)
     ParticleRadius(smoke_size)
     local smoke_color = HSVToRGB(Vec(0, 0, 1))
     ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
     ParticleGravity(pyro.gravity)
-    SpawnParticle(flame.pos, Vec(), 1)
+    ParticleTile(pyro.flame_tile)
+    SpawnParticle(VecAdd(flame.pos, random_vec(pyro.flame_jitter)), Vec(), pyro.flame_puff_life)
 
-    if math.random(1, 10) == 1 then
+    if pyro.smoke_life > 0 and math.random(1, 10) == 1 then
             -- smoke puff
             ParticleReset()
             ParticleType("smoke")
@@ -138,7 +144,7 @@ end
 function spawn_flame_group(pyro, point, flame_table)
     for i = 1, pyro.flames_per_spawn do
         local offset_dir = VecNormalize(random_vec(1))
-        local flame_pos = VecAdd(point.pos, VecScale(pyro.ff.resolution, offset_dir))
+        local flame_pos = VecAdd(point.pos, VecScale(offset_dir, pyro.ff.resolution))
         local flame = inst_flame(point.pos)
         flame.parent = point
         flame.motion_vec = point.vec
@@ -148,21 +154,26 @@ end
 
 function impulse_fx(pyro)
     local points = flatten(pyro.ff.metafield)
+    local player_trans = GetPlayerTransform()
     for i = 1, #points do
         local point = points[i]
         -- apply impulse
         local box = box_vec(point.pos, pyro.impulse_radius)
         local push_bodies = QueryAabbBodies(box[1], box[2])
+        local force_mag = VecLength(point.vec)
+        local force_dir = VecNormalize(point.vec)
+        local force_n = force_mag / pyro.ff.f_max
         for i = 1, #push_bodies do
             local push_body = push_bodies[i]
             local body_center = TransformToParentPoint(GetBodyTransform(push_body), GetBodyCenterOfMass(push_body))
-            local force_mag = VecLength(point.vec)
-            local force_dir = VecNormalize(point.vec)
-            local force_n = force_mag / pyro.ff.f_max
             local hit = QueryRaycast(point.pos, force_dir, pyro.impulse_radius, 0.025)
             if hit then 
                 ApplyBodyImpulse(push_body, body_center, VecScale(force_dir, force_n * pyro.impulse_const))
             end
+        end
+        if VecLength(VecSub(player_trans.pos, point.pos)) <= pyro.impulse_radius then
+            SetPlayerVelocity(point.vec)
+            SetPlayerGroundVelocity(point.vec)
         end
     end
 end

@@ -5,6 +5,7 @@ TOOL.GENERAL = {}
 TOOL.BOMB = {}
 TOOL.ROCKET = {}
 TOOL.THROWER = {}
+SHOCK_FIELD = {}
 
 function save_option_sets()
 	save_option_set(TOOL.GENERAL)
@@ -51,4 +52,35 @@ function init_pyro(tool)
     pyro.ff.point_split = tool.point_split.value
     pyro.ff.extend_spread = tool.extend_spread.value
     tool.pyro = pyro
+end
+
+function init_shock_field()
+    local pyro = inst_pyro()
+    pyro.flames_per_spawn = 15
+    pyro.flame_light_intensity = 0
+    pyro.flame_dead_force = 0
+    pyro.max_smoke_size = 1
+    pyro.min_smoke_size = 1
+    pyro.smoke_life = 0
+    pyro.flame_puff_life = 0.5
+    pyro.flame_jitter = 2
+    pyro.flame_tile = 0
+    pyro.flame_opacity = 0.8
+    pyro.impulse_const = 1000
+    pyro.impulse_radius = 8
+    pyro.fire_ignition_radius = 0
+    pyro.fire_density = 0
+    pyro.hole_punch_scale = 0
+    pyro.max_player_hurt = 0.01
+    pyro.rainbow_mode = false
+    pyro.ff.resolution = 2
+    pyro.ff.meta_resolution = 3
+    pyro.ff.f_max = 10
+    pyro.ff.f_dead = 1
+    pyro.ff.decay = 0.15
+    pyro.ff.prop_decay = 0.3
+    pyro.ff.heat_rise = 0
+    pyro.ff.point_split = 4
+    pyro.ff.extend_spread = 54
+    SHOCK_FIELD = pyro
 end

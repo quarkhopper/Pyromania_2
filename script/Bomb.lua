@@ -38,6 +38,7 @@ function blast_at(pos)
         local point_force = VecScale(force_dir, force_mag)
         apply_force(TOOL.BOMB.pyro.ff, point_position, point_force)
     end
+    create_shock(pos, 1)
     PlaySound(boom_sound, pos, 100)
     PlaySound(rumble_sound, pos, 100)
 end

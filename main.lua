@@ -37,6 +37,9 @@ function init()
 	-- option sets are the paramters for each subtool
 	load_option_sets()
 
+	-- init the field used for shock waves
+	init_shock_field()
+
 	-- true while the player has the options editor open
 	editing_options = false
 	option_page = 1
@@ -303,6 +306,7 @@ function tick(dt)
 	flame_tick(TOOL.BOMB.pyro, dt)
 	flame_tick(TOOL.THROWER.pyro, dt)
 	flame_tick(TOOL.ROCKET.pyro, dt)
+	flame_tick(SHOCK_FIELD, dt)
 	rocket_tick(dt)
 	thrower_tick(dt)
 
@@ -448,3 +452,9 @@ function make_gun_effect()
 	end
 end
 
+function create_shock(pos, scale)
+	for i = 1, 50 do
+		local dir = VecNormalize(random_vec(1))
+		apply_force(SHOCK_FIELD.ff, VecAdd(pos, VecScale(dir, 4)), VecScale(dir, scale * 10))
+	end
+end
