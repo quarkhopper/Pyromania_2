@@ -172,8 +172,7 @@ function impulse_fx(pyro)
             end
         end
         if VecLength(VecSub(player_trans.pos, point.pos)) <= pyro.impulse_radius then
-            SetPlayerVelocity(point.vec)
-            SetPlayerGroundVelocity(point.vec)
+            SetPlayerVelocity(VecAdd(GetPlayerVelocity(), VecScale(point.vec, 0.5)))
         end
     end
 end

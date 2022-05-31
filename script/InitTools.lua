@@ -70,7 +70,7 @@ function init_shock_field()
     pyro.impulse_radius = 8
     pyro.fire_ignition_radius = 0
     pyro.fire_density = 0
-    pyro.hole_punch_scale = 0
+    pyro.hole_punch_scale = 0.2
     pyro.max_player_hurt = 0.01
     pyro.rainbow_mode = false
     pyro.ff.resolution = 2
