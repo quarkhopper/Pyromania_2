@@ -17,7 +17,7 @@ function inst_pyro()
     inst.min_smoke_size = 0.3
     inst.smoke_life = 3
     inst.flame_puff_life = 1
-    inst.flame_jitter = 1
+    inst.flame_jitter = 0
     inst.flame_tile = 0
     inst.flame_opacity = 1
     inst.impulse_const = 70
