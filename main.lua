@@ -455,6 +455,6 @@ end
 function create_shock(pos, scale)
 	for i = 1, 50 do
 		local dir = VecNormalize(random_vec(1))
-		apply_force(SHOCK_FIELD.ff, VecAdd(pos, VecScale(dir, 4)), VecScale(dir, scale * 10))
+		apply_force(SHOCK_FIELD.ff, VecAdd(pos, VecScale(dir, 2)), VecScale(dir, scale * 10))
 	end
 end
