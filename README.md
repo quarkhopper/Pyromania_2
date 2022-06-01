@@ -19,7 +19,7 @@ Turns visibly rendered shock waves on and off. Shock effects will still occur bu
 The maximum magnitude of a vector in the vector field. The fraction of this maximum is commonly used in calculations throughout the mod. This is the force that is added to the field array when a flame effect is triggered and propagates away from that point. This value, with the decay, dead_force, and flame_dead_force parameters determine the length and intensity of flame effects. 
 #### Minimum field force per point (dead_force)
 A vector below this magnitude will be culled from the simulation. Setting this higher will result in shorter flame effects.  
-#### Whole field normalization decay per tick (decay)
+#### Whole field decay per tick (decay)
 A universal amount subtracted from the magnitude of all vectors in the field per tick. Setting this higher will result in shorter flame effects.
 #### Field propagation decay per tick (prop_decay)
 The amount of decay applied to a vector point when it propagates force to a child. Setting this higher will result in a less volumous explosion with a thinner front.
@@ -51,6 +51,8 @@ The size of smoke particles when the underlying vector force magnitude is at its
 The size of smoke particles when the underlying vector force magnitude is at flame_dead_force.
 #### Lifetime of smoke particles (smoke_life)
 How long black, lingering smoke particles remain (seconds).
+#### Relative smoke per flame (smoke_amount)
+The relative amount of smoke to spawn per flame spawn. 0 is no black smoke. 1 is a smoke particle per flame spawn (very smokey). Turn this down if you want less black smoke in your explosions or to increase performance.
 #### Impulse (pushing) constant (impulse_const)
 A constant multiplied by the normalized metafield vector force magnitude to push something dynamic when it is inside the impulse_radius of a metafield vector point. Setting this higher will push things more when they get near effects. 
 #### Impulse (pushing) radius (impulse_radius)
