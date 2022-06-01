@@ -510,6 +510,8 @@ function create_rocket_option_set()
 	oSet.min_smoke_size.value = 0.3
 	oSet.max_smoke_size.value = 0.6
 	oSet.contact_damage_scale.value = 0.5
+	oSet.fire_density.value = 8
+	oSet.fire_ignition_radius = 5
 
 	return oSet
 end
