@@ -559,24 +559,26 @@ function create_thrower_option_set()
 
 	oSet.f_max.value = 5
 	oSet.dead_force.value = 0.3
-	oSet.decay.value = 0.18
-	oSet.prop_decay.value = 0.04
+	oSet.decay.value = 0.2
+	oSet.prop_decay.value = 0.06
 	oSet.heat_rise.value = 1
 	oSet.point_split.value = 2
-	oSet.extend_spread.value = 30
+	oSet.extend_spread.value = 3
 	oSet.field_resolution.value = 0.1
 	oSet.meta_resolution.value = 1
-	oSet.flame_dead_force.value = 0.5
+	oSet.flame_dead_force.value = 0.3
 	oSet.flames_per_point.value = 1
 	oSet.flame_light_intensity.value = 1
 	oSet.min_smoke_size.value = 0.1
 	oSet.max_smoke_size.value = 0.3
+	oSet.flame_color_hot.value = Vec(7.5, 0.9, 0.6)
 	oSet.impulse_const.value = 50
 	oSet.impulse_radius.value = 2
 	oSet.contact_damage_scale.value = 0.1
 	oSet.fire_ignition_radius.value = 2
 	oSet.fire_density.value = 10
 	oSet.max_player_hurt.value = 0.1
+	oSet.speed.value = 0.6
 	
 	return oSet
 end
