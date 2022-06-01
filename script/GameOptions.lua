@@ -453,10 +453,10 @@ function create_bomb_option_set()
 	oSet.options[#oSet.options + 1] = oSet.max_random_radius
 
 	oSet.dead_force.value = 0.15
-	oSet.decay.value = 0.05
-	oSet.prop_decay.value = 0.02
+	oSet.decay.value = 0.055
+	oSet.prop_decay.value = 0.013
 	oSet.heat_rise.value = 1
-	oSet.point_split.value = 4
+	oSet.point_split.value = 3
 	oSet.extend_spread.value = 65
 	oSet.flame_dead_force.value = 0.6
 	oSet.min_smoke_size.value = 0.3
