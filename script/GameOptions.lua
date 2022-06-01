@@ -198,7 +198,7 @@ function create_mode_option_set(name, display_name)
 		option_type.numeric, 
 		0.03,
 		"decay",
-		"Whole field normalization decay per tick")
+		"Whole field decay per tick")
 	oSet.decay.range.lower = 0
 	oSet.decay.range.upper = 0.3
 	oSet.decay.step = 0.001
@@ -350,7 +350,7 @@ function create_mode_option_set(name, display_name)
 		option_type.numeric, 
 		0.1,
 		"smoke_amount",
-		"Relative amount of smoke per flame spawn")
+		"Relative smoke per flame")
 	oSet.smoke_amount.range.lower = 0
 	oSet.smoke_amount.range.upper = 1
 	oSet.smoke_amount.step = 0.01

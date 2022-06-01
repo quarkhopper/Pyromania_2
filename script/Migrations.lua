@@ -99,26 +99,31 @@ function migrate_option_set(option_set_ser)
         for i = 4, #set_parts do
             local option_ser = set_parts[i]
             local option = mode_option_from_string(option_ser)
-            if option.key == "smoke_life" then
-                -- put the smoke life option in as is
+            if option.key == "decay" then
+                -- shorten the name
+                option.friendly_name = "Whole field decay per tick"
+                option = mode_option_to_string(option)
                 new_parts[#new_parts + 1] = option
+            elseif option.key == "smoke_life" then
+                -- put the smoke life option in as is
+                new_parts[#new_parts + 1] = option_ser
 
                 -- put the new option after the smoke_life option
                 local smoke_amount = create_mode_option(
                     option_type.numeric, 
                     0.1,
                     "smoke_amount",
-                    "Relative amount of smoke per flame spawn")
+                    "Relative smoke per flame")
                 smoke_amount.range.lower = 0
                 smoke_amount.range.upper = 1
                 smoke_amount.step = 0.01
                 local ser = mode_option_to_string(smoke_amount)
-                set_parts[#new_parts + 1] = ser
+                new_parts[#new_parts + 1] = ser
             else
                 new_parts[#new_parts + 1] = option_ser
             end
-            option_set_ser = join_strings(new_parts, DELIM.OPTION_SET)
         end
+        option_set_ser = join_strings(new_parts, DELIM.OPTION_SET)
     end
 
     return option_set_ser

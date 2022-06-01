@@ -62,9 +62,11 @@ function inst_pyro()
     inst.impulse_radius = 5
     -- Radius from a force field vector point that flames can arise.
     inst.fire_ignition_radius = 1
-    -- Number of flames per LINEAR world unit to attempt to spawn. A value of 1 equates to
+    -- Number of flames per LINEAR world unit to attempt to spawn AS THOUGH a value of 1 equates to
     -- a volume of a 1x1x1 cube of voxels having only 1^3 (or 1) fire spawn. A value of 2 
-    -- yields 2^3 or 8 fire spawns.
+    -- yields 2^3 or 8 fire spawns. The reality is that this number of fires is calculated and then
+    -- than many attempts to cast out from a central point in a random direction a distance of 
+    -- fire_ignition_radius away are made. If that cast hits something, a fire is started.
     inst.fire_density = 1
     -- Teardown classifies materials by hard/med/soft. This value multiplied by the normalized 
     -- force of an acting vector (force field contact) determines how many voxels may be removed
@@ -193,12 +195,15 @@ function make_flame_effect(pyro, flame, dt)
 end
 
 function burn_fx(pyro)
+    -- Start fires throught the native Teardown mechanism. Base these effects on the
+    -- lower resolution metafield for better performance. 
     local points = flatten(pyro.ff.metafield)
     local num_fires = round((pyro.fire_density / pyro.fire_ignition_radius)^3)
     for i = 1, #points do
         local point = points[i]
         for j = 1, num_fires do
             local random_dir = random_vec(1)
+            -- cast in some random dir and start a fire if you hit something. 
             local hit, dist = QueryRaycast(point.pos, random_dir, pyro.fire_ignition_radius)
             if hit then 
                 local burn_at = VecAdd(point.pos, VecScale(random_dir, dist))
@@ -209,6 +214,7 @@ function burn_fx(pyro)
 end
 
 function make_flame_effects(pyro, dt)
+    -- for every flame instance, make the appropriate effect
     for i = 1, #pyro.flames do
         local flame = pyro.flames[i]
         make_flame_effect(pyro, flame, dt)
@@ -216,6 +222,7 @@ function make_flame_effects(pyro, dt)
 end
 
 function spawn_flames(pyro)
+    -- Spawn flame instances to render based on the underlying base force field vectors.
     local new_flames = {}
     local points = flatten(pyro.ff.field)
     for i = 1, #points do

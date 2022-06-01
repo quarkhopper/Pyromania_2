@@ -286,12 +286,10 @@ function refresh_metafield(ff)
             field_put(new_metafield, meta_point, meta_point.coord)
         else
             -- Average the base field point into the existing metafield point.
-            -- NOTE: should optimize this to not average every time we merge in a base field
-            -- point. Track number of points contributing and scale once. Not sure about How
-            -- much efficiency this will gain, but worth a try (at some point).
             set_point_vec(meta_point, VecScale(VecAdd(meta_point.vec, point.vec), 0.5))
         end
     end
+
     ff.metafield = new_metafield
 end
 
