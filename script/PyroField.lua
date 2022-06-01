@@ -1,52 +1,112 @@
 #include "ForceField.lua"
 #include "Utils.lua"
 
-PYRO = {}
-PYRO.MAX_FLAMES = 500
+PYRO = {} -- Static PyroField options
+PYRO.MAX_FLAMES = 500 -- default maximum number of flames to render
+-- If the pyro field is in rainbow mode, this one color will be cycled and 
+-- coordinates the color of all flames and smoke particules generated. 
 PYRO.RAINBOW = Vec(0, 1, 0.8)
 
 function inst_pyro()
     local inst = {}
+    -- Like the force field, this coordinates the staggering of 
+    -- activities on different ticks for performance reasons. 
     inst.tick_interval = 3
     inst.tick_count = inst.tick_interval
+    -- Table of objects that represent one point of light in the explosion shrouded by 
+    -- smoke to give it some diffusion. 
     inst.flames = {}
+    -- If conditions are met to spawn flames on a force field point, this is the number 
+    -- of flames that will be spawned based on that world coordinate (may be staggered or
+    -- varied in some other way)
     inst.flames_per_spawn = 5
+    -- Intensity of a flame light point in its puff. Customization of this should be
+    -- controlled through the HSV color rather than this value which function more 
+    -- of a gain.
     inst.flame_light_intensity = 3
+    -- When considering the base force field vector point, any vector below this magnitude
+    -- changes the flame rendering mode from normal rules to "ember" rules. Ember rules will
+    -- have the flame point light decreasing in intensity and the puff getting smaller and 
+    -- jittering as it flutters away. 
     inst.flame_dead_force = 0.2
+    -- Smoke size when the base field vector point is at its highest magnitude. Kind of 
+    -- a minomer as it may actually be smaller than min if set that way and it will still
+    -- function correctly in the algorithm. It's really the "max force" smoke size. And may 
+    -- be presented as a user option for "hot" smoke size.
     inst.max_smoke_size = 1
+    -- Smoke size when the base field vector point is just above the flame_dead_force.
     inst.min_smoke_size = 0.3
+    -- The lifetime of black smoke that spawns behind the flames.
     inst.smoke_life = 3
+    -- Normalized smoke amount. Calculated by math.random() < value
+    inst.smoke_amount_n = 0.2
+    -- True if rendering flames. If this is false then only the flame "puffs" will be shown 
+    -- and no black smoke will be generated. This is false when using the pyro Max field for
+    -- shock wave effects.
     inst.render_flames = true
+    -- The lifetime of flame diffusing smoke puffs.
     inst.flame_puff_life = 1
+    -- Jitter applied to the flame as the maximum magnitude of vector components
+    -- added to the position of the flame.
     inst.flame_jitter = 0
+    -- Built-in Teardown tile to use for the flame. 
     inst.flame_tile = 0
+    -- Opacity of flame puffs. 
     inst.flame_opacity = 1
+    -- Constant factor multiplied by the normalized force vector to apply as impulse to 
+    -- any body in the effective impulse_radius of that point. Sum: how hard to push things
+    -- around. 
     inst.impulse_const = 70
+    -- Effective radius that a force field vector can interact with a world body to apply
+    -- impulse to it. 
     inst.impulse_radius = 5
+    -- Radius from a force field vector point that flames can arise.
     inst.fire_ignition_radius = 1
+    -- Number of flames per LINEAR world unit to attempt to spawn. A value of 1 equates to
+    -- a volume of a 1x1x1 cube of voxels having only 1^3 (or 1) fire spawn. A value of 2 
+    -- yields 2^3 or 8 fire spawns.
     inst.fire_density = 1
+    -- Teardown classifies materials by hard/med/soft. This value multiplied by the normalized 
+    -- force of an acting vector (force field contact) determines how many voxels may be removed
+    -- from a HARD material in that contact event. Medium materials multiply this number by 5, 
+    -- and soft materials multiply this number by 10. 
     inst.hole_punch_scale = 0.2
+    -- The gretest proportion of player health that can be taken away in a tick
     inst.max_player_hurt = 0.5
+    -- PARTICLE gravity as applied to smoke particles in Teardown's engine. 
     inst.gravity = 1
+    -- Why did you guys ask for this? If set to "on" will cause all flame effects to rotate 
+    -- colors in sync and new smoke particules to spawn in that color. 
     inst.rainbow_mode = on_off.off
+    -- The flame color when based on a force field vector point just above flame_dead_force magnitude.
     inst.color_cool = Vec(7.7, 1, 0.8)
+    -- The flame color when based on a force field vector point at maximum magnitude.
     inst.color_hot = Vec(7.7, 1, 0.8)
 
+    -- The force field wrapped by this pyro field.
     inst.ff = inst_force_field_ff()
 
     return inst
 end
 
 function inst_flame(pos)
+    -- A flame object is rendered as a point light in a diffusing smoke particle.
     local inst = {}
     inst.pos = pos
+    -- Normalized life of the flame as defined by the normalized magnitude of 
+    -- the underlying force field vector with flame_dead_force as a minimum.
     inst.life_n = 1
+    -- Parent FORCE FIELD POINT that this flame was spawned for.
     inst.parent = nil
-    inst.motion_vec = Vec()
     return inst
 end
 
 function make_flame_effect(pyro, flame, dt)
+    -- Render effects for one flame instance
+    -- Flame life is the normalized value of the underlying force field vector magnitude on a scale
+    -- from the flame_dead_force to the max magnitude allowed for the field [0 to 1]. This differs 
+    -- from force_n that is the normalized value on a scale from the force field dead_force (usually lower
+    -- than flame_dead_force).
     flame.life_n = math.min(1, range_value_to_fraction(flame.parent.mag, pyro.flame_dead_force, pyro.ff.f_max))
     local color = Vec()
     local intensity = pyro.flame_light_intensity
@@ -85,7 +145,7 @@ function make_flame_effect(pyro, flame, dt)
     ParticleTile(pyro.flame_tile)
     SpawnParticle(VecAdd(flame.pos, random_vec(pyro.flame_jitter)), Vec(), pyro.flame_puff_life)
 
-    if pyro.smoke_life > 0 and math.random(1, 10) == 1 then
+    if pyro.smoke_life > 0 and math.random() < pyro.smoke_amount_n then
             -- smoke puff
             ParticleReset()
             ParticleType("smoke")
@@ -148,7 +208,6 @@ function spawn_flame_group(pyro, point, flame_table)
         local flame_pos = VecAdd(point.pos, VecScale(offset_dir, pyro.ff.resolution))
         local flame = inst_flame(point.pos)
         flame.parent = point
-        flame.motion_vec = point.vec
         table.insert(flame_table, flame)
     end
 end

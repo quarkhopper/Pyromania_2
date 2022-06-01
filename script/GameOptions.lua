@@ -322,7 +322,7 @@ function create_mode_option_set(name, display_name)
 		"min_smoke_size",
 		"Hot smoke particle size")
 	oSet.min_smoke_size.range.lower = 0.1
-	oSet.min_smoke_size.range.upper = 10
+	oSet.min_smoke_size.range.upper = 1
 	oSet.min_smoke_size.step = 0.1
 	oSet.options[#oSet.options + 1] = oSet.min_smoke_size
 
@@ -332,7 +332,7 @@ function create_mode_option_set(name, display_name)
 		"max_smoke_size",
 		"Cool smoke particle size")
 	oSet.max_smoke_size.range.lower = 0.1
-	oSet.max_smoke_size.range.upper = 10
+	oSet.max_smoke_size.range.upper = 1
 	oSet.max_smoke_size.step = 0.1
 	oSet.options[#oSet.options + 1] = oSet.max_smoke_size
 
@@ -341,10 +341,20 @@ function create_mode_option_set(name, display_name)
 		2,
 		"smoke_life",
 		"Lifetime of smoke particles")
-	oSet.smoke_life.range.lower = 0.5
+	oSet.smoke_life.range.lower = 0
 	oSet.smoke_life.range.upper = 5
 	oSet.smoke_life.step = 0.5
 	oSet.options[#oSet.options + 1] = oSet.smoke_life
+
+	oSet.smoke_amount = create_mode_option(
+		option_type.numeric, 
+		0.1,
+		"smoke_amount",
+		"Relative amount of smoke per flame spawn")
+	oSet.smoke_amount.range.lower = 0
+	oSet.smoke_amount.range.upper = 1
+	oSet.smoke_amount.step = 0.01
+	oSet.options[#oSet.options + 1] = oSet.smoke_amount
 
 	oSet.impulse_const = create_mode_option(
 		option_type.numeric, 

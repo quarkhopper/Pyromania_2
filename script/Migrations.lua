@@ -90,5 +90,36 @@ function migrate_option_set(option_set_ser)
         option_set_ser = join_strings(set_parts, DELIM.OPTION_SET)
     end
 
+    if version == "1.3" then
+    	-- from version 1.3 to 1.4 with relative smoke amount
+        version = "1.4"
+        local set_parts = split_string(option_set_ser, DELIM.OPTION_SET)
+        set_parts[3] = version
+        local new_parts = {set_parts[1], set_parts[2], set_parts[3]}
+        for i = 4, #set_parts do
+            local option_ser = set_parts[i]
+            local option = mode_option_from_string(option_ser)
+            if option.key == "smoke_life" then
+                -- put the smoke life option in as is
+                new_parts[#new_parts + 1] = option
+
+                -- put the new option after the smoke_life option
+                local smoke_amount = create_mode_option(
+                    option_type.numeric, 
+                    0.1,
+                    "smoke_amount",
+                    "Relative amount of smoke per flame spawn")
+                smoke_amount.range.lower = 0
+                smoke_amount.range.upper = 1
+                smoke_amount.step = 0.01
+                local ser = mode_option_to_string(smoke_amount)
+                set_parts[#new_parts + 1] = ser
+            else
+                new_parts[#new_parts + 1] = option_ser
+            end
+            option_set_ser = join_strings(new_parts, DELIM.OPTION_SET)
+        end
+    end
+
     return option_set_ser
 end
