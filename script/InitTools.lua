@@ -74,7 +74,7 @@ function init_shock_field()
     pyro.max_player_hurt = 0.01
     pyro.rainbow_mode = false
     pyro.ff.resolution = 2
-    pyro.ff.meta_resolution = 5
+    pyro.ff.meta_resolution = 4
     pyro.ff.f_max = 10
     pyro.ff.f_dead = 1
     pyro.ff.decay = 0.15
