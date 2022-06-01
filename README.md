@@ -12,10 +12,12 @@ PyroField.lua is encapsulated and can be exported with ForceField.lua and Utils.
 Limit on the total number of flame particles (point light in smoke particles) that can be spawned per tool. Above this limit flames will be randomly culled. 
 #### Max field points (simulation_points)
 Limit on the maximum number of vector field points that can be spawned per tool by the mod. Above this limit field points will be randomly culled.  
-Common tool options
+#### Visible shock waves (visible_shock_waves)
+Turns visibly rendered shock waves on and off. Shock effects will still occur but there won't be an overpressure condensation wave. Turning this off may improve performance. 
+### Common tool options
 #### Max field force per point (f_max)
 The maximum magnitude of a vector in the vector field. The fraction of this maximum is commonly used in calculations throughout the mod. This is the force that is added to the field array when a flame effect is triggered and propagates away from that point. This value, with the decay, dead_force, and flame_dead_force parameters determine the length and intensity of flame effects. 
-Minimum field force per point (dead_force)
+#### Minimum field force per point (dead_force)
 A vector below this magnitude will be culled from the simulation. Setting this higher will result in shorter flame effects.  
 #### Whole field normalization decay per tick (decay)
 A universal amount subtracted from the magnitude of all vectors in the field per tick. Setting this higher will result in shorter flame effects.

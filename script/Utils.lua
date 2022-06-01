@@ -66,15 +66,16 @@ function reflection_vector(vec, normal)
 	return VecSub(w, u)
 end
 
-function radiate(center_vec, spread, count)
+function radiate(center_vec, spread, count, offset)
     -- returns unit radiations from a center vec
+    offset = offset or 0
     local dir = VecNormalize(center_vec)
     local t = Transform(Vec(), QuatLookAt(Vec(), VecAdd(Vec(), center_vec)))
 	local delta = 360/count
 
     local radiations = {}
 	for i = 1, count do
-		local a = QuatRotateQuat(QuatEuler(0, 0, i * delta), QuatEuler(spread, 0, 0))
+		local a = QuatRotateQuat(QuatEuler(0, 0, (i * delta) + offset), QuatEuler(spread, 0, 0))
 		local v = QuatRotateVec(a, FF.FORWARD)
 		table.insert(radiations, TransformToParentPoint(t, v))
 	end

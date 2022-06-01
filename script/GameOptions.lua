@@ -156,6 +156,14 @@ function create_general_option_set()
 	oSet.simulation_points.step = 1
 	oSet.options[#oSet.options + 1] = oSet.simulation_points
 
+	oSet.visible_shock_waves = create_mode_option(
+		option_type.enum,
+		on_off.on,
+		"visible_shock_waves",
+		"Visible shock waves")
+	oSet.visible_shock_waves.accepted_values = on_off
+	oSet.options[#oSet.options + 1] = oSet.visible_shock_waves
+
 	return oSet
 end
 
@@ -373,7 +381,7 @@ function create_mode_option_set(name, display_name)
 		4,
 		"fire_density",
 		"Fire density")
-	oSet.fire_density.range.lower = 0.1
+	oSet.fire_density.range.lower = 0
 	oSet.fire_density.range.upper = 10
 	oSet.fire_density.step = 0.1
 	oSet.options[#oSet.options + 1] = oSet.fire_density
@@ -393,7 +401,7 @@ function create_mode_option_set(name, display_name)
 		0.55,
 		"max_player_hurt",
 		"Maximum player damage per tick")
-	oSet.max_player_hurt.range.lower = 0.01
+	oSet.max_player_hurt.range.lower = 0
 	oSet.max_player_hurt.range.upper = 1
 	oSet.max_player_hurt.step = 0.01
 	oSet.options[#oSet.options + 1] = oSet.max_player_hurt
@@ -446,9 +454,10 @@ function create_bomb_option_set()
 
 	oSet.dead_force.value = 0.15
 	oSet.decay.value = 0.05
-	oSet.heat_rise.value = 0.7
-	oSet.point_split.value = 6
-	oSet.extend_spread.value = 68
+	oSet.prop_decay.value = 0.02
+	oSet.heat_rise.value = 1
+	oSet.point_split.value = 4
+	oSet.extend_spread.value = 65
 	oSet.flame_dead_force.value = 0.6
 	oSet.min_smoke_size.value = 0.3
 	oSet.max_smoke_size.value = 0.6
@@ -493,9 +502,10 @@ function create_rocket_option_set()
 	oSet.f_max.value = 5
 	oSet.dead_force.value = 0.15
 	oSet.decay.value = 0.06
+	oSet.prop_decay.value = 0.01
 	oSet.heat_rise.value = 0.4
-	oSet.point_split.value = 3
-	oSet.extend_spread.value = 68
+	oSet.point_split.value = 2
+	oSet.extend_spread.value = 20
 	oSet.flame_dead_force.value = 0.6
 	oSet.min_smoke_size.value = 0.3
 	oSet.max_smoke_size.value = 0.6

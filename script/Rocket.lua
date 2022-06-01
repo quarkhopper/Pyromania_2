@@ -78,7 +78,7 @@ function rocket_tick(dt)
             for i = 1, 3 do
                 local force_pos = TransformToParentPoint(rocket.trans, Vec(0, 0, i * TOOL.ROCKET.pyro.ff.resolution))
                 apply_force(TOOL.ROCKET.pyro.ff, force_pos, point_force)
-                -- create_shock(rocket.trans.pos, 0.5)
+                -- create_shock(rocket.trans.pos, 0.3)
             end  
             PlaySound(rocket_boom_sound, bomb_pos, 100)
         elseif rocket.dist_left <= 0 then 

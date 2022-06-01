@@ -453,6 +453,7 @@ function make_gun_effect()
 end
 
 function create_shock(pos, scale)
+	SHOCK_FIELD.render_flames = TOOL.GENERAL.visible_shock_waves.value == on_off.on
 	for i = 1, 50 do
 		local dir = VecNormalize(random_vec(1))
 		apply_force(SHOCK_FIELD.ff, VecAdd(pos, VecScale(dir, 2)), VecScale(dir, scale * 10))

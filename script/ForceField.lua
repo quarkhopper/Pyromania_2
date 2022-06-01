@@ -84,7 +84,7 @@ function extend_field(ff)
         local point = points[i]
         if point.edge then 
             extend_point(ff, point)
-            local extend_dirs = radiate(point.vec, ff.extend_spread, ff.point_split)
+            local extend_dirs = radiate(point.vec, ff.extend_spread, ff.point_split, math.random() * 360)
             for i = 1, #extend_dirs do
                 -- create a temporary point to act as the parent to the potential 
                 -- extension

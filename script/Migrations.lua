@@ -71,5 +71,24 @@ function migrate_option_set(option_set_ser)
         end
     end
 
+    if version == "1.2" then
+    	-- from version 1.2 to 1.3 with shock wave on/off
+        version = "1.3"
+        local set_parts = split_string(option_set_ser, DELIM.OPTION_SET)
+        set_parts[3] = version
+        local option_name = set_parts[1]
+        if option_name == "general" then 
+            local visible_shock_waves = create_mode_option(
+                option_type.enum,
+                on_off.on,
+                "visible_shock_waves",
+                "Visible shock waves")
+            visible_shock_waves.accepted_values = on_off
+            local ser = mode_option_to_string(visible_shock_waves)
+            set_parts[#set_parts + 1] = ser
+        end
+        option_set_ser = join_strings(set_parts, DELIM.OPTION_SET)
+    end
+
     return option_set_ser
 end

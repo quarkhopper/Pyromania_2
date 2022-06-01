@@ -16,6 +16,7 @@ function inst_pyro()
     inst.max_smoke_size = 1
     inst.min_smoke_size = 0.3
     inst.smoke_life = 3
+    inst.render_flames = true
     inst.flame_puff_life = 1
     inst.flame_jitter = 0
     inst.flame_tile = 0
@@ -211,8 +212,11 @@ function flame_tick(pyro, dt)
     pyro.tick_count = pyro.tick_count - 1
     if pyro.tick_count == 0 then pyro.tick_count = pyro.tick_interval end
     force_field_ff_tick(pyro.ff, dt)
-    spawn_flames(pyro)
-    make_flame_effects(pyro, dt)
+    
+    if pyro.render_flames then 
+        spawn_flames(pyro)
+        make_flame_effects(pyro, dt)
+    end
 
     if (pyro.tick_count + 2) % 3 == 0 then 
         collision_fx(pyro)
