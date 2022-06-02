@@ -586,7 +586,7 @@ function create_thrower_option_set()
 	oSet.flame_color_hot.value = Vec(7.5, 0.9, 0.6)
 	oSet.impulse_const.value = 0
 	oSet.impulse_radius.value = 0
-	oSet.contact_damage_scale.value = 0.1
+	oSet.contact_damage_scale.value = 0.05
 	oSet.fire_ignition_radius.value = 2
 	oSet.fire_density.value = 10
 	oSet.max_player_hurt.value = 0.1
