@@ -155,7 +155,7 @@ function make_flame_effect(pyro, flame, dt)
         local afterlife_n = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force)
         smoke_size = fraction_to_range_value(afterlife_n, 0.1, pyro.max_smoke_size)
         -- Jitter is added to an ember to simulate flutter. Ok, it just looks better to me.
-        local jitter = random_vec(pyro.ff.resolution/2)
+        local jitter = random_vec(pyro.ff.resolution * 0.2)
         flame.pos = VecAdd(flame.pos, jitter)
     end
     -- finish setting the fire puff particle params
