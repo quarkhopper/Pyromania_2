@@ -238,7 +238,7 @@ function create_mode_option_set(name, display_name)
 		option_type.numeric, 
 		60,
 		"extend_spread",
-		"Field propagation angle of spread (degrees)")
+		"Angle of spread (degrees)")
 	oSet.extend_spread.range.lower = 0
 	oSet.extend_spread.range.upper = 180
 	oSet.extend_spread.step = 1
