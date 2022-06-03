@@ -38,7 +38,6 @@ function thrower_tick(dt)
                     new_fireball.speed = 0.5
                     new_fireball.splits_remaining = fireball.splits_remaining - 1
                     table.insert(fireballs_next_tick, new_fireball) 
-                    -- apply_force(TOOL.THROWER.pyro.ff, fireball.pos, VecScale(new_dirs[j], TOOL.THROWER.pyro.ff.f_max))
                 end
             else
                 -- continued flight
@@ -51,8 +50,6 @@ function thrower_tick(dt)
                     local fire_point = VecAdd(fireball.pos, VecScale(fireball.dir, -1 * (fireball.speed / j)))
                     apply_force(TOOL.THROWER.pyro.ff, fire_point, point_force)
                 end
-                -- DebugCross(fireball.pos)
-                -- DebugLine(fireball.pos, VecAdd(fireball.pos, VecScale(fireball.dir, fireball.speed)))
                 table.insert(fireballs_next_tick, fireball)
             end
 		end

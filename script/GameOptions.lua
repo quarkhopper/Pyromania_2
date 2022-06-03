@@ -510,7 +510,7 @@ function create_rocket_option_set()
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
 
 	oSet.f_max.value = 10
-	oSet.dead_force.value = 0.1
+	oSet.dead_force.value = 0.15
 	oSet.decay.value = 0.045
 	oSet.prop_decay.value = 0.18
 	oSet.heat_rise.value = 0.4
