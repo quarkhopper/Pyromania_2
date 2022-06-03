@@ -514,7 +514,7 @@ function create_rocket_option_set()
 	oSet.decay.value = 0.045
 	oSet.prop_decay.value = 0.18
 	oSet.heat_rise.value = 0.4
-	oSet.point_split.value = 3
+	oSet.point_split.value = 1
 	oSet.extend_spread.value = 10
 	oSet.flame_dead_force.value = 0.6
 	oSet.min_smoke_size.value = 0.3
