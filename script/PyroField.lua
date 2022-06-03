@@ -297,7 +297,9 @@ function collision_fx(pyro)
         local force_n = range_value_to_fraction(VecLength(contact.point.vec), pyro.flame_dead_force, pyro.ff.f_max)
         -- make holes
         local voxels = force_n * pyro.hole_punch_scale
-        MakeHole(contact.hit_point, voxels * 10, voxels * 5, voxels, true)
+        if voxels > 0.1 then 
+            MakeHole(contact.hit_point, voxels * 10, voxels * 5, voxels, true)
+        end
     end
 end
 
