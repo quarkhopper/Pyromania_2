@@ -424,7 +424,7 @@ function create_bomb_option_set()
 
 	oSet.explosion_fireball_radius = create_mode_option(
 		option_type.numeric, 
-		1,
+		0.5,
 		"explosion_fireball_radius",
 		"Explosion fireball radius")
 	oSet.explosion_fireball_radius.range.lower = 0.5
