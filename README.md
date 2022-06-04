@@ -11,24 +11,24 @@ PyroField.lua is encapsulated and can be exported with ForceField.lua and Utils.
 ### Rocket
 #### Gutter
 Punches in and rips apart from inside
-Max force per point = 5
-Min force per point = 0.2
-Whole field decay = 0.1
-Field prop decay = 0.2
-Field prop splits = 1
-Angle = 55
-Flame dead force = 0.3
-Field contact damage scale = 0.35
+- Max force per point = 5
+- Min force per point = 0.2
+- Whole field decay = 0.1
+- Field prop decay = 0.2
+- Field prop splits = 1
+- Angle = 55
+- Flame dead force = 0.3
+- Field contact damage scale = 0.35
 #### Punch through
 This type of explosion pushes forward in mostly the direction the rocket was traveling, braking more interior walls in the same direction.
-Max force per point = 10
-Min force per point = 015
-Whole field decay = 0.045
-Field prop decay = 0.18
-Field prop splits = 2
-Angle = 10
-Flame dead force = 0.6
-Field contact damage scale = 0.5
+- Max force per point = 10
+- Min force per point = 015
+- Whole field decay = 0.045
+- Field prop decay = 0.18
+- Field prop splits = 2
+- Angle = 10
+- Flame dead force = 0.6
+- Field contact damage scale = 0.5
 ## Options controlling the engine
 ### General options
 #### Max flames to render (max_flames)
