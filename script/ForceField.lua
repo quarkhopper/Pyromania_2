@@ -234,9 +234,7 @@ function normalize_field(ff)
         -- sort the points from least to greatest magnitude
         table.sort(points, function (p1, p2) return p1.mag < p2.mag end )
         while #points > FF.MAX_SIM_POINTS do
-            -- This tends to cull points on the extreme ends of magnitude for 
-            -- better dynamics.
-            local index = math.ceil((1.6 * math.random() - 1)^2 * #points)
+            local index = math.random(#points) --math.ceil((1.6 * math.random() - 1)^2 * #points)
             if index ~= 0 then 
                 local remove_point = points[index]
                 field_put(ff.field, nil, remove_point.coord)
