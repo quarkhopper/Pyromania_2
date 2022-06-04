@@ -509,17 +509,17 @@ function create_rocket_option_set()
 	oSet.max_dist.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
 
-	oSet.f_max.value = 10
-	oSet.dead_force.value = 0.15
-	oSet.decay.value = 0.045
-	oSet.prop_decay.value = 0.18
+	oSet.f_max.value = 5
+	oSet.dead_force.value = 0.2
+	oSet.decay.value = 0.1
+	oSet.prop_decay.value = 0.2
 	oSet.heat_rise.value = 0.4
-	oSet.point_split.value = 2
-	oSet.extend_spread.value = 10
-	oSet.flame_dead_force.value = 0.6
+	oSet.point_split.value = 1
+	oSet.extend_spread.value = 55
+	oSet.flame_dead_force.value = 0.3
 	oSet.min_smoke_size.value = 0.3
 	oSet.max_smoke_size.value = 0.6
-	oSet.contact_damage_scale.value = 0.5
+	oSet.contact_damage_scale.value = 0.2
 	oSet.fire_density.value = 8
 	oSet.fire_ignition_radius.value = 5
 
