@@ -92,12 +92,12 @@ function init_shock_field()
     pyro.hole_punch_scale = 0.2
     pyro.max_player_hurt = 0.01
     pyro.rainbow_mode = false
-    pyro.ff.resolution = 2
+    pyro.ff.resolution = 2.5
     pyro.ff.meta_resolution = 4
     pyro.ff.f_max = 10
     pyro.ff.f_dead = 2
-    pyro.ff.decay = 0.3
-    pyro.ff.prop_decay = 0.3
+    pyro.ff.decay = 0.08
+    pyro.ff.prop_decay = 0.2
     pyro.ff.heat_rise = 0
     pyro.ff.point_split = 4
     pyro.ff.extend_spread = 55
