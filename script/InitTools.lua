@@ -74,7 +74,7 @@ end
 function init_shock_field()
     -- special parameters that make a shock wave field work
     local pyro = inst_pyro()
-    pyro.flames_per_spawn = 10
+    pyro.flames_per_spawn = 5
     pyro.flame_light_intensity = 0
     pyro.flame_dead_force = 0
     pyro.max_smoke_size = 1
