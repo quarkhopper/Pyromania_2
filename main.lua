@@ -169,15 +169,18 @@ function draw_option_modal()
 					UiText("Page next")
 				UiPop()
 			end
+			-- SAVE OPTIONS
 			if InputPressed("return") then 
 				save_option_sets()
 				load_option_sets()
 				editing_options = false 
 			end
+			-- DISCARD CHANGES
 			if InputPressed("backspace") then
 				load_option_sets()
 				editing_options = false
 			end
+			-- REVERT TO DEFAULTS
             if InputPressed("delete") then
                 option_set_reset(page_options.name)
 				load_option_sets()

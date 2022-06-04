@@ -28,6 +28,8 @@ function load_option_sets()
     -- constrained, what values are valid and how the option control
     -- is presented to the user.
 	TOOL.GENERAL = load_option_set("general", true)
+    PYRO.MAX_FLAMES = TOOL.GENERAL.max_flames.value
+    FF.MAX_SIM_POINTS = TOOL.GENERAL.simulation_points.value
 	TOOL.BOMB = load_option_set("bomb", true)
     init_pyro(TOOL.BOMB)
 	TOOL.ROCKET = load_option_set("rocket", true)

@@ -148,7 +148,7 @@ function create_general_option_set()
 
 	oSet.simulation_points = create_mode_option(
 		option_type.numeric, 
-		500,
+		200,
 		"simulation_points",
 		"Max field points")
 	oSet.simulation_points.range.lower = 1
