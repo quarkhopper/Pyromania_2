@@ -97,7 +97,7 @@ function init_shock_field()
     pyro.ff.f_max = 10
     pyro.ff.f_dead = 2
     pyro.ff.decay = 0.08
-    pyro.ff.prop_decay = 0.2
+    pyro.ff.prop_decay = 0.6
     pyro.ff.heat_rise = 0
     pyro.ff.point_split = 4
     pyro.ff.extend_spread = 55
