@@ -428,9 +428,7 @@ function handle_input(dt)
 				GetPlayerGrabShape() == 0 and
 				InputDown("RMB") and 
 				not InputDown("LMB") then
-					if not DEBUG_MODE then 
-						thrower_muzzle_flames()
-					end
+					thrower_muzzle_flames()
 					local trans = GetPlayerTransform()
 					PlayLoop(thrower_sound, trans.pos, 50)
 					if secondary_shoot_timer == 0 then

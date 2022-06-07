@@ -308,7 +308,6 @@ function flame_tick(pyro, dt)
     if pyro.tick_count == 0 then pyro.tick_count = pyro.tick_interval end
     force_field_ff_tick(pyro.ff, dt)
     
-    if DEBUG_MODE then return end
     if pyro.render_flames then 
         spawn_flames(pyro)
         make_flame_effects(pyro, dt)
