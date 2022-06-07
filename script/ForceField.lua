@@ -37,7 +37,7 @@ function inst_force_field_ff()
     inst.prop_split = 6
     -- The angle in degrees that spokes are produced from the center parent vector when 
     -- propagating. 
-    inst.prop_angle = 45
+    -- inst.prop_angle = 45
     -- directional variation added on propagation.
     inst.dir_jitter = 0
     -- directional bias to apply over time, such as for heat rise or gravity. Does not affect force magnitude.
@@ -146,8 +146,7 @@ function propagate_field_forces(ff, dt)
             local prop_dir = prop_dirs[i]
             propagate_point_force(ff, point, prop_dir, trans_mag, dt)
         end
-        if point.hit then point.cull = true 
-        elseif point.mag > ff.f_dead then point.cull = false end
+        if point.mag > ff.f_dead then point.cull = false end
     end
 end
 
@@ -163,9 +162,27 @@ function propagate_point_force(ff, point, trans_dir, trans_mag, dt)
             -- check if we're hitting something on the way to extending
             local hit, dist, normal, shape = QueryRaycast(point.pos, trans_dir, 2 * ff.resolution * ff.extend_scale, 0.025)
             if hit then 
+
                 -- log the contact, don't create a new extension
                 local hit_point = VecAdd(point.pos, VecScale(trans_dir, dist))
                 table.insert(ff.contacts, inst_field_contact(point, hit_point, normal, shape))
+                -- redirect a vector parallel to the surface
+                -- when directly opposed to the normal of the impacted surface the 
+                -- abs value dot product (for unit vectors) will be 1. This is when 
+                -- the force vector will be directly annihilated. parallel to the
+                -- surface will be 0, and the force vector is not redirected at all 
+                local redirection_factor = math.abs(VecDot(normal, trans_dir))
+                -- fun note! When I first made this calculation I did an oopsy and 
+                -- scaled the normal by the distance to the hit point (instead of, at max,
+                -- the magnitude of the force). When a force impacted
+                -- a surface at shallower than right angles this ADDED energy, and 
+                -- caused fire to spread out and crawl over everything in the map.
+                -- it looked really cool but looking really cool as your application 
+                -- terminates upsets people, I GUESS.
+                local new_vec =  VecAdd(point.vec, VecScale(normal, point.mag * redirection_factor))
+                -- readjust as this sometimes results in added energy. 
+                local new_vec = VecScale(VecNormalize(new_vec), math.min(point.mag, VecLength(new_vec)))
+                set_point_vec(point, new_vec)
                 point.hit = true
             elseif point.mag > ff.f_dead then 
                 -- create the point in the new space

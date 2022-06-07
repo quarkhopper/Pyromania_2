@@ -244,15 +244,15 @@ function create_mode_option_set(name, display_name)
 	oSet.prop_split.step = 1
 	oSet.options[#oSet.options + 1] = oSet.prop_split
 
-	oSet.prop_angle = create_mode_option(
-		option_type.numeric, 
-		60,
-		"prop_angle",
-		"Spread angle (degrees)")
-	oSet.prop_angle.range.lower = 0
-	oSet.prop_angle.range.upper = 180
-	oSet.prop_angle.step = 1
-	oSet.options[#oSet.options + 1] = oSet.prop_angle
+	-- oSet.prop_angle = create_mode_option(
+	-- 	option_type.numeric, 
+	-- 	60,
+	-- 	"prop_angle",
+	-- 	"Spread angle (degrees)")
+	-- oSet.prop_angle.range.lower = 0
+	-- oSet.prop_angle.range.upper = 180
+	-- oSet.prop_angle.step = 1
+	-- oSet.options[#oSet.options + 1] = oSet.prop_angle
 
 	oSet.extend_scale = create_mode_option(
 		option_type.numeric, 
@@ -489,7 +489,7 @@ function create_bomb_option_set()
 	oSet.bias_gain.value = 0.1
 	oSet.heat_rise.value = 0.3
 	oSet.prop_split.value = 3
-	oSet.prop_angle.value = 15
+	-- oSet.prop_angle.value = 15
 	oSet.extend_scale.value = 3
 	oSet.dir_jitter.value = 0
 	oSet.field_resolution.value = 0.5
@@ -545,16 +545,16 @@ function create_rocket_option_set()
 	oSet.max_dist.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
 
-	oSet.f_max.value = 1000
-	oSet.f_dead.value = 0.08
-	oSet.flame_dead_force.value = 3
-	oSet.trans_gain.value = 0.25
-	oSet.bias_gain.value = 0.3
-	oSet.heat_rise.value = 0.3
+	oSet.f_max.value = 5000
+	oSet.f_dead.value = 0.15
+	oSet.flame_dead_force.value = 5
+	oSet.trans_gain.value = 0.2
+	oSet.bias_gain.value = 0.25
+	oSet.heat_rise.value = 0.1
 	oSet.prop_split.value = 3
-	oSet.prop_angle.value = 30
+	-- oSet.prop_angle.value = 30
 	oSet.extend_scale.value = 1
-	oSet.dir_jitter.value = 5
+	oSet.dir_jitter.value = 0
 	oSet.field_resolution.value = 0.5
 	oSet.meta_resolution.value = 2
 	oSet.flames_per_point.value = 4
@@ -624,7 +624,7 @@ function create_thrower_option_set()
 	oSet.bias_gain.value = 0.8
 	oSet.heat_rise.value = 0
 	oSet.prop_split.value = 2
-	oSet.prop_angle.value = 10
+	-- oSet.prop_angle.value = 10
 	oSet.extend_scale.value = 1.5
 	oSet.dir_jitter.value = 0
 	oSet.field_resolution.value = 0.1

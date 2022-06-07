@@ -1,5 +1,11 @@
 #include "ForceField.lua"
 #include "Utils.lua"
+--[[
+    This script is a wrapper for ForceField.lua. Where ForceField.lua covers the 
+    "physics" of the forces moving around, this covers the fire and SFX and wraps
+    that field. 
+]]--
+
 
 PYRO = {} -- Static PyroField options
 PYRO.MAX_FLAMES = 500 -- default maximum number of flames to render
@@ -134,11 +140,20 @@ function make_flame_effect(pyro, flame, dt)
             color = HSVToRGB(pyro.color_cool)
         end
     end
-    if flame.life_n < 0 then 
-        -- Ember mode: intensity goes from 0.8 of the normal light intensity down to zero based 
-        -- on the fraction of the range from the mag the flame died (flame_dead_force) to total 
-        -- force death (f_dead)
-        intensity = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force) * 0.8
+
+    local particle_size = 0
+    local puff_value = 1
+    if flame.life_n >= 0 then 
+        particle_size = fraction_to_range_value(flame.life_n, pyro.max_smoke_size, pyro.min_smoke_size)
+    else
+        local afterlife_n = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force)
+        puff_value = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force)
+        particle_size = fraction_to_range_value(afterlife_n, 0.2, pyro.max_smoke_size)
+        intensity = fraction_to_range_value(afterlife_n, 0.2, intensity)
+        -- Jitter is added to an ember to simulate flutter. this prevents the smaller sized particules from 
+        -- exposing the field grid too much. 
+        local jitter = random_vec(pyro.ff.resolution * 0.5)
+        flame.pos = VecAdd(flame.pos, jitter)
     end
     -- Put the light source in the middle of where the diffusing flame puff will be
     PointLight(flame.pos, color[1], color[2], color[3], intensity)
@@ -146,22 +161,9 @@ function make_flame_effect(pyro, flame, dt)
     ParticleReset()
     ParticleType("smoke")
     ParticleAlpha(pyro.flame_opacity, 0, "easeout", 0, 0.5)
-    -- smoke size is controlled by the normalized life of the flame [1 to 0] above the flame_dead_force 
-    -- threshold. below flame_dead_force (ember mode) the size goes from the max size down to 0.1. 
-    local smoke_size = 0
-    if flame.life_n >= 0 then
-        smoke_size = fraction_to_range_value(flame.life_n, pyro.max_smoke_size, pyro.min_smoke_size)
-    else
-        local afterlife_n = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force)
-        smoke_size = fraction_to_range_value(afterlife_n, 0.2, pyro.min_smoke_size) -- pyro.max_smoke_size)
-        -- Jitter is added to an ember to simulate flutter. Ok, it just looks better to me.
-        local jitter = random_vec(pyro.ff.resolution)
-        flame.pos = VecAdd(flame.pos, jitter)
-    end
-    -- finish setting the fire puff particle params
     ParticleDrag(0.25)
-    ParticleRadius(smoke_size)
-    local smoke_color = HSVToRGB(Vec(0, 0, 1))
+    ParticleRadius(particle_size)
+    local smoke_color = HSVToRGB(Vec(0, 0, puff_value))
     ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
     ParticleGravity(pyro.gravity)
     ParticleTile(pyro.flame_tile)
@@ -169,14 +171,14 @@ function make_flame_effect(pyro, flame, dt)
     -- in options.
     SpawnParticle(VecAdd(flame.pos, random_vec(pyro.flame_jitter)), Vec(), pyro.flame_puff_life)
 
-    -- if black smoke amount is set above 0, and chance favors it...
-    if pyro.smoke_amount_n > 0 and math.random() < pyro.smoke_amount_n then
+    -- if black smoke amount is set above 0, we're not in ember mode, and chance favors it...
+    if flame.life_n > 0 and pyro.smoke_amount_n > 0 and math.random() < pyro.smoke_amount_n then
             -- Set up a smoke puff
             ParticleReset()
             ParticleType("smoke")
             ParticleDrag(0.5)
             ParticleAlpha(0.5, 0.9, "linear", 0.05, 0.5)
-            ParticleRadius(smoke_size)
+            ParticleRadius(particle_size)
             if pyro.rainbow_mode == on_off.on then
                 -- Rainbow mode: smoke puff is the universal color of the tick
                 smoke_color = PYRO.RAINBOW
@@ -284,7 +286,7 @@ function check_hurt_player(pyro)
             local hit = QueryRaycast(point.pos, VecNormalize(vec_to_player), dist_to_player, 0.025)
             if not hit then             
                 local factor = 1 - (dist_to_player / pyro.impulse_radius)
-                factor = factor * (VecLength(point.vec) / pyro.ff.f_max)
+                factor = factor * (VecLength(point.vec) / pyro.ff.f_max) + 0.01
                 hurt_player(factor * pyro.max_player_hurt)
             end
         end

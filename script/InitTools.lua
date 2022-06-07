@@ -65,7 +65,7 @@ function init_pyro(tool)
     pyro.ff.f_dead = tool.f_dead.value
     pyro.ff.bias = Vec(0, tool.heat_rise.value, 0)
     pyro.ff.prop_split = tool.prop_split.value
-    pyro.ff.prop_angle = tool.prop_angle.value
+    -- pyro.ff.prop_angle = tool.prop_angle.value
     pyro.ff.extend_scale = tool.extend_scale.value
     pyro.ff.trans_gain = tool.trans_gain.value
     pyro.ff.bias_gain = tool.bias_gain.value
@@ -99,7 +99,7 @@ function init_shock_field()
     pyro.ff.f_dead = 0.1
     pyro.ff.bias = Vec()
     pyro.ff.prop_split = 4
-    pyro.ff.prop_angle = 55
+    -- pyro.ff.prop_angle = 55
     pyro.extend_scale = 3
     pyro.ff.dir_jitter = 5
     pyro.ff.trans_gain = 0.05
