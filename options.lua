@@ -1,7 +1,14 @@
 #include "script/Defs.lua"
 
 function init()
-    keybind_options = {KEY.PLANT_BOMB, KEY.DETONATE, KEY.STOP_FIRE, KEY.OPTIONS, KEY.RANDOM_BOOM, KEY.ACTION_MOVIE}
+    keybind_options = {
+        KEY.PLANT_BOMB, 
+        KEY.DETONATE, 
+        KEY.STOP_FIRE, 
+        KEY.OPTIONS, 
+        KEY.RANDOM_BOOM, 
+        KEY.ACTION_MOVIE, 
+        KEY.DEBUG}
     updating_key = nil
 end
 

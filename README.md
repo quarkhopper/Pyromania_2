@@ -48,10 +48,10 @@ A universal amount subtracted from the magnitude of all vectors in the field per
 The amount of decay applied to a vector point when it propagates force to a child. Setting this higher will result in a less volumous explosion with a thinner front.
 #### Field heat rise dir adjust (heat_rise)
 An upward-pointing vector of this magnitude is added to the unit vector of all points in the field per tick. Setting this higher will result in flame effects that rise faster. Note: This is in the ForceField module for convenience even though it is technically specific to fire effects.
-#### Field propagation splits (point_split)
-Force propagates through the vector field by radiating in evenly spaced “spokes” at a set angle (extend_spread) from the parent vector. This setting controls the number of “spokes”. Setting this higher will result in more round, billowy flames. Too low and force will propagate in lines in the field and will generally look strange on larger field resolutions. 
-#### Field propagation angle of spread (extend_spread)
-As mentioned in point_split above, this setting determines the angle that field propagation splits at. Smaller angles will cause the flames to propagate in more compact jets, and larger angles cause the flames to billow and boil more. Use angles above 30 degrees for flames to effectively “navigate” through confined spaces, such as hallways. 
+#### Field propagation splits (prop_split)
+Force propagates through the vector field by radiating in evenly spaced “spokes” at a set angle (prop_angle) from the parent vector. This setting controls the number of “spokes”. Setting this higher will result in more round, billowy flames. Too low and force will propagate in lines in the field and will generally look strange on larger field resolutions. 
+#### Field propagation angle of spread (prop_angle)
+As mentioned in prop_split above, this setting determines the angle that field propagation splits at. Smaller angles will cause the flames to propagate in more compact jets, and larger angles cause the flames to billow and boil more. Use angles above 30 degrees for flames to effectively “navigate” through confined spaces, such as hallways. 
 #### Field resolution (field_resolution)
 Game units to vector coordinates. One game unit = 10 voxels, so a field resolution of 0.1 means that each voxel has an individual vector. This effectively sets the scale of flame effects, with larger resolution numbers producing a larger (but more crude looking) effect field. 
 #### Metafield resolution (meta_resolution)

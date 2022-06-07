@@ -62,12 +62,13 @@ function init_pyro(tool)
     pyro.ff.resolution = tool.field_resolution.value
     pyro.ff.meta_resolution = tool.meta_resolution.value
     pyro.ff.f_max = tool.f_max.value
-    pyro.ff.f_dead = tool.dead_force.value
-    pyro.ff.decay = tool.decay.value
-    pyro.ff.prop_decay = tool.prop_decay.value
-    pyro.ff.heat_rise = tool.heat_rise.value
-    pyro.ff.point_split = tool.point_split.value
-    pyro.ff.extend_spread = tool.extend_spread.value
+    pyro.ff.f_dead = tool.f_dead.value
+    pyro.ff.bias = Vec(0, tool.heat_rise.value, 0)
+    pyro.ff.prop_split = tool.prop_split.value
+    pyro.ff.prop_angle = tool.prop_angle.value
+    pyro.ff.extend_scale = tool.extend_scale.value
+    pyro.ff.trans_gain = tool.trans_gain.value
+    pyro.ff.bias_gain = tool.bias_gain.value
     tool.pyro = pyro
 end
 
@@ -95,11 +96,13 @@ function init_shock_field()
     pyro.ff.resolution = 2.5
     pyro.ff.meta_resolution = 4
     pyro.ff.f_max = 10
-    pyro.ff.f_dead = 2
-    pyro.ff.decay = 0.08
-    pyro.ff.prop_decay = 0.6
-    pyro.ff.heat_rise = 0
-    pyro.ff.point_split = 4
-    pyro.ff.extend_spread = 55
+    pyro.ff.f_dead = 0.1
+    pyro.ff.bias = Vec()
+    pyro.ff.prop_split = 4
+    pyro.ff.prop_angle = 55
+    pyro.extend_scale = 3
+    pyro.ff.dir_jitter = 5
+    pyro.ff.trans_gain = 0.05
+    pyro.ff.bias_gain = 0
     SHOCK_FIELD = pyro
 end

@@ -1,5 +1,5 @@
-CURRENT_VERSION = "1.4"
-TOOL_NAME = "Pyromania"
+CURRENT_VERSION = "1"
+TOOL_NAME = "Pyromania 2"
 
 -- delimeters
 DELIM = {}
@@ -12,7 +12,7 @@ DELIM.OPTION = ";"
 -- registry related delimeters and strings
 REG = {}
 REG.DELIM = "."
-REG.TOOL_KEY = "pyromania"
+REG.TOOL_KEY = "pyromania_2"
 REG.TOOL_NAME = "savegame.mod.tool." .. REG.TOOL_KEY .. ".quarkhopper"
 REG.TOOL_OPTION = "option"
 REG.PREFIX_TOOL_OPTIONS = REG.TOOL_NAME .. REG.DELIM .. REG.TOOL_OPTION
@@ -37,6 +37,7 @@ KEY.STOP_FIRE = setup_keybind("Stop fire", "stop_fire", "V")
 KEY.OPTIONS = setup_keybind("Options", "options", "O")
 KEY.RANDOM_BOOM = setup_keybind("Random boom", "random_boom", "M")
 KEY.ACTION_MOVIE = setup_keybind("Action movie mode", "action_mode", "F5")
+KEY.DEBUG = setup_keybind("Debug mode", "debug mode", "F11")
 
 CONSTS = {}
 CONSTS.FLAME_COLOR_DEFAULT = Vec(7.7, 1, 0.8)

@@ -66,7 +66,13 @@ function reflection_vector(vec, normal)
 	return VecSub(w, u)
 end
 
-function radiate(center_vec, spread, count, offset)
+function vecs_equal(vec_a, vec_b)
+    return vec_a[1] == vec_b[1] and
+        vec_a[2] == vec_b[2] and
+        vec_a[3] == vec_b[3]
+end
+
+function radiate(center_vec, spread_angle, count, offset)
     -- returns unit radiations from a center vec
     offset = offset or 0
     local dir = VecNormalize(center_vec)
@@ -75,7 +81,7 @@ function radiate(center_vec, spread, count, offset)
 
     local radiations = {}
 	for i = 1, count do
-		local a = QuatRotateQuat(QuatEuler(0, 0, (i * delta) + offset), QuatEuler(spread, 0, 0))
+		local a = QuatRotateQuat(QuatEuler(0, 0, (i * delta) + offset), QuatEuler(spread_angle, 0, 0))
 		local v = QuatRotateVec(a, FF.FORWARD)
 		table.insert(radiations, TransformToParentPoint(t, v))
 	end

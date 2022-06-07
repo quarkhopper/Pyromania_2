@@ -43,13 +43,15 @@ function init()
 	-- true while the player has the options editor open
 	editing_options = false
 	option_page = 1
+
+	DEBUG_MODE = false
 end
 
 -------------------------------------------------
 -- Drawing
 -------------------------------------------------
 
-function draw()
+function draw(dt)
 	if action_mode then 
 		UiPush()
 			UiTranslate(UiCenter(), 27)
@@ -82,7 +84,30 @@ function draw()
 		UiText(KEY.RANDOM_BOOM.key.." to randomly explode something in your area", true)
 		UiText(KEY.ACTION_MOVIE.key.. " = DANGER !! ACTION MOVIE MODE ON/OFF")
 	UiPop()
+
+	if DEBUG_MODE then 
+		-- Debug display
+		UiPush()
+				UiTranslate(UiWidth() - 10, UiHeight() - UI.OPTION_TEXT_SIZE * 6)
+				UiAlign("right")
+				UiFont("bold.ttf", UI.OPTION_TEXT_SIZE)
+				UiTextOutline(0,0,0,1,0.5)
+				UiColor(1,1,1)
+				UiText("bomb energy = "..tostring(TOOL.BOMB.pyro.ff.energy), true)
+				UiText("rocket energy = "..tostring(TOOL.ROCKET.pyro.ff.energy), true)
+				local num_rocket_points = "--"
+				if TOOL.ROCKET.pyro.ff.field.points ~= nil then 
+					num_rocket_points = #TOOL.ROCKET.pyro.ff.field.points
+				end
+				UiText("rocket points = "..tostring(num_rocket_points), true	)
+				UiText("flamethrower energy = "..tostring(TOOL.THROWER.pyro.ff.energy), true)
+				UiText("shockwave energy = "..tostring(SHOCK_FIELD.ff.energy), true)
+				UiText("dt = "..tostring(dt))
+		UiPop()
+	end
 end
+
+
 
 -- draw the option editor
 function draw_option_modal()
@@ -403,7 +428,9 @@ function handle_input(dt)
 				GetPlayerGrabShape() == 0 and
 				InputDown("RMB") and 
 				not InputDown("LMB") then
-					make_gun_effect()
+					if not DEBUG_MODE then 
+						thrower_muzzle_flames()
+					end
 					local trans = GetPlayerTransform()
 					PlayLoop(thrower_sound, trans.pos, 50)
 					if secondary_shoot_timer == 0 then
@@ -412,6 +439,11 @@ function handle_input(dt)
 					end
 				end
 			
+				-- debug mode
+				if InputPressed(KEY.DEBUG.key) then
+					DEBUG_MODE = not DEBUG_MODE
+				end
+
 				-- shoot lock for when the player is grabbing and 
 				-- throwing things
 				if GetPlayerGrabShape() ~= 0 then
@@ -435,24 +467,6 @@ function stop_all_flames()
 	reset_ff(TOOL.BOMB.pyro.ff)
 	reset_ff(TOOL.THROWER.pyro.ff)
 	reset_ff(TOOL.ROCKET.pyro.ff)
-end
-
-function make_gun_effect()
-	local body = GetToolBody()
-	local trans = GetBodyTransform(body)
-	for i = 1, 10 do
-		local light_point = TransformToParentPoint(trans, Vec(0.3, -0.8, -2 - (0.2*i)))
-		light_point = VecAdd(light_point, random_vec(0.1))
-		ParticleReset()
-		ParticleType("smoke")
-		ParticleTile(0)
-		ParticleAlpha(1)
-		ParticleRadius(0.1 + (0.03 * i))
-		local smoke_color = HSVToRGB(Vec(0, 0, 1))
-		ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
-		SpawnParticle(light_point, Vec(), 0.2)
-		PointLight(light_point, 1, 0.3, 0.1, 1)
-	end
 end
 
 function create_shock(pos, scale)

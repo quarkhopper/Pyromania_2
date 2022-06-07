@@ -36,28 +36,30 @@ function rocket_tick(dt)
         local rocket = rockets[i]
         local hit, dist = QueryRaycast(rocket.trans.pos, rocket.dir, rocket.speed, 0.025)
         if hit then 
-            -- break a hole and on the next tick explode
-            for i = 1, rocket.speed * 10 do
-                local offset = i * 0.1
-                MakeHole(VecAdd(rocket.trans.pos, VecScale(rocket.dir, offset)), 1, 1, 1)
-            end
-            local puff_spokes = 12
-            local puff_size_start = 0.6
-            local puff_size_end = 0.1
-            local puff_steps = 15
-            local puff_color_value = 0.8
-            for k = 1, puff_spokes do
-                local puff_dist = math.random(2, 8)
-                local puff_dir = VecAdd(VecScale(rocket.dir, -1), random_vec(0.5))
-                for j = 1, puff_steps do
-                    local puff_rad = (puff_dist * j) / puff_steps
-                    local puff_pos = VecAdd(rocket.trans.pos, VecScale(puff_dir, puff_rad))
-                    ParticleReset()
-                    ParticleType("smoke")
-                    ParticleRadius(fraction_to_range_value(j/puff_steps, puff_size_start, puff_size_end))
-                    local smoke_color = VecScale(Vec(1,1,1), puff_color_value)
-                    ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
-                    SpawnParticle(puff_pos, Vec(), 2)                    
+            if not DEBUG_MODE then 
+                -- break a hole and on the next tick explode
+                for i = 1, rocket.speed * 10 do
+                    local offset = i * 0.1
+                    MakeHole(VecAdd(rocket.trans.pos, VecScale(rocket.dir, offset)), 1, 1, 1)
+                end
+                local puff_spokes = 12
+                local puff_size_start = 0.6
+                local puff_size_end = 0.1
+                local puff_steps = 15
+                local puff_color_value = 0.8
+                for k = 1, puff_spokes do
+                    local puff_dist = math.random(2, 8)
+                    local puff_dir = VecAdd(VecScale(rocket.dir, -1), random_vec(0.5))
+                    for j = 1, puff_steps do
+                        local puff_rad = (puff_dist * j) / puff_steps
+                        local puff_pos = VecAdd(rocket.trans.pos, VecScale(puff_dir, puff_rad))
+                        ParticleReset()
+                        ParticleType("smoke")
+                        ParticleRadius(fraction_to_range_value(j/puff_steps, puff_size_start, puff_size_end))
+                        local smoke_color = VecScale(Vec(1,1,1), puff_color_value)
+                        ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
+                        SpawnParticle(puff_pos, Vec(), 2)                    
+                    end
                 end
             end
             -- check again in case we're hitting the ground
@@ -72,14 +74,25 @@ function rocket_tick(dt)
         end
         if rocket.fuse == 0 then 
             SetBodyDynamic(rocket, true)
-            Explosion(rocket.trans.pos, 1)
-            local force_mag = TOOL.ROCKET.pyro.ff.f_max
-            local point_force = VecScale(rocket.dir, force_mag)
-            for i = 1, 3 do
-                local force_pos = TransformToParentPoint(rocket.trans, Vec(0, 0, i * TOOL.ROCKET.pyro.ff.resolution))
-                apply_force(TOOL.ROCKET.pyro.ff, force_pos, point_force)
-                -- create_shock(rocket.trans.pos, 0.3)
-            end  
+            if not DEBUG_MODE then Explosion(rocket.trans.pos, 1) else Delete(rocket.body) end
+
+            local force_mag = 10000 -- TOOL.ROCKET.pyro.ff.f_max
+            local fireball_rad = TOOL.ROCKET.explosion_fireball_radius.value
+            local explosion_seeds =  TOOL.ROCKET.explosion_seeds.value
+            local pos = rocket.trans.pos
+            for i = 1, explosion_seeds do
+                local spawn_dir = VecNormalize(random_vec(1))
+                local spawn_offset = VecScale(spawn_dir, fireball_rad)
+                local point_position = VecAdd(pos, spawn_offset)
+                local force_dir = VecNormalize(VecSub(point_position, pos))
+                local hit, dist, normal, shape = QueryRaycast(pos, force_dir, fireball_rad + 0.1, 0.025)
+                if hit then
+                    local hit_point = VecAdd(pos, VecScale(force_dir, dist)) 
+                    local force_dir = normal
+                end
+                local point_force = VecScale(force_dir, force_mag)
+                apply_force(TOOL.ROCKET.pyro.ff, point_position, point_force)
+            end
             PlaySound(rocket_boom_sound, bomb_pos, 100)
         elseif rocket.dist_left <= 0 then 
             -- ran out of fuel
@@ -91,19 +104,21 @@ function rocket_tick(dt)
             SetBodyDynamic(rocket.body, false)
             rocket.dist_left = rocket.dist_left - rocket.speed
             table.insert(rockets_next_tick, rocket)
-            local light_point = TransformToParentPoint(rocket.trans, Vec(0, 0, 2))
-            for i = 1, 10 do
-                ParticleReset()
-                ParticleType("smoke")
-                ParticleAlpha(0.5, 0.9, "linear", 0.05, 0.5)
-                ParticleRadius(0.2, 0.5)
-                ParticleTile(5)
-                local smoke_color = HSVToRGB(Vec(0, 0, 0.4))
-                ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
-                local smoke_point = VecAdd(rocket.trans.pos, VecScale(rocket.dir, -1 * (rocket.speed / i)))
-                SpawnParticle(smoke_point, Vec(), 3)
+            if not DEBUG_MODE then 
+                local light_point = TransformToParentPoint(rocket.trans, Vec(0, 0, 2))
+                for i = 1, 10 do
+                    ParticleReset()
+                    ParticleType("smoke")
+                    ParticleAlpha(0.5, 0.9, "linear", 0.05, 0.5)
+                    ParticleRadius(0.2, 0.5)
+                    ParticleTile(5)
+                    local smoke_color = HSVToRGB(Vec(0, 0, 0.4))
+                    ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
+                    local smoke_point = VecAdd(rocket.trans.pos, VecScale(rocket.dir, -1 * (rocket.speed / i)))
+                    SpawnParticle(smoke_point, Vec(), 3)
+                end
+                PointLight(light_point, 1, 0, 0, 0.1)
             end
-            PointLight(light_point, 1, 0, 0, 0.1)
             rocket.fuse = math.max(rocket.fuse - 1, -1)
         end
     end

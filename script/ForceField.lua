@@ -3,15 +3,11 @@
 FF = {} -- library constants
 FF.FORWARD = Vec(0, 0, -1)
 FF.MAX_SIM_POINTS = 200
+FF.BIAS_CONST = 100
 
 function inst_force_field_ff()
     -- create a force field instance.
     local inst = {}
-    -- the tick counter allows certain activities to happen in a 
-    -- staggered fashion rather than all at once on a single tick
-    inst.tick_reset = 2
-    inst.tick_count = inst.tick_reset
-
     -- The field is a hashed multidim array for fast location searching
     inst.field = {}
     -- the metafield is a lower resolution array that's an average of a 
@@ -30,22 +26,27 @@ function inst_force_field_ff()
     -- Resolution of the metafield
     inst.meta_resolution = 2
     -- The maximum force assignable to a vector. It's clamped below this number.
-    inst.f_max = 2
-    -- The force magnitude below which a vector is culled from the field.
+    inst.f_max = 500
+    -- The force below which vectors are culled from the field
     inst.f_dead = 0.1
-    -- The universal reduction (proportion) of magnitude of every vector in the field.
-    inst.decay = 0.02
-    -- The reduction of magnitude of a vector after it has propagated force to adjacent
-    -- children
-    inst.prop_decay  = 0.01
-    -- Field extension propagation produces this many spokes radiating out from the parent
+    -- Field propagation produces this many spokes radiating out from the parent
     -- vector into other field coordinates. That may combine with existing vectors in those
     -- coordinates or extend the field into new coordinates (adding to the field)
-    inst.point_split = 6
+    inst.prop_split = 6
     -- The angle in degrees that spokes are produced from the center parent vector when 
     -- propagating. 
-    inst.extend_spread = 45
-
+    inst.prop_angle = 45
+    -- directional variation added on propagation.
+    inst.dir_jitter = 0
+    -- directional bias to apply over time, such as for heat rise or gravity. Does not affect force magnitude.
+    inst.bias = Vec()
+    -- debug total energy
+    inst.energy = 0
+    -- the radius in coordinate space that propagation reaches. Larger values than 1.5 may skip coordinates to
+    -- propagate. Effectively this lets the field grow faster dimensionally.
+    inst.extend_scale = 1.5
+    inst.trans_gain = 0.01
+    inst.bias_gain = 0.8
     return inst
 end
 
@@ -79,11 +80,11 @@ function inst_field_point(coord, resolution)
     inst.coord = coord
     local half_res = resolution/2
     inst.pos = VecAdd(VecScale(coord, inst.resolution), VecScale(Vec(1,1,1), half_res))
-    inst.dir = Vec(0,1,0)
-    inst.mag = 1
-    inst.vec = Vec(0,1,0)
-    inst.edge = false
+    inst.dir = Vec()
+    inst.mag = 0
+    inst.vec = Vec()
     inst.type = point_type.base
+    inst.cull = false
     return inst
 end
 
@@ -92,7 +93,8 @@ function set_point_vec(point, vec)
     -- dir/mag attributes
     point.vec = vec
     point.dir = VecNormalize(vec)
-    point.mag = VecLength(vec)
+    local new_mag = VecLength(vec)
+    point.mag = new_mag
 end
 
 function set_point_dir_mag(point, dir, mag)
@@ -112,129 +114,85 @@ function apply_force(ff, pos, force)
     -- have a couple things to do
     if point == nil then 
         point = inst_field_point(coord, ff.resolution)
-        -- set to true so we know on the next extend cycle to treat this as 
-        -- an edge to extend into other field coordinates.
-        point.edge = true
         -- insert a point into the field
         field_put(ff.field, point, point.coord)
     end
-    -- if the point already exists, just override the point vector that's there
     set_point_vec(point, VecAdd(point.vec, force))
 end
 
-function extend_field(ff)
-    -- called in the proper tick cycle to extend the field at the edges if the vector is pointing the right way. 
-    ff.contacts = {}
-    local points = flatten(ff.field)
-    for i = 1, #points do
-        local point = points[i]
-        -- if the point was marked as an edge on the last cycle (it was brand new to the field last cycle)
-        -- then we will look into extending it
-        if point.edge then 
-            -- extend the point itself in the direction of the existing vector
-            extend_point(ff, point)
-            -- find the direction of a number of spokes at a certain deflection angle
-            -- away from the parent vector.
-            local extend_dirs = radiate(point.vec, ff.extend_spread, ff.point_split, math.random() * 360)
-            for i = 1, #extend_dirs do
-                -- create a temporary point to act as the parent to the potential 
-                -- extension.
-                local extend_dir = extend_dirs[i]
-                local temp_point = inst_field_point(point.coord, ff.resolution)
-                set_point_vec(temp_point, VecScale(extend_dir, point.mag))
-                extend_point(ff, temp_point)
-            end   
-            -- we've extended the point. It's no longer at the edge of the field. 
-            point.edge = false 
-        end
-    end
-end
-
-function extend_point(ff, point, new_extensions)
-    local extend_dir = point.dir
-    local extend_coord = round_vec(VecAdd(point.coord, extend_dir))
-    local extension_point = field_get(ff.field, extend_coord)
-    -- only put a point where there isn't one already
-    if extension_point == nil then 
-        -- check if we're hitting something on the way to extending
-        local hit, dist, normal, shape = QueryRaycast(point.pos, extend_dir, 2 * ff.resolution, 0.025)
-        if hit then 
-            -- log the contact, don't create a new extension
-            local hit_point = VecAdd(point.pos, VecScale(extend_dir, dist))
-            table.insert(ff.contacts, inst_field_contact(point, hit_point, normal, shape))
-        else 
-            -- extend into the new space at full force
-            extension_point = inst_field_point(extend_coord, ff.resolution)
-            set_point_vec(extension_point, point.vec)
-            -- commented for now since this seems to be working fine without decaying
-            -- the parent for every extension, but if I decide to do this again it will
-            -- require a patch to the existing setting of all current subscribers... and 
-            -- I'm not prepared to do that to them just yet. 
-            -- set_point_vec(point, VecScale(point.vec, (1 - ff.prop_decay))) 
-
-            -- since we created this point it's now an edge of the field. It will
-            -- be eligible for extension on the next cycle.
-            extension_point.edge = true
-            field_put(ff.field, extension_point, extension_point.coord)
-        end
-    end
-end
-
-function propagate_field_forces(ff)
+function propagate_field_forces(ff, dt)
+    if ff.trans_gain == 0 or ff.extend_scale == 0 then return end
     -- propagate the force outside of each point into the coord its pointing at 
     -- and average the vectors, reducing the parent mag by a proportion. 
     local points = flatten(ff.field)
     for i = 1, #points do
         local point = points[i]
-        -- propagate the force in the direction of the parent vector
-        propagate_point_force(ff, point)
+        -- points start the cycle with the call flag set to true. If the propagation cycle ends
+        -- and the cull flag has not been set to false then the point will be culled 
+        -- in the normalization phase this cycle.
+        point.cull = true
+        local trans_mag = (point.mag/(ff.prop_split + 1)) * fraction_to_range_value(ff.trans_gain, 0, 1/dt) * dt
+        propagate_point_force(ff, point, point.dir, trans_mag, dt)
         -- propagate the force in a spread to other vectors around the direction it's pointing.
-        -- See extension method above for details about radiate(). Note: without damping, this 
-        -- would create a sustaining or increasing energy situation, so this is not physically accurate
-        -- but works well for simulation with proper tuning. 
-        local prop_dirs = radiate(point.vec, ff.extend_spread, ff.point_split)
+        -- See extension method above for details about radiate(). 
+        local prop_dirs = radiate(point.vec, ff.prop_angle, ff.prop_split, math.random() * 360)
         for i = 1, #prop_dirs do
             -- propagate the force in the direction of radiation spokes
             local prop_dir = prop_dirs[i]
-            local temp_point = inst_field_point(point.coord, ff.resolution)
-            set_point_vec(temp_point, VecScale(prop_dir, point.mag))
-            propagate_point_force(ff, temp_point)
+            propagate_point_force(ff, point, prop_dir, trans_mag, dt)
         end
+        if point.mag > ff.f_dead then point.cull = false end
     end
 end
 
-function propagate_point_force(ff, point)
+function propagate_point_force(ff, point, trans_dir, trans_mag, dt)
     -- propagate force to a vector in a target coordinate given a parent vector.
-    local force_dir = point.dir
-    local coord_prime = round_vec(VecAdd(point.coord, force_dir))
-    local point_prime = field_get(ff.field, coord_prime)
-    if point_prime ~= nil then 
-        -- direction of combined vector at target point is a normalization
-        -- of the combined dirs (to unit vector) and average of the magnitudes.
-        local dir = VecAdd(point_prime.vec, point.vec)
-        dir = VecAdd(dir, Vec(0, ff.heat_rise, 0))
-        dir = VecNormalize(dir)
-        local mag = (point_prime.mag + point.mag) / 2
-        -- set the target point force vector and reduce the parent by
-        -- the proportional decay.
-        set_point_vec(point, VecScale(point.vec, (1 - ff.prop_decay))) 
-        set_point_dir_mag(point_prime, dir, mag)
+    local jitter_mag = fraction_to_range_value(ff.dir_jitter/10, 0, 1)
+    trans_dir = VecNormalize(VecAdd(trans_dir, jitter_mag))
+    local trans_vec = VecScale(trans_dir, trans_mag)
+    local coord_prime = round_vec(VecAdd(point.coord, VecScale(trans_dir, random_float_in_range(1, ff.extend_scale))))
+    if not vecs_equal(coord_prime, point.coord) then 
+        local point_prime = field_get(ff.field, coord_prime)
+        if point_prime == nil then
+            -- check if we're hitting something on the way to extending
+            local hit, dist, normal, shape = QueryRaycast(point.pos, trans_dir, 2 * ff.resolution * ff.extend_scale, 0.025)
+            if hit then 
+                -- log the contact, don't create a new extension
+                local hit_point = VecAdd(point.pos, VecScale(trans_dir, dist))
+                table.insert(ff.contacts, inst_field_contact(point, hit_point, normal, shape))
+            elseif point.mag > ff.f_dead then 
+                -- create the point in the new space
+                point_prime = inst_field_point(coord_prime, ff.resolution)
+                set_point_dir_mag(point_prime, trans_dir, trans_mag)
+                field_put(ff.field, point_prime, point_prime.coord)
+                -- do not cull a new point or a point that has extended the field
+                point_prime.cull = false
+                point.cull = false
+            end
+        else
+            local new_dir = VecNormalize(VecAdd(point_prime.dir, trans_dir))
+            if point.mag > point_prime.mag then 
+                -- if there is a significant transfer of force then do not call
+                point_prime.cull = false
+                point.cull = false
+            end
+            set_point_dir_mag(point_prime, new_dir, point_prime.mag + trans_mag)
+
+        end
+        set_point_dir_mag(point, point.dir, math.max(0, point.mag - trans_mag))
     end
 end
 
-function normalize_field(ff)
+function normalize_field(ff, dt)
     -- Remove points above the set limit of points to simulate in the field. 
     -- Go through all points, clamp the field vector magnitudes to the max
     -- and cull the field vectors that fall below dead magnitude. 
-    -- Reduce all magnitudes by a universal proportion. 
 
     -- remove points until we're under the sim limit
     local points = flatten(ff.field)
     if #points > FF.MAX_SIM_POINTS then
-        -- sort the points from least to greatest magnitude
-        table.sort(points, function (p1, p2) return p1.mag < p2.mag end )
         while #points > FF.MAX_SIM_POINTS do
-            local index = math.random(#points) --math.ceil((1.6 * math.random() - 1)^2 * #points)
+            local index = math.random(#points)
             if index ~= 0 then 
                 local remove_point = points[index]
                 field_put(ff.field, nil, remove_point.coord)
@@ -243,18 +201,32 @@ function normalize_field(ff)
         end
     end
 
-    -- Apply a universal decay to all points, reducing their magnitudes and 
-    -- culling points that fall below dead magnitude. If any point magnitude 
-    -- is above max then it will be clamped to the maximum magnitude allowed.
+    -- If any point magnitude is above max then it will be clamped to the maximum magnitude allowed.
+    ff.energy = 0
     local points = flatten(ff.field)
     for i = 1, #points do
         local point = points[i]
-        set_point_vec(point, VecScale(point.vec, (1 - ff.decay)))
         if point.mag > ff.f_max then 
-            set_point_vec(point, VecScale(point.dir, ff.f_max))
-        elseif point.mag < ff.f_dead then 
+            set_point_dir_mag(point, point.dir, ff.f_max)
+            ff.energy = ff.energy + ff.f_max
+        elseif point.cull then 
+            -- judgement day. I see the truth of your cull flags and 
+            -- I say to you, vector point: you shall not be spared on that
+            -- day!
             field_put(ff.field, nil, point.coord)
+        else
+            ff.energy = ff.energy + point.mag
         end
+    end
+end
+
+function apply_bias(ff, dt)
+    if ff.bias == 0 then return end
+    local points = flatten(ff.field)
+    for i = 1, #points do
+        local point = points[i]
+        local new_dir = VecNormalize(VecAdd(point.dir, VecScale(ff.bias, ff.bias_gain * FF.BIAS_CONST * dt)))
+        set_point_dir_mag(point, new_dir, point.mag)
     end
 end
 
@@ -280,7 +252,7 @@ function refresh_metafield(ff)
         if meta_point == nil then 
             meta_point = inst_field_point(meta_coord, ff.meta_resolution)
             meta_point.type = point_type.meta
-            meta_point.vec = point.vec
+            set_point_vec(meta_point, point.vec)
             field_put(new_metafield, meta_point, meta_point.coord)
         else
             -- Average the base field point into the existing metafield point.
@@ -382,13 +354,21 @@ end
 
 function debug_field(ff)
     -- debug the field by showing vector line indicators
-    local points = flatten(ff)
+    local points = flatten(ff.field)
     for i = 1, #points do
         local point = points[i]
-        local color = debug_color(ff, point)
-        DebugCross(point.pos, color[1], color[2], color[3])
-        DebugLine(point.pos, VecAdd(point.pos, point.vec), color[1], color[2], color[3])
+        debug_point(ff, point)
     end
+end
+
+function debug_point(ff, point)
+    local color = debug_color(ff, point)
+    DebugCross(point.pos, color[1], color[2], color[3])
+    local mag = point.mag
+    if point.mag > 10 then
+        mag = math.log10(point.mag) 
+    end
+    DebugLine(point.pos, VecAdd(point.pos, VecScale(point.dir, mag)), color[1], color[2], color[3])
 end
 
 function debug_color(ff, point)
@@ -399,20 +379,17 @@ function debug_color(ff, point)
     return Vec(r, 0, b)
 end
 
-function force_field_ff_tick(ff, dt)
-    -- debug_field(ff.field)
 
-    if ff.tick_count == 0 then ff.tick_count = ff.tick_reset end
-    if (ff.tick_count + 1) % 2 == 0 then 
-        -- Do these cycles on every other tick
-        propagate_field_forces(ff)
-        normalize_field(ff)
-        refresh_metafield(ff)
-    elseif ff.tick_count % 2 == 0 then 
-        -- Extend the field on its own cycle every other tick
-        extend_field(ff)
+function force_field_ff_tick(ff, dt)
+
+    if DEBUG_MODE then
+        debug_field(ff)
     end
-    ff.tick_count = ff.tick_count - 1
+
+    propagate_field_forces(ff, dt)
+    apply_bias(ff, dt)
+    normalize_field(ff, dt)
+    refresh_metafield(ff)
 end
 
 point_type = enum {

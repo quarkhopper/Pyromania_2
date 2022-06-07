@@ -153,9 +153,9 @@ function make_flame_effect(pyro, flame, dt)
         smoke_size = fraction_to_range_value(flame.life_n, pyro.max_smoke_size, pyro.min_smoke_size)
     else
         local afterlife_n = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force)
-        smoke_size = fraction_to_range_value(afterlife_n, 0.1, 1) -- pyro.max_smoke_size)
+        smoke_size = fraction_to_range_value(afterlife_n, 0.2, 1) -- pyro.max_smoke_size)
         -- Jitter is added to an ember to simulate flutter. Ok, it just looks better to me.
-        local jitter = random_vec(pyro.ff.resolution * 0.5)
+        local jitter = random_vec(pyro.ff.resolution)
         flame.pos = VecAdd(flame.pos, jitter)
     end
     -- finish setting the fire puff particle params
@@ -170,7 +170,7 @@ function make_flame_effect(pyro, flame, dt)
     SpawnParticle(VecAdd(flame.pos, random_vec(pyro.flame_jitter)), Vec(), pyro.flame_puff_life)
 
     -- if black smoke amount is set above 0, and chance favors it...
-    if math.random() < pyro.smoke_amount_n then
+    if pyro.smoke_amount_n > 0 and math.random() < pyro.smoke_amount_n then
             -- Set up a smoke puff
             ParticleReset()
             ParticleType("smoke")
@@ -308,6 +308,7 @@ function flame_tick(pyro, dt)
     if pyro.tick_count == 0 then pyro.tick_count = pyro.tick_interval end
     force_field_ff_tick(pyro.ff, dt)
     
+    if DEBUG_MODE then return end
     if pyro.render_flames then 
         spawn_flames(pyro)
         make_flame_effects(pyro, dt)

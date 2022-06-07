@@ -18,12 +18,15 @@ function detonate(bomb)
 end
 
 function blast_at(pos)
+
+    if not DEBUG_MODE then 
+        Explosion(pos, 0.5)
+        for i = 1, 100 do
+            SpawnFire(VecAdd(pos, random_vec(1)))
+        end
+    end
     local force_mag = TOOL.BOMB.pyro.ff.f_max
 	local fireball_rad = TOOL.BOMB.explosion_fireball_radius.value
-    Explosion(pos, 0.5)
-	for i = 1, 100 do
-		SpawnFire(VecAdd(pos, random_vec(1)))
-	end
 	local explosion_seeds = TOOL.BOMB.explosion_seeds.value
     for i = 1, explosion_seeds do
         local spawn_dir = VecNormalize(random_vec(1))
@@ -38,7 +41,9 @@ function blast_at(pos)
         local point_force = VecScale(force_dir, force_mag)
         apply_force(TOOL.BOMB.pyro.ff, point_position, point_force)
     end
-    create_shock(pos, 1)
-    PlaySound(boom_sound, pos, 100)
-    PlaySound(rumble_sound, pos, 100)
+    if not DEBUG_MODE then 
+        create_shock(pos, 1)
+        PlaySound(boom_sound, pos, 100)
+        PlaySound(rumble_sound, pos, 100)
+    end
 end
