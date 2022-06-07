@@ -4,6 +4,8 @@ FF = {} -- library constants
 FF.FORWARD = Vec(0, 0, -1)
 FF.MAX_SIM_POINTS = 200
 FF.BIAS_CONST = 100
+FF.MIN_PROP_ANGLE = 10
+FF.MAX_PROP_ANGLE = 30
 
 function inst_force_field_ff()
     -- create a force field instance.
@@ -85,6 +87,7 @@ function inst_field_point(coord, resolution)
     inst.vec = Vec()
     inst.type = point_type.base
     inst.cull = false
+    inst.hit = false
     return inst
 end
 
@@ -135,13 +138,16 @@ function propagate_field_forces(ff, dt)
         propagate_point_force(ff, point, point.dir, trans_mag, dt)
         -- propagate the force in a spread to other vectors around the direction it's pointing.
         -- See extension method above for details about radiate(). 
-        local prop_dirs = radiate(point.vec, ff.prop_angle, ff.prop_split, math.random() * 360)
+        local force_n = math.max(0, range_value_to_fraction(point.mag, ff.f_dead, ff.f_max))
+        local prop_angle = fraction_to_range_value(math.sqrt(force_n), FF.MAX_PROP_ANGLE, FF.MIN_PROP_ANGLE)
+        local prop_dirs = radiate(point.vec, prop_angle, ff.prop_split, math.random() * 360)
         for i = 1, #prop_dirs do
             -- propagate the force in the direction of radiation spokes
             local prop_dir = prop_dirs[i]
             propagate_point_force(ff, point, prop_dir, trans_mag, dt)
         end
-        if point.mag > ff.f_dead then point.cull = false end
+        if point.hit then point.cull = true 
+        elseif point.mag > ff.f_dead then point.cull = false end
     end
 end
 
@@ -160,6 +166,7 @@ function propagate_point_force(ff, point, trans_dir, trans_mag, dt)
                 -- log the contact, don't create a new extension
                 local hit_point = VecAdd(point.pos, VecScale(trans_dir, dist))
                 table.insert(ff.contacts, inst_field_contact(point, hit_point, normal, shape))
+                point.hit = true
             elseif point.mag > ff.f_dead then 
                 -- create the point in the new space
                 point_prime = inst_field_point(coord_prime, ff.resolution)
