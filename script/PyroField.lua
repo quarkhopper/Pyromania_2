@@ -12,6 +12,13 @@ PYRO.MAX_FLAMES = 500 -- default maximum number of flames to render
 -- If the pyro field is in rainbow mode, this one color will be cycled and 
 -- coordinates the color of all flames and smoke particules generated. 
 PYRO.RAINBOW = Vec(0, 1, 0.8)
+PYRO.MIN_PLAYER_PUSH = 1
+PYRO.MAX_PLAYER_PUSH = 5
+PYRO.MIN_IMPULSE = 200
+PYRO.MAX_IMPULSE = 10000
+PYRO.MIN_HOLE_VOXELS = 0.1
+PYRO.MAX_HOLE_VOXELS = 5
+PYRO.GRAVITY = 0.5
 
 function inst_pyro()
     local inst = {}
@@ -59,10 +66,7 @@ function inst_pyro()
     inst.flame_tile = 0
     -- Opacity of flame puffs. 
     inst.flame_opacity = 1
-    -- Constant factor multiplied by the normalized force vector to apply as impulse to 
-    -- any body in the effective impulse_radius of that point. Sum: how hard to push things
-    -- around. 
-    inst.impulse_const = 70
+    inst.impulse_scale = 1
     -- Effective radius that a force field vector can interact with a world body to apply
     -- impulse to it. 
     inst.impulse_radius = 5
@@ -74,16 +78,9 @@ function inst_pyro()
     -- than many attempts to cast out from a central point in a random direction a distance of 
     -- fire_ignition_radius away are made. If that cast hits something, a fire is started.
     inst.fire_density = 1
-    -- Teardown classifies materials by hard/med/soft. This value multiplied by the normalized 
-    -- force of an acting vector (force field contact) determines how many voxels may be removed
-    -- from a HARD material in that contact event. Medium materials multiply this number by 5, 
-    -- and soft materials multiply this number by 10. 
-    inst.hole_punch_scale = 0.2
+    inst.contact_damage_scale = 1
     -- The gretest proportion of player health that can be taken away in a tick
     inst.max_player_hurt = 0.5
-    -- PARTICLE gravity as applied to smoke particles in Teardown's engine. This affects how the puffs 
-    -- and black move after being created.
-    inst.gravity = 1
     -- Why did you guys ask for this? If set to "on" will cause all flame effects to rotate 
     -- colors in sync and new smoke particules to spawn in that color. 
     inst.rainbow_mode = on_off.off
@@ -142,13 +139,16 @@ function make_flame_effect(pyro, flame, dt)
     end
 
     local particle_size = 0
-    local puff_value = 1
+    local puff_color_value = 1
     if flame.life_n >= 0 then 
+        -- normal mode
         particle_size = fraction_to_range_value(flame.life_n, pyro.max_smoke_size, pyro.min_smoke_size)
     else
+        -- ember mode
         local afterlife_n = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force)
-        puff_value = (range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force) * 0.9) + 0.1
-        particle_size = fraction_to_range_value(afterlife_n, 0.2, pyro.max_smoke_size)
+        puff_color_value = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force)
+        -- puff_color_value = puff_color_value + random_float_in_range(-0.1, 0.1)
+        particle_size = fraction_to_range_value(afterlife_n ^ 0.5, 0.2, pyro.max_smoke_size)
         intensity = fraction_to_range_value(afterlife_n, 0.2, intensity)
         -- Jitter is added to an ember to simulate flutter. this prevents the smaller sized particules from 
         -- exposing the field grid too much. 
@@ -163,9 +163,9 @@ function make_flame_effect(pyro, flame, dt)
     ParticleAlpha(pyro.flame_opacity, 0, "easeout", 0, 0.5)
     ParticleDrag(0.25)
     ParticleRadius(particle_size)
-    local smoke_color = HSVToRGB(Vec(0, 0, puff_value))
+    local smoke_color = HSVToRGB(Vec(0, 0, puff_color_value))
     ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
-    ParticleGravity(pyro.gravity)
+    ParticleGravity(PYRO.GRAVITY)
     ParticleTile(pyro.flame_tile)
     -- Apply a little random jitter if specified by the options, for the specified lifetime
     -- in options.
@@ -176,7 +176,7 @@ function make_flame_effect(pyro, flame, dt)
             -- Set up a smoke puff
             ParticleReset()
             ParticleType("smoke")
-            ParticleDrag(0.5)
+            ParticleDrag(0)
             ParticleAlpha(0.5, 0.9, "linear", 0.05, 0.5)
             ParticleRadius(particle_size)
             if pyro.rainbow_mode == on_off.on then
@@ -189,7 +189,7 @@ function make_flame_effect(pyro, flame, dt)
                 smoke_color = HSVToRGB(Vec(0, 0, 0.1))
             end
             ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
-            ParticleGravity(pyro.gravity)
+            ParticleGravity(PYRO.GRAVITY)
             -- apply a little random jitter to the smoke puff based on the flame position,
             -- for the specified lifetime of the particle.
             SpawnParticle(VecAdd(flame.pos, random_vec(0.1)), Vec(), pyro.smoke_life)
@@ -264,11 +264,25 @@ function impulse_fx(pyro)
             local body_center = TransformToParentPoint(GetBodyTransform(push_body), GetBodyCenterOfMass(push_body))
             local hit = QueryRaycast(point.pos, force_dir, pyro.impulse_radius, 0.025)
             if hit then 
-                ApplyBodyImpulse(push_body, body_center, VecScale(force_dir, force_n * pyro.impulse_const))
+                local impulse_mag = fraction_to_range_value(force_n, PYRO.MIN_IMPULSE, PYRO.MAX_IMPULSE) * pyro.impulse_scale
+                ApplyBodyImpulse(push_body, body_center, VecScale(force_dir, impulse_mag))
             end
         end
         if VecLength(VecSub(player_trans.pos, point.pos)) <= pyro.impulse_radius then
-            SetPlayerVelocity(VecAdd(GetPlayerVelocity(), VecScale(force_dir, force_n^2 * pyro.impulse_const * 0.005)))
+            local push_mag = fraction_to_range_value(force_n^2, PYRO.MIN_PLAYER_PUSH, PYRO.MAX_PLAYER_PUSH) * pyro.impulse_scale
+            SetPlayerVelocity(VecAdd(GetPlayerVelocity(), VecScale(force_dir, push_mag)))
+        end
+    end
+end
+
+function collision_fx(pyro)
+    for i = 1, #pyro.ff.contacts do
+        local contact = pyro.ff.contacts[i]
+        local force_n = range_value_to_fraction(VecLength(contact.point.vec), pyro.flame_dead_force, pyro.ff.f_max)
+        -- make holes
+        local voxels = fraction_to_range_value(force_n ^ 0.5, PYRO.MIN_HOLE_VOXELS, PYRO.MAX_HOLE_VOXELS) * pyro.contact_damage_scale
+        if voxels > 0.1 then 
+            MakeHole(contact.hit_point, voxels * 10, voxels * 5, voxels, true)
         end
     end
 end
@@ -289,18 +303,6 @@ function check_hurt_player(pyro)
                 factor = factor * (VecLength(point.vec) / pyro.ff.f_max) + 0.01
                 hurt_player(factor * pyro.max_player_hurt)
             end
-        end
-    end
-end
-
-function collision_fx(pyro)
-    for i = 1, #pyro.ff.contacts do
-        local contact = pyro.ff.contacts[i]
-        local force_n = range_value_to_fraction(VecLength(contact.point.vec), pyro.flame_dead_force, pyro.ff.f_max)
-        -- make holes
-        local voxels = force_n * pyro.hole_punch_scale
-        if voxels > 0.1 then 
-            MakeHole(contact.hit_point, voxels * 10, voxels * 5, voxels, true)
         end
     end
 end

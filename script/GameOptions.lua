@@ -178,7 +178,7 @@ function create_mode_option_set(name, display_name)
 		option_type.numeric, 
 		1000,
 		"f_max",
-		"Max force")
+		"Imparted force per point")
 	oSet.f_max.range.lower = 1
 	oSet.f_max.range.upper = 100000
 	oSet.f_max.step = 10
@@ -196,12 +196,12 @@ function create_mode_option_set(name, display_name)
 	
 	oSet.flame_dead_force = create_mode_option(
 		option_type.numeric, 
-		200,
+		10,
 		"flame_dead_force",
 		"Flame dead force")
 	oSet.flame_dead_force.range.lower = 0
-	oSet.flame_dead_force.range.upper = 1000
-	oSet.flame_dead_force.step = 1
+	oSet.flame_dead_force.range.upper = 10
+	oSet.flame_dead_force.step = 0.1
 	oSet.options[#oSet.options + 1] = oSet.flame_dead_force
 
 	oSet.trans_gain = create_mode_option(
@@ -243,16 +243,6 @@ function create_mode_option_set(name, display_name)
 	oSet.prop_split.range.upper = 10
 	oSet.prop_split.step = 1
 	oSet.options[#oSet.options + 1] = oSet.prop_split
-
-	-- oSet.prop_angle = create_mode_option(
-	-- 	option_type.numeric, 
-	-- 	60,
-	-- 	"prop_angle",
-	-- 	"Spread angle (degrees)")
-	-- oSet.prop_angle.range.lower = 0
-	-- oSet.prop_angle.range.upper = 180
-	-- oSet.prop_angle.step = 1
-	-- oSet.options[#oSet.options + 1] = oSet.prop_angle
 
 	oSet.extend_scale = create_mode_option(
 		option_type.numeric, 
@@ -376,15 +366,15 @@ function create_mode_option_set(name, display_name)
 	oSet.smoke_amount.step = 0.01
 	oSet.options[#oSet.options + 1] = oSet.smoke_amount
 
-	oSet.impulse_const = create_mode_option(
+	oSet.impulse_scale = create_mode_option(
 		option_type.numeric, 
-		300,
-		"impulse_const",
-		"Impulse (pushing) constant")
-	oSet.impulse_const.range.lower = 0
-	oSet.impulse_const.range.upper = 1000
-	oSet.impulse_const.step = 1
-	oSet.options[#oSet.options + 1] = oSet.impulse_const
+		1,
+		"impulse_scale",
+		"Impulse (pushing) scale")
+	oSet.impulse_scale.range.lower = 0
+	oSet.impulse_scale.range.upper = 1
+	oSet.impulse_scale.step = 0.01
+	oSet.options[#oSet.options + 1] = oSet.impulse_scale
 
 	oSet.impulse_radius = create_mode_option(
 		option_type.numeric, 
@@ -418,10 +408,10 @@ function create_mode_option_set(name, display_name)
 
 	oSet.contact_damage_scale = create_mode_option(
 		option_type.numeric, 
-		0.3,
+		1,
 		"contact_damage_scale",
 		"Field contact damage scale")
-	oSet.contact_damage_scale.range.lower = 0.01
+	oSet.contact_damage_scale.range.lower = 0
 	oSet.contact_damage_scale.range.upper = 1
 	oSet.contact_damage_scale.step = 0.01
 	oSet.options[#oSet.options + 1] = oSet.contact_damage_scale
@@ -435,6 +425,12 @@ function create_mode_option_set(name, display_name)
 	oSet.max_player_hurt.range.upper = 1
 	oSet.max_player_hurt.step = 0.01
 	oSet.options[#oSet.options + 1] = oSet.max_player_hurt
+
+    return oSet
+end	
+
+function create_bomb_option_set()
+	local oSet = create_mode_option_set("bomb", "Bomb settings")
 
 	oSet.explosion_fireball_radius = create_mode_option(
 		option_type.numeric, 
@@ -456,12 +452,6 @@ function create_mode_option_set(name, display_name)
 	oSet.explosion_seeds.step = 1
 	oSet.options[#oSet.options + 1] = oSet.explosion_seeds	
 
-    return oSet
-end	
-
-function create_bomb_option_set()
-	local oSet = create_mode_option_set("bomb", "Bomb settings")
-
 	oSet.min_random_radius = create_mode_option(
 		option_type.numeric, 
 		15,
@@ -482,38 +472,58 @@ function create_bomb_option_set()
 	oSet.max_random_radius.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_random_radius
 
-	oSet.f_max.value = 500
+	oSet.f_max.value = 50000
 	oSet.f_dead.value = 0.1
-	oSet.flame_dead_force.value = 10
-	oSet.trans_gain.value = 0.95
-	oSet.bias_gain.value = 0.1
-	oSet.heat_rise.value = 0.3
-	oSet.prop_split.value = 3
-	-- oSet.prop_angle.value = 15
+	oSet.flame_dead_force.value = 0.8
+	oSet.trans_gain.value = 0.05
+	oSet.bias_gain.value = 0.5
+	oSet.heat_rise.value = 0.5
+	oSet.prop_split.value = 5
+	-- oSet.prop_angle.value = 30
 	oSet.extend_scale.value = 3
-	oSet.dir_jitter.value = 0
-	oSet.field_resolution.value = 0.5
+	oSet.dir_jitter.value = 2
+	oSet.field_resolution.value = 0.8
 	oSet.meta_resolution.value = 2
 	oSet.flames_per_point.value = 4
 	oSet.flame_light_intensity.value = 3
-	oSet.min_smoke_size.value = 0.2
-	oSet.max_smoke_size.value = 0.4
+	oSet.min_smoke_size.value = 0.3
+	oSet.max_smoke_size.value = 0.6
 	oSet.smoke_life.value = 1
-	oSet.smoke_amount.value = 0.1
-	oSet.impulse_const.value = 300
+	oSet.smoke_amount.value = 0.3
+	oSet.impulse_scale.value = 0.8
 	oSet.impulse_radius.value = 5
 	oSet.fire_ignition_radius.value = 5
 	oSet.fire_density.value = 8
-	oSet.contact_damage_scale.value = 0.15
+	oSet.contact_damage_scale.value = 1
 	oSet.max_player_hurt.value = 0.55
-	oSet.explosion_fireball_radius.value = 0.1
-	oSet.explosion_seeds.value = 50
+	oSet.explosion_fireball_radius.value = 0.5
+	oSet.explosion_seeds.value = 100
 
 	return oSet
 end
 
 function create_rocket_option_set()
 	local oSet = create_mode_option_set("rocket", "Rocket settings")
+
+	oSet.explosion_fireball_radius = create_mode_option(
+		option_type.numeric, 
+		0.5,
+		"explosion_fireball_radius",
+		"Explosion fireball radius")
+	oSet.explosion_fireball_radius.range.lower = 0
+	oSet.explosion_fireball_radius.range.upper = 10
+	oSet.explosion_fireball_radius.step = 0.1
+	oSet.options[#oSet.options + 1] = oSet.explosion_fireball_radius	
+
+	oSet.explosion_seeds = create_mode_option(
+		option_type.numeric, 
+		10,
+		"explosion_seeds",
+		"Explosion seed points")
+	oSet.explosion_seeds.range.lower = 10
+	oSet.explosion_seeds.range.upper = 100
+	oSet.explosion_seeds.step = 1
+	oSet.options[#oSet.options + 1] = oSet.explosion_seeds	
 
 	oSet.rate_of_fire = create_mode_option(
 		option_type.numeric, 
@@ -563,11 +573,11 @@ function create_rocket_option_set()
 	oSet.max_smoke_size.value = 0.6
 	oSet.smoke_life.value = 1
 	oSet.smoke_amount.value = 0.1
-	oSet.impulse_const.value = 300
+	oSet.impulse_scale.value = 0.6
 	oSet.impulse_radius.value = 5
 	oSet.fire_ignition_radius.value = 5
 	oSet.fire_density.value = 8
-	oSet.contact_damage_scale.value = 0.15
+	oSet.contact_damage_scale.value = 0.1
 	oSet.max_player_hurt.value = 0.55
 	oSet.explosion_fireball_radius.value = 0.1
 	oSet.explosion_seeds.value = 50
@@ -619,27 +629,29 @@ function create_thrower_option_set()
 	oSet.options[#oSet.options + 1] = oSet.gravity	
 
 	oSet.f_max.value = 500
-	oSet.f_dead.value = 0.1
-	oSet.trans_gain.value = 0.01
-	oSet.bias_gain.value = 0.8
-	oSet.heat_rise.value = 0
+	oSet.f_dead.value = 0.5
+	oSet.flame_dead_force.value = 0.8
+	oSet.trans_gain.value = 0.2
+	oSet.bias_gain.value = 0.7
+	oSet.heat_rise.value = 0.8
 	oSet.prop_split.value = 2
 	-- oSet.prop_angle.value = 10
 	oSet.extend_scale.value = 1.5
-	oSet.dir_jitter.value = 0
+	oSet.dir_jitter.value = 0.1
 	oSet.field_resolution.value = 0.1
 	oSet.meta_resolution.value = 1
-	oSet.flame_dead_force.value = 0.3
 	oSet.flames_per_point.value = 1
 	oSet.flame_light_intensity.value = 1
-	oSet.min_smoke_size.value = 0.1
-	oSet.max_smoke_size.value = 0.3
 	oSet.flame_color_hot.value = Vec(7.5, 0.9, 0.6)
-	oSet.impulse_const.value = 0
+	oSet.min_smoke_size.value = 0.1
+	oSet.max_smoke_size.value = 0.2
+	oSet.smoke_life.value = 1
+	oSet.smoke_amount.value = 0.1
+	oSet.impulse_scale.value = 0
 	oSet.impulse_radius.value = 0
-	oSet.contact_damage_scale.value = 0.05
-	oSet.fire_ignition_radius.value = 2
+	oSet.fire_ignition_radius.value = 1
 	oSet.fire_density.value = 10
+	oSet.contact_damage_scale.value = 0.01
 	oSet.max_player_hurt.value = 0.1
 	oSet.speed.value = 0.6
 	
