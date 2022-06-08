@@ -96,10 +96,10 @@ function init_pyro(tool)
         pyro.ff.end_prop_split = 2
         pyro.ff.start_prop_angle = 10
         pyro.ff.end_prop_angle = 30
-        pyro.ff.start_trans_gain = 0.2
-        pyro.ff.end_trans_gain = 0.4
+        pyro.ff.start_trans_gain = 0.3
+        pyro.ff.end_trans_gain = 0.2
         pyro.ff.start_extend_scale = 0.5
-        pyro.ff.end_extend_scale = 1.5
+        pyro.ff.end_extend_scale = 1
         pyro.hot_particle_size = 0.1
         pyro.cool_particle_size = 0.2
 
@@ -131,8 +131,8 @@ function init_shock_field()
     pyro.rainbow_mode = false
     pyro.ff.resolution = 2.5
     pyro.ff.meta_resolution = 3
-    pyro.ff.f_max = 1000
-    pyro.ff.f_dead = 1
+    pyro.ff.f_max = 10000
+    pyro.ff.f_dead = 10
     pyro.ff.bias = Vec()
     pyro.ff.dir_jitter = 10
     pyro.ff.bias_gain = 0
@@ -140,8 +140,8 @@ function init_shock_field()
     pyro.ff.end_prop_split = 4
     pyro.ff.start_prop_angle = 10
     pyro.ff.end_prop_angle = 30
-    pyro.ff.start_trans_gain = 0.8
-    pyro.ff.end_trans_gain = 0.8
+    pyro.ff.start_trans_gain = 0.4
+    pyro.ff.end_trans_gain = 0.2
     pyro.ff.start_extend_scale = 3
     pyro.ff.end_extend_scale = 3
     SHOCK_FIELD = pyro

@@ -162,7 +162,7 @@ function propagate_point_force(ff, point, trans_dir, dt)
     local jitter_mag = fraction_to_range_value(ff.dir_jitter/10, 0, 1)
     trans_dir = VecNormalize(VecAdd(trans_dir, jitter_mag))
     local trans_vec = VecScale(trans_dir, point.trans_mag)
-    local coord_prime = round_vec(VecAdd(point.coord, VecScale(trans_dir, random_float_in_range(1, point.extend_scale))))
+    local coord_prime = round_vec(VecAdd(point.coord, VecScale(trans_dir, point.extend_scale))) -- random_float_in_range(1, point.extend_scale))))
     if not vecs_equal(coord_prime, point.coord) then 
         local point_prime = field_get(ff.field, coord_prime)
         if point_prime == nil then

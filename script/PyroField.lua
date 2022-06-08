@@ -14,7 +14,7 @@ PYRO.MAX_FLAMES = 500 -- default maximum number of flames to render
 PYRO.RAINBOW = Vec(0, 1, 0.8)
 PYRO.MIN_PLAYER_PUSH = 1
 PYRO.MAX_PLAYER_PUSH = 5
-PYRO.MIN_IMPULSE = 200
+PYRO.MIN_IMPULSE = 50
 PYRO.MAX_IMPULSE = 10000
 PYRO.MIN_HOLE_VOXELS = 0.1
 PYRO.MAX_HOLE_VOXELS = 5
@@ -151,7 +151,7 @@ function make_flame_effect(pyro, flame, dt)
         intensity = fraction_to_range_value(afterlife_n, 0.2, intensity)
         -- Jitter is added to an ember to simulate flutter. this prevents the smaller sized particules from 
         -- exposing the field grid too much. 
-        local jitter = random_vec(pyro.ff.resolution * 0.5)
+        local jitter = random_vec(pyro.ff.resolution)
         flame.pos = VecAdd(flame.pos, jitter)
     end
     -- Put the light source in the middle of where the diffusing flame puff will be
@@ -263,7 +263,7 @@ function impulse_fx(pyro)
             local body_center = TransformToParentPoint(GetBodyTransform(push_body), GetBodyCenterOfMass(push_body))
             local hit = QueryRaycast(point.pos, force_dir, pyro.impulse_radius, 0.025)
             if hit then 
-                local impulse_mag = fraction_to_range_value(force_n, PYRO.MIN_IMPULSE, PYRO.MAX_IMPULSE) * pyro.impulse_scale
+                local impulse_mag = fraction_to_range_value(force_n ^ 0.5, PYRO.MIN_IMPULSE, PYRO.MAX_IMPULSE) * pyro.impulse_scale
                 ApplyBodyImpulse(push_body, body_center, VecScale(force_dir, impulse_mag))
             end
         end

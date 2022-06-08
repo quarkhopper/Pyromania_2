@@ -249,9 +249,9 @@ function create_mode_option_set(name, display_name)
 		2,
 		"meta_resolution",
 		"Metafield resolution")
-	oSet.meta_resolution.range.lower = 1
-	oSet.meta_resolution.range.upper = 100
-	oSet.meta_resolution.step = 0.5
+	oSet.meta_resolution.range.lower = 0.1
+	oSet.meta_resolution.range.upper = 10
+	oSet.meta_resolution.step = 0.1
 	oSet.options[#oSet.options + 1] = oSet.meta_resolution
 
 	oSet.flames_per_point = create_mode_option(
@@ -424,7 +424,7 @@ function create_bomb_option_set()
 
 	-- default values
 	oSet.f_max.value = 100000
-	oSet.f_dead.value = 0.001
+	oSet.f_dead.value = 0.01
 	oSet.flame_dead_force.value = 0.1
 	oSet.bias_gain.value = 0.4
 	oSet.heat_rise.value = 0.1
@@ -513,7 +513,7 @@ function create_rocket_option_set()
 	oSet.flame_light_intensity.value = 3
 	oSet.smoke_life.value = 1
 	oSet.smoke_amount.value = 0.1
-	oSet.impulse_scale.value = 0.6
+	oSet.impulse_scale.value = 0.28
 	oSet.impulse_radius.value = 5
 	oSet.fire_ignition_radius.value = 5
 	oSet.fire_density.value = 8
@@ -576,14 +576,14 @@ function create_thrower_option_set()
 	oSet.heat_rise.value = 0.8
 	oSet.dir_jitter.value = 0.1
 	oSet.field_resolution.value = 0.1
-	oSet.meta_resolution.value = 1
+	oSet.meta_resolution.value = 0.5
 	oSet.flames_per_point.value = 1
 	oSet.flame_light_intensity.value = 1
 	oSet.flame_color_hot.value = Vec(7.5, 0.9, 0.6)
 	oSet.smoke_life.value = 1
 	oSet.smoke_amount.value = 0.1
-	oSet.impulse_scale.value = 0
-	oSet.impulse_radius.value = 0
+	oSet.impulse_scale.value = 0.01
+	oSet.impulse_radius.value = 0.2
 	oSet.fire_ignition_radius.value = 1
 	oSet.fire_density.value = 10
 	oSet.contact_damage_scale.value = 0.01
