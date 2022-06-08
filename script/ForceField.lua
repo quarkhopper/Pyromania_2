@@ -4,8 +4,6 @@ FF = {} -- library constants
 FF.FORWARD = Vec(0, 0, -1)
 FF.MAX_SIM_POINTS = 200
 FF.BIAS_CONST = 100
-FF.MIN_PROP_ANGLE = 10
-FF.MAX_PROP_ANGLE = 30
 
 function inst_force_field_ff()
     -- create a force field instance.
@@ -31,24 +29,21 @@ function inst_force_field_ff()
     inst.f_max = 500
     -- The force below which vectors are culled from the field
     inst.f_dead = 0.1
-    -- Field propagation produces this many spokes radiating out from the parent
-    -- vector into other field coordinates. That may combine with existing vectors in those
-    -- coordinates or extend the field into new coordinates (adding to the field)
-    inst.prop_split = 6
-    -- The angle in degrees that spokes are produced from the center parent vector when 
-    -- propagating. 
-    -- inst.prop_angle = 45
     -- directional variation added on propagation.
     inst.dir_jitter = 0
     -- directional bias to apply over time, such as for heat rise or gravity. Does not affect force magnitude.
     inst.bias = Vec()
     -- debug total energy
     inst.energy = 0
-    -- the radius in coordinate space that propagation reaches. Larger values than 1.5 may skip coordinates to
-    -- propagate. Effectively this lets the field grow faster dimensionally.
-    inst.extend_scale = 1.5
-    inst.trans_gain = 0.01
     inst.bias_gain = 0.8
+    inst.start_prop_split = 1
+	inst.end_prop_split = 5
+    inst.start_prop_angle = 10
+    inst.end_prop_angle = 30
+    inst.end_trans_gain = 0.1
+    inst.start_trans_gain = 1
+    inst.end_extend_scale = 0.5
+    inst.start_extend_scale = 3
     return inst
 end
 
@@ -88,7 +83,19 @@ function inst_field_point(coord, resolution)
     inst.type = point_type.base
     inst.cull = false
     inst.hit = false
+    inst.trans_mag = 0
+    inst.trans_gain = 0
+    inst.force_n = 0
+    inst.extend_scale = 0
     return inst
+end
+
+function update_point_calculations(point, ff, dt)
+    point.force_n = math.max(0, range_value_to_fraction(point.mag, ff.f_dead, ff.f_max))
+    point.trans_gain = fraction_to_range_value(point.force_n ^ 0.5, ff.end_trans_gain, ff.start_trans_gain)
+    point.prop_split = round(fraction_to_range_value(point.force_n ^ 0.5, ff.end_prop_split, ff.start_prop_split))
+    point.trans_mag = (point.mag/(point.prop_split + 1)) * fraction_to_range_value(point.trans_gain, 0, 1/dt) * dt
+    point.extend_scale = fraction_to_range_value(point.force_n ^ 0.5, ff.end_extend_scale, ff.start_extend_scale)
 end
 
 function set_point_vec(point, vec)
@@ -130,37 +137,37 @@ function propagate_field_forces(ff, dt)
     local points = flatten(ff.field)
     for i = 1, #points do
         local point = points[i]
+        update_point_calculations(point, ff, dt)
         -- points start the cycle with the call flag set to true. If the propagation cycle ends
         -- and the cull flag has not been set to false then the point will be culled 
         -- in the normalization phase this cycle.
         point.cull = true
-        local trans_mag = (point.mag/(ff.prop_split + 1)) * fraction_to_range_value(ff.trans_gain, 0, 1/dt) * dt
-        propagate_point_force(ff, point, point.dir, trans_mag, dt)
+
+        propagate_point_force(ff, point, point.dir, dt)
         -- propagate the force in a spread to other vectors around the direction it's pointing.
         -- See extension method above for details about radiate(). 
-        local force_n = math.max(0, range_value_to_fraction(point.mag, ff.f_dead, ff.f_max))
-        local prop_angle = fraction_to_range_value(math.sqrt(force_n), FF.MAX_PROP_ANGLE, FF.MIN_PROP_ANGLE)
-        local prop_dirs = radiate(point.vec, prop_angle, ff.prop_split, math.random() * 360)
+        local prop_angle = fraction_to_range_value(point.force_n ^ 0.5, ff.end_prop_angle, ff.start_prop_angle)
+        local prop_dirs = radiate(point.vec, prop_angle, point.prop_split, math.random() * 360)
         for i = 1, #prop_dirs do
             -- propagate the force in the direction of radiation spokes
             local prop_dir = prop_dirs[i]
-            propagate_point_force(ff, point, prop_dir, trans_mag, dt)
+            propagate_point_force(ff, point, prop_dir, dt)
         end
         if point.mag > ff.f_dead then point.cull = false end
     end
 end
 
-function propagate_point_force(ff, point, trans_dir, trans_mag, dt)
+function propagate_point_force(ff, point, trans_dir, dt)
     -- propagate force to a vector in a target coordinate given a parent vector.
     local jitter_mag = fraction_to_range_value(ff.dir_jitter/10, 0, 1)
     trans_dir = VecNormalize(VecAdd(trans_dir, jitter_mag))
-    local trans_vec = VecScale(trans_dir, trans_mag)
-    local coord_prime = round_vec(VecAdd(point.coord, VecScale(trans_dir, random_float_in_range(1, ff.extend_scale))))
+    local trans_vec = VecScale(trans_dir, point.trans_mag)
+    local coord_prime = round_vec(VecAdd(point.coord, VecScale(trans_dir, random_float_in_range(1, point.extend_scale))))
     if not vecs_equal(coord_prime, point.coord) then 
         local point_prime = field_get(ff.field, coord_prime)
         if point_prime == nil then
             -- check if we're hitting something on the way to extending
-            local hit, dist, normal, shape = QueryRaycast(point.pos, trans_dir, 2 * ff.resolution * ff.extend_scale, 0.025)
+            local hit, dist, normal, shape = QueryRaycast(point.pos, trans_dir, 2 * ff.resolution * point.extend_scale, 0.025)
             if hit then 
 
                 -- log the contact, don't create a new extension
@@ -172,13 +179,6 @@ function propagate_point_force(ff, point, trans_dir, trans_mag, dt)
                 -- the force vector will be directly annihilated. parallel to the
                 -- surface will be 0, and the force vector is not redirected at all 
                 local redirection_factor = math.abs(VecDot(normal, trans_dir))
-                -- fun note! When I first made this calculation I did an oopsy and 
-                -- scaled the normal by the distance to the hit point (instead of, at max,
-                -- the magnitude of the force). When a force impacted
-                -- a surface at shallower than right angles this ADDED energy, and 
-                -- caused fire to spread out and crawl over everything in the map.
-                -- it looked really cool but looking really cool as your application 
-                -- terminates upsets people, I GUESS.
                 local new_vec =  VecAdd(point.vec, VecScale(normal, point.mag * redirection_factor))
                 -- readjust as this sometimes results in added energy. 
                 local new_vec = VecScale(VecNormalize(new_vec), math.min(point.mag, VecLength(new_vec)))
@@ -187,7 +187,7 @@ function propagate_point_force(ff, point, trans_dir, trans_mag, dt)
             elseif point.mag > ff.f_dead then 
                 -- create the point in the new space
                 point_prime = inst_field_point(coord_prime, ff.resolution)
-                set_point_dir_mag(point_prime, trans_dir, trans_mag)
+                set_point_dir_mag(point_prime, trans_dir, point.trans_mag)
                 field_put(ff.field, point_prime, point_prime.coord)
                 -- do not cull a new point or a point that has extended the field
                 point_prime.cull = false
@@ -200,10 +200,10 @@ function propagate_point_force(ff, point, trans_dir, trans_mag, dt)
                 point_prime.cull = false
                 point.cull = false
             end
-            set_point_dir_mag(point_prime, new_dir, point_prime.mag + trans_mag)
+            set_point_dir_mag(point_prime, new_dir, point_prime.mag + point.trans_mag)
 
         end
-        set_point_dir_mag(point, point.dir, math.max(0, point.mag - trans_mag))
+        set_point_dir_mag(point, point.dir, math.max(0, point.mag - point.trans_mag))
     end
 end
 

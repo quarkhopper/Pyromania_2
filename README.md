@@ -68,9 +68,9 @@ The HSV color of a flame when the controlling vector field force is at its maxim
 The HSV color of a flame when the controlling vector field force is at its minimum (flame_dead_force).
 #### Rainbow mode (rainbow_mode)
 All flames and resulting smoke particles in the pyro field cycle hue values. 
-#### Hot smoke particle size (min_smoke_size)
-The size of smoke particles when the underlying vector force magnitude is at its maximum. NOTE: calling this “min” assumes that hot flame particles are smaller, but there’s nothing stopping you from setting this larger than max_smoke_size and seeing particles shrink. 
-#### Cool smoke particle size (max_smoke_size)
+#### Hot smoke particle size (hot_particle_size)
+The size of smoke particles when the underlying vector force magnitude is at its maximum. NOTE: calling this “min” assumes that hot flame particles are smaller, but there’s nothing stopping you from setting this larger than cool_particle_size and seeing particles shrink. 
+#### Cool smoke particle size (cool_particle_size)
 The size of smoke particles when the underlying vector force magnitude is at flame_dead_force.
 #### Lifetime of smoke particles (smoke_life)
 How long black, lingering smoke particles remain (seconds).

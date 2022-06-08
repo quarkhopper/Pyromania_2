@@ -30,6 +30,7 @@ function load_option_sets()
 	TOOL.GENERAL = load_option_set("general", true)
     PYRO.MAX_FLAMES = TOOL.GENERAL.max_flames.value
     FF.MAX_SIM_POINTS = TOOL.GENERAL.simulation_points.value
+
 	TOOL.BOMB = load_option_set("bomb", true)
     init_pyro(TOOL.BOMB)
 	TOOL.ROCKET = load_option_set("rocket", true)
@@ -46,8 +47,6 @@ function init_pyro(tool)
     pyro.flames_per_spawn = tool.flames_per_point.value
     pyro.flame_light_intensity = tool.flame_light_intensity.value
     pyro.flame_dead_force = tool.flame_dead_force.value
-    pyro.max_smoke_size = tool.max_smoke_size.value
-    pyro.min_smoke_size = tool.min_smoke_size.value
     pyro.smoke_life = tool.smoke_life.value
     pyro.smoke_amount_n = tool.smoke_amount.value
     pyro.impulse_scale = tool.impulse_scale.value
@@ -64,11 +63,48 @@ function init_pyro(tool)
     pyro.ff.f_max = tool.f_max.value
     pyro.ff.f_dead = tool.f_dead.value
     pyro.ff.bias = Vec(0, tool.heat_rise.value, 0)
-    pyro.ff.prop_split = tool.prop_split.value
-    -- pyro.ff.prop_angle = tool.prop_angle.value
-    pyro.ff.extend_scale = tool.extend_scale.value
-    pyro.ff.trans_gain = tool.trans_gain.value
     pyro.ff.bias_gain = tool.bias_gain.value
+
+    -- These options are not configurable through the options modal or saved in
+    -- the save file. 
+    if tool == TOOL.BOMB then 
+        pyro.ff.start_prop_split = 1
+        pyro.ff.end_prop_split = 6
+        pyro.ff.start_prop_angle = 10
+        pyro.ff.end_prop_angle = 30
+        pyro.ff.start_trans_gain = 0.25
+        pyro.ff.end_trans_gain = 0.1
+        pyro.ff.start_extend_scale = 3
+        pyro.ff.end_extend_scale = 1
+        pyro.hot_particle_size = 0.3
+        pyro.cool_particle_size = 0.6
+
+    elseif tool == TOOL.ROCKET then 
+        pyro.ff.start_prop_split = 1
+        pyro.ff.end_prop_split = 5
+        pyro.ff.start_prop_angle = 10
+        pyro.ff.end_prop_angle = 30
+        pyro.ff.start_trans_gain = 0.5
+        pyro.ff.end_trans_gain = 0.15
+        pyro.ff.start_extend_scale = 2
+        pyro.ff.end_extend_scale = 1
+        pyro.hot_particle_size = 0.1
+        pyro.cool_particle_size = 0.6
+
+    elseif tool == TOOL.THROWER then 
+        pyro.ff.start_prop_split = 1
+        pyro.ff.end_prop_split = 2
+        pyro.ff.start_prop_angle = 10
+        pyro.ff.end_prop_angle = 30
+        pyro.ff.start_trans_gain = 0.2
+        pyro.ff.end_trans_gain = 0.4
+        pyro.ff.start_extend_scale = 0.5
+        pyro.ff.end_extend_scale = 1.5
+        pyro.hot_particle_size = 0.1
+        pyro.cool_particle_size = 0.2
+
+    end
+
     tool.pyro = pyro
 end
 
@@ -78,8 +114,8 @@ function init_shock_field()
     pyro.flames_per_spawn = 5
     pyro.flame_light_intensity = 0
     pyro.flame_dead_force = 0
-    pyro.max_smoke_size = 1
-    pyro.min_smoke_size = 1
+    pyro.cool_particle_size = 1
+    pyro.hot_particle_size = 1
     pyro.smoke_life = 0
     pyro.smoke_amount_n = 0
     pyro.flame_puff_life = 0.5
@@ -98,11 +134,15 @@ function init_shock_field()
     pyro.ff.f_max = 1000
     pyro.ff.f_dead = 1
     pyro.ff.bias = Vec()
-    pyro.ff.prop_split = 4
-    -- pyro.ff.prop_angle = 55
-    pyro.extend_scale = 3
     pyro.ff.dir_jitter = 10
-    pyro.ff.trans_gain = 0.8
     pyro.ff.bias_gain = 0
+    pyro.ff.start_prop_split = 4
+    pyro.ff.end_prop_split = 4
+    pyro.ff.start_prop_angle = 10
+    pyro.ff.end_prop_angle = 30
+    pyro.ff.start_trans_gain = 0.8
+    pyro.ff.end_trans_gain = 0.8
+    pyro.ff.start_extend_scale = 3
+    pyro.ff.end_extend_scale = 3
     SHOCK_FIELD = pyro
 end

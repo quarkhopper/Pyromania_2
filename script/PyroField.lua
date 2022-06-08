@@ -46,9 +46,9 @@ function inst_pyro()
     -- a minomer as it may actually be smaller than min if set that way and it will still
     -- function correctly in the algorithm. It's really the "max force" smoke size. And may 
     -- be presented as a user option for "hot" smoke size.
-    inst.max_smoke_size = 1
+    inst.cool_particle_size = 1
     -- Smoke size when the base field vector point is just above the flame_dead_force.
-    inst.min_smoke_size = 0.3
+    inst.hot_particle_size = 0.3
     -- The lifetime of black smoke that spawns behind the flames.
     inst.smoke_life = 3
     -- Normalized smoke amount. Calculated by math.random() < value
@@ -142,13 +142,12 @@ function make_flame_effect(pyro, flame, dt)
     local puff_color_value = 1
     if flame.life_n >= 0 then 
         -- normal mode
-        particle_size = fraction_to_range_value(flame.life_n, pyro.max_smoke_size, pyro.min_smoke_size)
+        particle_size = fraction_to_range_value(flame.life_n, pyro.cool_particle_size, pyro.hot_particle_size)
     else
         -- ember mode
-        local afterlife_n = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force)
-        puff_color_value = range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force)
-        -- puff_color_value = puff_color_value + random_float_in_range(-0.1, 0.1)
-        particle_size = fraction_to_range_value(afterlife_n ^ 0.5, 0.2, pyro.max_smoke_size)
+        local afterlife_n = math.max(0, range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force))
+        puff_color_value = afterlife_n
+        particle_size = fraction_to_range_value(afterlife_n ^ 0.5, 0.2, pyro.cool_particle_size)
         intensity = fraction_to_range_value(afterlife_n, 0.2, intensity)
         -- Jitter is added to an ember to simulate flutter. this prevents the smaller sized particules from 
         -- exposing the field grid too much. 
@@ -161,7 +160,7 @@ function make_flame_effect(pyro, flame, dt)
     ParticleReset()
     ParticleType("smoke")
     ParticleAlpha(pyro.flame_opacity, 0, "easeout", 0, 0.5)
-    ParticleDrag(0.25)
+    -- ParticleDrag(0.25)
     ParticleRadius(particle_size)
     local smoke_color = HSVToRGB(Vec(0, 0, puff_color_value))
     ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
@@ -176,7 +175,7 @@ function make_flame_effect(pyro, flame, dt)
             -- Set up a smoke puff
             ParticleReset()
             ParticleType("smoke")
-            ParticleDrag(0)
+            -- ParticleDrag(0)
             ParticleAlpha(0.5, 0.9, "linear", 0.05, 0.5)
             ParticleRadius(particle_size)
             if pyro.rainbow_mode == on_off.on then

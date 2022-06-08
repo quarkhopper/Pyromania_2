@@ -204,16 +204,6 @@ function create_mode_option_set(name, display_name)
 	oSet.flame_dead_force.step = 0.1
 	oSet.options[#oSet.options + 1] = oSet.flame_dead_force
 
-	oSet.trans_gain = create_mode_option(
-		option_type.numeric, 
-		0.01,
-		"trans_gain",
-		"Force transfer gain")
-	oSet.trans_gain.range.lower = 0
-	oSet.trans_gain.range.upper = 1
-	oSet.trans_gain.step = 0.001
-	oSet.options[#oSet.options + 1] = oSet.trans_gain
-
 	oSet.bias_gain = create_mode_option(
 		option_type.numeric, 
 		0.01,
@@ -233,26 +223,6 @@ function create_mode_option_set(name, display_name)
 	oSet.heat_rise.range.upper = 1
 	oSet.heat_rise.step = 0.1
 	oSet.options[#oSet.options + 1] = oSet.heat_rise
-
-	oSet.prop_split = create_mode_option(
-		option_type.numeric, 
-		6,
-		"prop_split",
-		"Spread splits")
-	oSet.prop_split.range.lower = 1
-	oSet.prop_split.range.upper = 10
-	oSet.prop_split.step = 1
-	oSet.options[#oSet.options + 1] = oSet.prop_split
-
-	oSet.extend_scale = create_mode_option(
-		option_type.numeric, 
-		1.5,
-		"extend_scale",
-		"Spread scale")
-	oSet.extend_scale.range.lower = 0
-	oSet.extend_scale.range.upper = 10
-	oSet.extend_scale.step = 0.5
-	oSet.options[#oSet.options + 1] = oSet.extend_scale
 
 	oSet.dir_jitter = create_mode_option(
 		option_type.numeric, 
@@ -325,26 +295,6 @@ function create_mode_option_set(name, display_name)
 		"Rainbow mode")
 	oSet.rainbow_mode.accepted_values = on_off
 	oSet.options[#oSet.options + 1] = oSet.rainbow_mode
-
-	oSet.min_smoke_size = create_mode_option(
-		option_type.numeric, 
-		0.3,
-		"min_smoke_size",
-		"Hot smoke particle size")
-	oSet.min_smoke_size.range.lower = 0.1
-	oSet.min_smoke_size.range.upper = 1
-	oSet.min_smoke_size.step = 0.1
-	oSet.options[#oSet.options + 1] = oSet.min_smoke_size
-
-	oSet.max_smoke_size = create_mode_option(
-		option_type.numeric, 
-		0.8,
-		"max_smoke_size",
-		"Cool smoke particle size")
-	oSet.max_smoke_size.range.lower = 0.1
-	oSet.max_smoke_size.range.upper = 1
-	oSet.max_smoke_size.step = 0.1
-	oSet.options[#oSet.options + 1] = oSet.max_smoke_size
 
 	oSet.smoke_life = create_mode_option(
 		option_type.numeric, 
@@ -472,22 +422,17 @@ function create_bomb_option_set()
 	oSet.max_random_radius.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_random_radius
 
+	-- default values
 	oSet.f_max.value = 100000
 	oSet.f_dead.value = 0.001
 	oSet.flame_dead_force.value = 0.1
-	oSet.trans_gain.value = 0.1
 	oSet.bias_gain.value = 0.4
 	oSet.heat_rise.value = 0.1
-	oSet.prop_split.value = 5
-	-- oSet.prop_angle.value = 30
-	oSet.extend_scale.value = 2
 	oSet.dir_jitter.value = 0
 	oSet.field_resolution.value = 0.8
 	oSet.meta_resolution.value = 2
 	oSet.flames_per_point.value = 4
 	oSet.flame_light_intensity.value = 3
-	oSet.min_smoke_size.value = 0.3
-	oSet.max_smoke_size.value = 0.6
 	oSet.smoke_life.value = 2
 	oSet.smoke_amount.value = 0.3
 	oSet.impulse_scale.value = 0.8
@@ -555,22 +500,17 @@ function create_rocket_option_set()
 	oSet.max_dist.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
 
+	-- default values
 	oSet.f_max.value = 5000
 	oSet.f_dead.value = 0.15
 	oSet.flame_dead_force.value = 5
-	oSet.trans_gain.value = 0.2
 	oSet.bias_gain.value = 0.25
 	oSet.heat_rise.value = 0.1
-	oSet.prop_split.value = 3
-	-- oSet.prop_angle.value = 30
-	oSet.extend_scale.value = 1
 	oSet.dir_jitter.value = 0
 	oSet.field_resolution.value = 0.5
 	oSet.meta_resolution.value = 2
 	oSet.flames_per_point.value = 4
 	oSet.flame_light_intensity.value = 3
-	oSet.min_smoke_size.value = 0.2
-	oSet.max_smoke_size.value = 0.6
 	oSet.smoke_life.value = 1
 	oSet.smoke_amount.value = 0.1
 	oSet.impulse_scale.value = 0.6
@@ -628,23 +568,18 @@ function create_thrower_option_set()
 	oSet.gravity.step = 0.001
 	oSet.options[#oSet.options + 1] = oSet.gravity	
 
+	-- default values
 	oSet.f_max.value = 500
 	oSet.f_dead.value = 0.5
 	oSet.flame_dead_force.value = 0.8
-	oSet.trans_gain.value = 0.2
 	oSet.bias_gain.value = 0.7
 	oSet.heat_rise.value = 0.8
-	oSet.prop_split.value = 2
-	-- oSet.prop_angle.value = 10
-	oSet.extend_scale.value = 1.5
 	oSet.dir_jitter.value = 0.1
 	oSet.field_resolution.value = 0.1
 	oSet.meta_resolution.value = 1
 	oSet.flames_per_point.value = 1
 	oSet.flame_light_intensity.value = 1
 	oSet.flame_color_hot.value = Vec(7.5, 0.9, 0.6)
-	oSet.min_smoke_size.value = 0.1
-	oSet.max_smoke_size.value = 0.2
 	oSet.smoke_life.value = 1
 	oSet.smoke_amount.value = 0.1
 	oSet.impulse_scale.value = 0
