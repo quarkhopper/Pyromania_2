@@ -85,7 +85,7 @@ function init_shock_field()
     pyro.flame_puff_life = 0.5
     pyro.flame_jitter = 2
     pyro.flame_tile = 0
-    pyro.flame_opacity = 1s
+    pyro.flame_opacity = 1
     pyro.impulse_scale = 1
     pyro.impulse_radius = 10
     pyro.fire_ignition_radius = 0

@@ -472,16 +472,16 @@ function create_bomb_option_set()
 	oSet.max_random_radius.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_random_radius
 
-	oSet.f_max.value = 50000
+	oSet.f_max.value = 100000
 	oSet.f_dead.value = 0.1
 	oSet.flame_dead_force.value = 0.8
-	oSet.trans_gain.value = 0.05
-	oSet.bias_gain.value = 0.5
-	oSet.heat_rise.value = 0.5
+	oSet.trans_gain.value = 0.26
+	oSet.bias_gain.value = 0.4
+	oSet.heat_rise.value = 0.1
 	oSet.prop_split.value = 5
 	-- oSet.prop_angle.value = 30
-	oSet.extend_scale.value = 3
-	oSet.dir_jitter.value = 2
+	oSet.extend_scale.value = 2
+	oSet.dir_jitter.value = 0
 	oSet.field_resolution.value = 0.8
 	oSet.meta_resolution.value = 2
 	oSet.flames_per_point.value = 4
@@ -494,7 +494,7 @@ function create_bomb_option_set()
 	oSet.impulse_radius.value = 5
 	oSet.fire_ignition_radius.value = 5
 	oSet.fire_density.value = 8
-	oSet.contact_damage_scale.value = 1
+	oSet.contact_damage_scale.value = 0.1
 	oSet.max_player_hurt.value = 0.55
 	oSet.explosion_fireball_radius.value = 0.5
 	oSet.explosion_seeds.value = 100
