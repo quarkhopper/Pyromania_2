@@ -189,7 +189,7 @@ function create_mode_option_set(name, display_name)
 		0.1,
 		"f_dead",
 		"Dead force")
-	oSet.f_dead.range.lower = 0
+	oSet.f_dead.range.lower = 0.001
 	oSet.f_dead.range.upper = 1
 	oSet.f_dead.step = 0.001
 	oSet.options[#oSet.options + 1] = oSet.f_dead
@@ -473,9 +473,9 @@ function create_bomb_option_set()
 	oSet.options[#oSet.options + 1] = oSet.max_random_radius
 
 	oSet.f_max.value = 100000
-	oSet.f_dead.value = 0.1
-	oSet.flame_dead_force.value = 0.8
-	oSet.trans_gain.value = 0.26
+	oSet.f_dead.value = 0.001
+	oSet.flame_dead_force.value = 0.1
+	oSet.trans_gain.value = 0.1
 	oSet.bias_gain.value = 0.4
 	oSet.heat_rise.value = 0.1
 	oSet.prop_split.value = 5
@@ -488,7 +488,7 @@ function create_bomb_option_set()
 	oSet.flame_light_intensity.value = 3
 	oSet.min_smoke_size.value = 0.3
 	oSet.max_smoke_size.value = 0.6
-	oSet.smoke_life.value = 1
+	oSet.smoke_life.value = 2
 	oSet.smoke_amount.value = 0.3
 	oSet.impulse_scale.value = 0.8
 	oSet.impulse_radius.value = 5
