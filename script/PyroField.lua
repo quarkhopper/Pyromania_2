@@ -41,13 +41,7 @@ function inst_pyro()
     -- changes the flame rendering mode from normal rules to "ember" rules. Ember rules will
     -- have the flame point light decreasing in intensity and the puff getting smaller and 
     -- jittering as it flutters away. 
-    inst.flame_dead_force = 0.2
-    -- Smoke size when the base field vector point is at its highest magnitude. Kind of 
-    -- a minomer as it may actually be smaller than min if set that way and it will still
-    -- function correctly in the algorithm. It's really the "max force" smoke size. And may 
-    -- be presented as a user option for "hot" smoke size.
     inst.cool_particle_size = 1
-    -- Smoke size when the base field vector point is just above the flame_dead_force.
     inst.hot_particle_size = 0.3
     -- The lifetime of black smoke that spawns behind the flames.
     inst.smoke_life = 3
@@ -84,7 +78,7 @@ function inst_pyro()
     -- Why did you guys ask for this? If set to "on" will cause all flame effects to rotate 
     -- colors in sync and new smoke particules to spawn in that color. 
     inst.rainbow_mode = on_off.off
-    -- The flame color when based on a force field vector point just above flame_dead_force magnitude.
+    -- The flame color when based on a force field vector point just above dead force.
     inst.color_cool = Vec(7.7, 1, 0.8)
     -- The flame color when based on a force field vector point at maximum magnitude.
     inst.color_hot = Vec(7.7, 1, 0.8)
@@ -100,7 +94,7 @@ function inst_flame(pos)
     local inst = {}
     inst.pos = pos
     -- Normalized life of the flame as defined by the normalized magnitude of 
-    -- the underlying force field vector with flame_dead_force as a minimum.
+    -- the underlying force field vector with burnout force as a minimum.
     inst.life_n = 1
     -- Parent FORCE FIELD POINT that this flame was spawned for.
     inst.parent = nil
@@ -111,10 +105,10 @@ function make_flame_effect(pyro, flame, dt)
     -- Render effects for one flame instance.
 
     -- Flame life is the normalized value of the underlying force field vector magnitude on a scale
-    -- from the flame_dead_force to the max magnitude allowed for the field [0 to 1]. This differs 
-    -- from force_n that is the normalized value on a scale from the force field dead_force (usually lower
-    -- than flame_dead_force).
-    flame.life_n = math.min(1, range_value_to_fraction(flame.parent.mag, pyro.flame_dead_force, pyro.ff.f_max))
+    -- from the burnout force to the max magnitude allowed for the field [0 to 1]. This differs 
+    -- from force_n that is the normalized value on a scale from the force field dead force (usually lower
+    -- than burnout force).
+    flame.life_n = math.min(1, range_value_to_fraction(flame.parent.mag, pyro.ff.graph.burnout_force, pyro.ff.graph.max_force))
     local color = Vec()
     local intensity = pyro.flame_light_intensity
     if pyro.rainbow_mode == on_off.on then
@@ -145,7 +139,7 @@ function make_flame_effect(pyro, flame, dt)
         particle_size = fraction_to_range_value(flame.life_n, pyro.cool_particle_size, pyro.hot_particle_size)
     else
         -- ember mode
-        local afterlife_n = math.max(0, range_value_to_fraction(flame.parent.mag, pyro.ff.f_dead, pyro.flame_dead_force))
+        local afterlife_n = math.max(0, range_value_to_fraction(flame.parent.mag, pyro.ff.graph.dead_force, pyro.ff.graph.burnout_force))
         puff_color_value = afterlife_n
         particle_size = fraction_to_range_value(afterlife_n ^ 0.5, 0.2, pyro.cool_particle_size)
         intensity = fraction_to_range_value(afterlife_n, 0.2, intensity)
@@ -257,7 +251,7 @@ function impulse_fx(pyro)
         local push_bodies = QueryAabbBodies(box[1], box[2])
         local force_mag = VecLength(point.vec)
         local force_dir = VecNormalize(point.vec)
-        local force_n = force_mag / pyro.ff.f_max
+        local force_n = force_mag / pyro.ff.graph.max_force
         for i = 1, #push_bodies do
             local push_body = push_bodies[i]
             local body_center = TransformToParentPoint(GetBodyTransform(push_body), GetBodyCenterOfMass(push_body))
@@ -277,7 +271,7 @@ end
 function collision_fx(pyro)
     for i = 1, #pyro.ff.contacts do
         local contact = pyro.ff.contacts[i]
-        local force_n = range_value_to_fraction(VecLength(contact.point.vec), pyro.flame_dead_force, pyro.ff.f_max)
+        local force_n = range_value_to_fraction(VecLength(contact.point.vec), pyro.ff.graph.burnout_force, pyro.ff.graph.max_force)
         -- make holes
         local voxels = fraction_to_range_value(force_n ^ 0.5, PYRO.MIN_HOLE_VOXELS, PYRO.MAX_HOLE_VOXELS) * pyro.contact_damage_scale
         if voxels > 0.1 then 
@@ -299,7 +293,7 @@ function check_hurt_player(pyro)
             local hit = QueryRaycast(point.pos, VecNormalize(vec_to_player), dist_to_player, 0.025)
             if not hit then             
                 local factor = 1 - (dist_to_player / pyro.impulse_radius)
-                factor = factor * (VecLength(point.vec) / pyro.ff.f_max) + 0.01
+                factor = factor * (VecLength(point.vec) / pyro.ff.graph.max_force) + 0.01
                 hurt_player(factor * pyro.max_player_hurt)
             end
         end

@@ -75,7 +75,7 @@ function rocket_tick(dt)
         if rocket.fuse == 0 then 
             SetBodyDynamic(rocket, true)
             Explosion(rocket.trans.pos, 1)
-            local force_mag = TOOL.ROCKET.pyro.ff.f_max
+            local force_mag = TOOL.ROCKET.pyro.ff.graph.max_force
             local fireball_rad = TOOL.ROCKET.explosion_fireball_radius.value
             local explosion_seeds =  TOOL.ROCKET.explosion_seeds.value
             local pos = rocket.trans.pos

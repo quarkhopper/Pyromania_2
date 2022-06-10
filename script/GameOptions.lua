@@ -174,35 +174,35 @@ function create_mode_option_set(name, display_name)
     oSet.version = CURRENT_VERSION
 	oSet.options = {}
 
-	oSet.f_max = create_mode_option(
+	oSet.max_force = create_mode_option(
 		option_type.numeric, 
 		1000,
-		"f_max",
+		"max_force",
 		"Imparted force per point")
-	oSet.f_max.range.lower = 1
-	oSet.f_max.range.upper = 100000
-	oSet.f_max.step = 10
-	oSet.options[#oSet.options + 1] = oSet.f_max
+	oSet.max_force.range.lower = 1
+	oSet.max_force.range.upper = 100000
+	oSet.max_force.step = 10
+	oSet.options[#oSet.options + 1] = oSet.max_force
 
-	oSet.f_dead = create_mode_option(
+	oSet.dead_threshold = create_mode_option(
 		option_type.numeric, 
 		0.1,
-		"f_dead",
+		"dead_threshold",
 		"Dead force")
-	oSet.f_dead.range.lower = 0.001
-	oSet.f_dead.range.upper = 1
-	oSet.f_dead.step = 0.001
-	oSet.options[#oSet.options + 1] = oSet.f_dead
+	oSet.dead_threshold.range.lower = 0.001
+	oSet.dead_threshold.range.upper = 1
+	oSet.dead_threshold.step = 0.001
+	oSet.options[#oSet.options + 1] = oSet.dead_threshold
 	
-	oSet.flame_dead_force = create_mode_option(
+	oSet.flame_dead_threshold = create_mode_option(
 		option_type.numeric, 
 		10,
-		"flame_dead_force",
+		"flame_dead_threshold",
 		"Flame dead force")
-	oSet.flame_dead_force.range.lower = 0
-	oSet.flame_dead_force.range.upper = 10
-	oSet.flame_dead_force.step = 0.1
-	oSet.options[#oSet.options + 1] = oSet.flame_dead_force
+	oSet.flame_dead_threshold.range.lower = 0
+	oSet.flame_dead_threshold.range.upper = 10
+	oSet.flame_dead_threshold.step = 0.1
+	oSet.options[#oSet.options + 1] = oSet.flame_dead_threshold
 
 	oSet.bias_gain = create_mode_option(
 		option_type.numeric, 
@@ -423,9 +423,7 @@ function create_bomb_option_set()
 	oSet.options[#oSet.options + 1] = oSet.max_random_radius
 
 	-- default values
-	oSet.f_max.value = 100000
-	oSet.f_dead.value = 0.01
-	oSet.flame_dead_force.value = 0.1
+	oSet.max_force.value = 1000
 	oSet.bias_gain.value = 0.4
 	oSet.heat_rise.value = 0.1
 	oSet.dir_jitter.value = 0
@@ -501,9 +499,7 @@ function create_rocket_option_set()
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
 
 	-- default values
-	oSet.f_max.value = 5000
-	oSet.f_dead.value = 0.15
-	oSet.flame_dead_force.value = 5
+	oSet.max_force.value = 1000
 	oSet.bias_gain.value = 0.25
 	oSet.heat_rise.value = 0.1
 	oSet.dir_jitter.value = 0
@@ -569,9 +565,7 @@ function create_thrower_option_set()
 	oSet.options[#oSet.options + 1] = oSet.gravity	
 
 	-- default values
-	oSet.f_max.value = 500
-	oSet.f_dead.value = 0.5
-	oSet.flame_dead_force.value = 0.8
+	oSet.max_force.value = 500
 	oSet.bias_gain.value = 0.7
 	oSet.heat_rise.value = 0.8
 	oSet.dir_jitter.value = 0.1

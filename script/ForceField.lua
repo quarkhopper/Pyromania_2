@@ -5,6 +5,30 @@ FF.FORWARD = Vec(0, 0, -1)
 FF.MAX_SIM_POINTS = 200
 FF.BIAS_CONST = 100
 
+function inst_graph()
+    local inst = {}
+    -- boundary vars
+    inst.max_force = 1000 -- mag
+    inst.dead_threshold =  0.001 -- of max_force
+    -- continuous vars
+    inst.hot_prop_split = 1
+	inst.cool_prop_split = 5
+    inst.hot_prop_angle = 10
+    inst.cool_prop_angle = 30
+    inst.cool_extend_scale = 0.5
+    inst.hot_extend_scale = 3
+    -- parametric vars
+    inst.shock_transfer = 0.5 -- of mag
+    inst.shock_threshold = 0.5 -- of max_force
+    inst.expansion_transfer = 0.3 -- abs mag/dt
+    inst.expansion_threshold = 0.1 -- of max_force
+    inst.burnout_transfer = 0.8 -- of mag
+    -- constants
+    inst.burnout_force = inst.max_force * inst.expansion_threshold
+    inst.dead_force = inst.max_force * inst.dead_threshold
+    return inst
+end
+
 function inst_force_field_ff()
     -- create a force field instance.
     local inst = {}
@@ -19,16 +43,11 @@ function inst_force_field_ff()
     -- a shape. This list is cleared before every propagation. This field is 
     -- regenerated regularly from the base field.
     inst.contacts = {}
-
     -- Resolution of the base field. How many world units per force vector. (actually the reverse of an 
     -- actual resolution  number)
     inst.resolution = 0.5
     -- Resolution of the metafield
     inst.meta_resolution = 2
-    -- The maximum force assignable to a vector. It's clamped below this number.
-    inst.f_max = 500
-    -- The force below which vectors are culled from the field
-    inst.f_dead = 0.1
     -- directional variation added on propagation.
     inst.dir_jitter = 0
     -- directional bias to apply over time, such as for heat rise or gravity. Does not affect force magnitude.
@@ -36,14 +55,8 @@ function inst_force_field_ff()
     -- debug total energy
     inst.energy = 0
     inst.bias_gain = 0.8
-    inst.start_prop_split = 1
-	inst.end_prop_split = 5
-    inst.start_prop_angle = 10
-    inst.end_prop_angle = 30
-    inst.end_trans_gain = 0.1
-    inst.start_trans_gain = 1
-    inst.end_extend_scale = 0.5
-    inst.start_extend_scale = 3
+
+    inst.graph = inst_graph()
     return inst
 end
 
@@ -83,19 +96,33 @@ function inst_field_point(coord, resolution)
     inst.type = point_type.base
     inst.cull = false
     inst.hit = false
-    inst.trans_mag = 0
-    inst.trans_gain = 0
     inst.force_n = 0
     inst.extend_scale = 0
     return inst
 end
 
 function update_point_calculations(point, ff, dt)
-    point.force_n = math.max(0, range_value_to_fraction(point.mag, ff.f_dead, ff.f_max))
-    point.trans_gain = fraction_to_range_value(point.force_n ^ 0.5, ff.end_trans_gain, ff.start_trans_gain)
-    point.prop_split = round(fraction_to_range_value(point.force_n ^ 0.5, ff.end_prop_split, ff.start_prop_split))
-    point.trans_mag = (point.mag/(point.prop_split + 1)) * fraction_to_range_value(point.trans_gain, 0, 1/dt) * dt
-    point.extend_scale = fraction_to_range_value(point.force_n ^ 0.5, ff.end_extend_scale, ff.start_extend_scale)
+    -- point graph behavior is based on the normalized force
+    point.force_n = math.max(0, range_value_to_fraction(point.mag, ff.graph.dead_threshold, ff.graph.max_force))
+    -- continuous vars
+        -- point.trans_mag = (point.mag/(point.prop_split + 1)) * fraction_to_range_value(point.trans_gain, 0, 1/dt) * dt
+    point.prop_split = round(fraction_to_range_value(point.force_n, ff.graph.cool_prop_split, ff.graph.hot_prop_split))
+    point.extend_scale = fraction_to_range_value(point.force_n, ff.graph.cool_extend_scale, ff.graph.hot_extend_scale)
+    point.prop_angle = fraction_to_range_value(point.force_n, ff.graph.cool_prop_angle, ff.graph.hot_prop_angle)
+    -- parameteric vars
+    local split_fraction = (point.mag / point.prop_split + 1)
+    local transfer_factor = 0
+    if point.force_n >= ff.graph.shock_threshold then 
+        -- initial phase of shock expansion
+        transfer_factor = ff.graph.shock_transfer
+    elseif point.force_n >= ff.graph.expansion_threshold then
+        -- middle phase of expansion
+        transfer_factor = ff.graph.expansion_transfer
+    else
+        -- end phase burnout
+        transfer_factor = ff.graph.burnout_transfer
+    end
+    point.trans_mag = split_fraction * transfer_factor * dt
 end
 
 function set_point_vec(point, vec)
@@ -131,7 +158,7 @@ function apply_force(ff, pos, force)
 end
 
 function propagate_field_forces(ff, dt)
-    if ff.trans_gain == 0 or ff.extend_scale == 0 then return end
+    if ff.extend_scale == 0 then return end
     -- propagate the force outside of each point into the coord its pointing at 
     -- and average the vectors, reducing the parent mag by a proportion. 
     local points = flatten(ff.field)
@@ -142,18 +169,16 @@ function propagate_field_forces(ff, dt)
         -- and the cull flag has not been set to false then the point will be culled 
         -- in the normalization phase this cycle.
         point.cull = true
-
         propagate_point_force(ff, point, point.dir, dt)
         -- propagate the force in a spread to other vectors around the direction it's pointing.
         -- See extension method above for details about radiate(). 
-        local prop_angle = fraction_to_range_value(point.force_n ^ 0.5, ff.end_prop_angle, ff.start_prop_angle)
-        local prop_dirs = radiate(point.vec, prop_angle, point.prop_split, math.random() * 360)
+        local prop_dirs = radiate(point.vec, point.prop_angle, point.prop_split, math.random() * 360)
         for i = 1, #prop_dirs do
             -- propagate the force in the direction of radiation spokes
             local prop_dir = prop_dirs[i]
             propagate_point_force(ff, point, prop_dir, dt)
         end
-        if point.mag > ff.f_dead then point.cull = false end
+        if point.mag > ff.graph.dead_threshold then point.cull = false end
     end
 end
 
@@ -184,7 +209,7 @@ function propagate_point_force(ff, point, trans_dir, dt)
                 local new_vec = VecScale(VecNormalize(new_vec), math.min(point.mag, VecLength(new_vec)))
                 set_point_vec(point, new_vec)
                 point.hit = true
-            elseif point.mag > ff.f_dead then 
+            elseif point.mag > ff.graph.dead_threshold then 
                 -- create the point in the new space
                 point_prime = inst_field_point(coord_prime, ff.resolution)
                 set_point_dir_mag(point_prime, trans_dir, point.trans_mag)
@@ -230,9 +255,9 @@ function normalize_field(ff, dt)
     local points = flatten(ff.field)
     for i = 1, #points do
         local point = points[i]
-        if point.mag > ff.f_max then 
-            set_point_dir_mag(point, point.dir, ff.f_max)
-            ff.energy = ff.energy + ff.f_max
+        if point.mag > ff.graph.max_force then 
+            set_point_dir_mag(point, point.dir, ff.graph.max_force)
+            ff.energy = ff.energy + ff.graph.max_force
         elseif point.cull then 
             -- judgement day. I see the truth of your cull flags and 
             -- I say to you, vector point: you shall not be spared on that
@@ -398,7 +423,7 @@ end
 function debug_color(ff, point)
     -- color code the debug vector line by the proportion 
     -- of maximum force it is. 
-    local r = point.mag / ff.f_max
+    local r = point.mag / ff.graph.max_force
     local b = 1 - r
     return Vec(r, 0, b)
 end
