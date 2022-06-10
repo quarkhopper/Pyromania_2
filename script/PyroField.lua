@@ -100,7 +100,8 @@ end
 
 function make_flame_effect(pyro, flame, dt)
     -- Render effects for one flame instance.
-    local life_n =  math.min(0, range_value_to_fraction(flame.parent.life_timer, pyro.ff.graph.burnout_time, pyro.ff.graph.life_time))
+    local life_n =  math.max(0, range_value_to_fraction(flame.parent.life_timer, pyro.ff.graph.burnout_time, pyro.ff.graph.life_time))
+    -- DebugPrint("l_n="..tostring(life_n)..", lt="..tostring(pyro.ff.graph.life_time)..", ltr="..tostring(flame.parent.life_timer)..", bt="..tostring(pyro.ff.graph.burnout_time))
     local afterlife_n = math.max(0, range_value_to_fraction(flame.parent.life_timer, 0, pyro.ff.graph.burnout_time))
     local color = Vec()
     local intensity = pyro.flame_light_intensity
@@ -153,27 +154,27 @@ function make_flame_effect(pyro, flame, dt)
     SpawnParticle(VecAdd(flame.pos, random_vec(pyro.flame_jitter)), Vec(), pyro.flame_puff_life)
 
     -- if black smoke amount is set above 0, we're not in ember mode, and chance favors it...
-    if life_n > 0 and pyro.smoke_amount_n > 0 and math.random() < pyro.smoke_amount_n then
-            -- Set up a smoke puff
-            ParticleReset()
-            ParticleType("smoke")
-            -- ParticleDrag(0)
-            ParticleAlpha(0.5, 0.9, "linear", 0.05, 0.5)
-            ParticleRadius(particle_size)
-            if pyro.rainbow_mode == on_off.on then
-                -- Rainbow mode: smoke puff is the universal color of the tick
-                smoke_color = PYRO.RAINBOW
-                smoke_color[3] = 1
-                smoke_color = HSVToRGB(smoke_color)
-            else
-                -- Normal mode: smoke color is a hard-coded dingy value
-                smoke_color = HSVToRGB(Vec(0, 0, 0.1))
-            end
-            ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
-            ParticleGravity(PYRO.GRAVITY)
-            -- apply a little random jitter to the smoke puff based on the flame position,
-            -- for the specified lifetime of the particle.
-            SpawnParticle(VecAdd(flame.pos, random_vec(0.1)), Vec(), pyro.smoke_life)
+    if life_n > 0 and math.random() < pyro.smoke_amount_n then
+        -- Set up a smoke puff
+        ParticleReset()
+        ParticleType("smoke")
+        -- ParticleDrag(0)
+        ParticleAlpha(0.5, 0.9, "linear", 0.05, 0.5)
+        ParticleRadius(particle_size)
+        if pyro.rainbow_mode == on_off.on then
+            -- Rainbow mode: smoke puff is the universal color of the tick
+            smoke_color = PYRO.RAINBOW
+            smoke_color[3] = 1
+            smoke_color = HSVToRGB(smoke_color)
+        else
+            -- Normal mode: smoke color is a hard-coded dingy value
+            smoke_color = HSVToRGB(Vec(0, 0, 0.1))
+        end
+        ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
+        ParticleGravity(PYRO.GRAVITY)
+        -- apply a little random jitter to the smoke puff based on the flame position,
+        -- for the specified lifetime of the particle.
+        SpawnParticle(VecAdd(flame.pos, random_vec(0.1)), Vec(), pyro.smoke_life)
     end
 end
 

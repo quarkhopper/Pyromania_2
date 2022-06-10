@@ -104,10 +104,10 @@ function init_pyro(tool)
 
         pyro.ff.graph.max_force = 1000 
         pyro.ff.graph.extend_threshold =  0.01 
-        pyro.ff.graph.shock_time = 0.2
+        pyro.ff.graph.shock_time = 0.1
         pyro.ff.graph.expansion_time = 1
         pyro.ff.graph.burnout_time = 2
-        pyro.ff.graph.shock_transfer = 0.25
+        pyro.ff.graph.shock_transfer = 0.02
         pyro.ff.graph.expansion_transfer = 0.01
         pyro.ff.graph.burnout_transfer = 0.01
         pyro.ff.graph.hot_prop_split = 1

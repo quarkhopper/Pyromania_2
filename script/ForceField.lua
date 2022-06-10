@@ -107,33 +107,6 @@ function inst_field_point(coord, resolution, graph)
     return inst
 end
 
-function update_point_calculations(point, ff, dt)
-    -- continuous vars
-    point.prop_split = round(fraction_to_range_value(point.life_n, ff.graph.cool_prop_split, ff.graph.hot_prop_split))
-    point.extend_scale = fraction_to_range_value(point.life_n, ff.graph.cool_extend_scale, ff.graph.hot_extend_scale)
-    point.prop_angle = fraction_to_range_value(point.life_n, ff.graph.cool_prop_angle, ff.graph.hot_prop_angle)
-    -- parameteric vars
-    local transfer_factor = 0
-    if point.mag > FF.LOW_MAG_LIMIT then 
-        if point.shock_timer > 0 then 
-            -- initial phase of shock expansion
-            transfer_factor = ff.graph.shock_transfer
-            point.shock_timer = math.max(0, point.shock_timer - dt)
-        elseif point.expansion_timer > 0 then
-            -- middle phase of expansion
-            transfer_factor = ff.graph.expansion_transfer
-            point.expansion_timer = math.max(0, point.expansion_timer - dt)
-        elseif point.burnout_timer > 0 then
-            -- end phase burnout
-            transfer_factor = ff.graph.burnout_transfer
-            point.burnout_timer = math.max(0, point.burnout_timer - dt)
-        end
-    end
-    local split_fraction = (point.mag / point.prop_split + 1)
-    point.trans_mag = split_fraction * transfer_factor * dt
-    point.life_timer = point.shock_timer + point.expansion_timer + point.burnout_timer
-end
-
 function set_point_vec(point, vec)
     -- Sets the force vector of a point and updates the 
     -- dir/mag attributes
@@ -166,6 +139,33 @@ function copy_graph(source, target)
     target.burnout_timer = source.burnout_timer
     target.life_timer = target.shock_timer + target.expansion_timer + target.burnout_timer
     target.life_n = target.life_timer / target.graph.life_time
+end
+
+function update_point_calculations(point, ff, dt)
+    -- continuous vars
+    point.prop_split = round(fraction_to_range_value(point.life_n, ff.graph.cool_prop_split, ff.graph.hot_prop_split))
+    point.extend_scale = fraction_to_range_value(point.life_n, ff.graph.cool_extend_scale, ff.graph.hot_extend_scale)
+    point.prop_angle = fraction_to_range_value(point.life_n, ff.graph.cool_prop_angle, ff.graph.hot_prop_angle)
+    -- parameteric vars
+    local transfer_factor = 0
+    if point.mag > FF.LOW_MAG_LIMIT then 
+        if point.shock_timer > 0 then 
+            -- initial phase of shock expansion
+            transfer_factor = ff.graph.shock_transfer
+            point.shock_timer = math.max(0, point.shock_timer - dt)
+        elseif point.expansion_timer > 0 then
+            -- middle phase of expansion
+            transfer_factor = ff.graph.expansion_transfer
+            point.expansion_timer = math.max(0, point.expansion_timer - dt)
+        elseif point.burnout_timer > 0 then
+            -- end phase burnout
+            transfer_factor = ff.graph.burnout_transfer
+            point.burnout_timer = math.max(0, point.burnout_timer - dt)
+        end
+    end
+    local split_fraction = (point.mag / point.prop_split + 1)
+    point.trans_mag = split_fraction * transfer_factor * dt
+    point.life_timer = point.shock_timer + point.expansion_timer + point.burnout_timer
 end
 
 function apply_force(ff, pos, force)
@@ -219,10 +219,10 @@ function propagate_point_force(ff, point, trans_dir, dt)
     if not vecs_equal(coord_prime, point.coord) then 
         local point_prime = field_get(ff.field, coord_prime)
         if point_prime == nil then
-            -- check if we're hitting something on the way to extending
+            -- check if we're hitting something on the way to extending\
+            DebugPrint("mag="..tostring(point.mag)..", ef="..tostring(point.extend_force))
             local hit, dist, normal, shape = QueryRaycast(point.pos, trans_dir, 2 * ff.resolution * point.extend_scale, 0.025)
             if hit then 
-
                 -- log the contact, don't create a new extension
                 local hit_point = VecAdd(point.pos, VecScale(trans_dir, dist))
                 table.insert(ff.contacts, inst_field_contact(point, hit_point, normal, shape))
