@@ -5,8 +5,12 @@ FF.FORWARD = Vec(0, 0, -1)
 FF.MAX_SIM_POINTS = 200
 FF.BIAS_CONST = 100
 
-function inst_graph()
+function inst_graph(shock_time, expansion_time, burnout_time)
     local inst = {}
+    inst.shock_time = shock_time or 0.2
+    inst.expansion_time = expansion_time or 2
+    inst.burnout_time = burnout_time or 1
+    inst.life_time = inst.shock_time + inst.expansion_time + inst.burnout_time
     -- boundary vars
     inst.max_force = 1000 -- mag
     inst.dead_threshold =  0.001 -- of max_force
@@ -19,13 +23,8 @@ function inst_graph()
     inst.hot_extend_scale = 3
     -- parametric vars
     inst.shock_transfer = 0.5 -- of mag
-    inst.shock_threshold = 0.5 -- of max_force
     inst.expansion_transfer = 0.3 -- abs mag/dt
-    inst.expansion_threshold = 0.1 -- of max_force
     inst.burnout_transfer = 0.8 -- of mag
-    -- constants
-    inst.burnout_force = inst.max_force * inst.expansion_threshold
-    inst.dead_force = inst.max_force * inst.dead_threshold
     return inst
 end
 
@@ -80,7 +79,7 @@ function inst_field_contact(point, hit_point, normal, shape)
     return inst
 end
 
-function inst_field_point(coord, resolution)
+function inst_field_point(coord, resolution, graph)
     -- One vector in the field. There's a static for setting either the position
     -- or the dir/mag combo to keep them consistent for efficiency so this doesn't
     -- have to be recalculated over and over. (I would love it if OOP was allowed in 
@@ -96,33 +95,41 @@ function inst_field_point(coord, resolution)
     inst.type = point_type.base
     inst.cull = false
     inst.hit = false
-    inst.force_n = 0
     inst.extend_scale = 0
+    inst.graph = graph or inst_graph()
+    inst.shock_timer = inst.graph.shock_time
+    inst.expansion_timer = inst.graph.expansion_time
+    inst.burnout_timer = inst.graph.burnout_time
+    inst.life_timer = inst.shock_timer + inst.expansion_timer + inst.burnout_timer
+    inst.life_n = 1
     return inst
 end
 
 function update_point_calculations(point, ff, dt)
-    -- point graph behavior is based on the normalized force
-    point.force_n = math.max(0, range_value_to_fraction(point.mag, ff.graph.dead_threshold, ff.graph.max_force))
     -- continuous vars
-        -- point.trans_mag = (point.mag/(point.prop_split + 1)) * fraction_to_range_value(point.trans_gain, 0, 1/dt) * dt
-    point.prop_split = round(fraction_to_range_value(point.force_n, ff.graph.cool_prop_split, ff.graph.hot_prop_split))
-    point.extend_scale = fraction_to_range_value(point.force_n, ff.graph.cool_extend_scale, ff.graph.hot_extend_scale)
-    point.prop_angle = fraction_to_range_value(point.force_n, ff.graph.cool_prop_angle, ff.graph.hot_prop_angle)
+    point.prop_split = round(fraction_to_range_value(point.life_n, ff.graph.cool_prop_split, ff.graph.hot_prop_split))
+    point.extend_scale = fraction_to_range_value(point.life_n, ff.graph.cool_extend_scale, ff.graph.hot_extend_scale)
+    point.prop_angle = fraction_to_range_value(point.life_n, ff.graph.cool_prop_angle, ff.graph.hot_prop_angle)
     -- parameteric vars
-    local split_fraction = (point.mag / point.prop_split + 1)
     local transfer_factor = 0
-    if point.force_n >= ff.graph.shock_threshold then 
+    if point.shock_timer > 0 then 
         -- initial phase of shock expansion
         transfer_factor = ff.graph.shock_transfer
-    elseif point.force_n >= ff.graph.expansion_threshold then
+        point.shock_timer = math.max(0, point.shock_timer - dt)
+    elseif point.expansion_timer > 0 then
         -- middle phase of expansion
         transfer_factor = ff.graph.expansion_transfer
-    else
+        point.expansion_timer = math.max(0, point.expansion_timer - dt)
+    elseif point.burnout_timer > 0 then
         -- end phase burnout
         transfer_factor = ff.graph.burnout_transfer
+        point.burnout_timer = math.max(0, point.burnout_timer - dt)
+    else
+        transfer_factor = 0
     end
+    local split_fraction = (point.mag / point.prop_split + 1)
     point.trans_mag = split_fraction * transfer_factor * dt
+    point.life_timer = point.shock_timer + point.expansion_timer + point.burnout_timer
 end
 
 function set_point_vec(point, vec)
@@ -142,6 +149,23 @@ function set_point_dir_mag(point, dir, mag)
     point.vec = VecScale(dir, mag)
 end
 
+function reset_graph(point)
+    point.shock_timer = point.graph.shock_time
+    point.expansion_timer = point.graph.expansion_time
+    point.burnout_timer = point.graph.burnout_time
+    point.life_timer = point.shock_timer + point.expansion_timer + point.burnout_timer
+    point.life_n = 1
+end
+
+function copy_graph(source, target)
+    target.graph = source.graph
+    target.shock_timer = source.shock_timer
+    target.expansion_timer = source.expansion_timer
+    target.burnout_timer = source.burnout_timer
+    target.life_timer = target.shock_timer + target.expansion_timer + target.burnout_timer
+    target.life_n = target.life_timer / target.graph.life_time
+end
+
 function apply_force(ff, pos, force)
     -- This is an interface function that sparks a force propagation through
     -- through the field. 
@@ -150,11 +174,12 @@ function apply_force(ff, pos, force)
     -- if this point doesn't exist yet in the coord of the field, we
     -- have a couple things to do
     if point == nil then 
-        point = inst_field_point(coord, ff.resolution)
+        point = inst_field_point(coord, ff.resolution, ff.graph)
         -- insert a point into the field
         field_put(ff.field, point, point.coord)
     end
     set_point_vec(point, VecAdd(point.vec, force))
+    reset_graph(point)
 end
 
 function propagate_field_forces(ff, dt)
@@ -164,21 +189,22 @@ function propagate_field_forces(ff, dt)
     local points = flatten(ff.field)
     for i = 1, #points do
         local point = points[i]
-        update_point_calculations(point, ff, dt)
         -- points start the cycle with the call flag set to true. If the propagation cycle ends
         -- and the cull flag has not been set to false then the point will be culled 
         -- in the normalization phase this cycle.
         point.cull = true
-        propagate_point_force(ff, point, point.dir, dt)
-        -- propagate the force in a spread to other vectors around the direction it's pointing.
-        -- See extension method above for details about radiate(). 
-        local prop_dirs = radiate(point.vec, point.prop_angle, point.prop_split, math.random() * 360)
-        for i = 1, #prop_dirs do
-            -- propagate the force in the direction of radiation spokes
-            local prop_dir = prop_dirs[i]
-            propagate_point_force(ff, point, prop_dir, dt)
+        update_point_calculations(point, ff, dt)
+        if point.trans_mag > 0 then 
+            propagate_point_force(ff, point, point.dir, dt)
+            -- propagate the force in a spread to other vectors around the direction it's pointing.
+            -- See extension method above for details about radiate(). 
+            local prop_dirs = radiate(point.vec, point.prop_angle, point.prop_split, math.random() * 360)
+            for i = 1, #prop_dirs do
+                -- propagate the force in the direction of radiation spokes
+                local prop_dir = prop_dirs[i]
+                propagate_point_force(ff, point, prop_dir, dt)
+            end
         end
-        if point.mag > ff.graph.dead_threshold then point.cull = false end
     end
 end
 
@@ -212,6 +238,7 @@ function propagate_point_force(ff, point, trans_dir, dt)
             elseif point.mag > ff.graph.dead_threshold then 
                 -- create the point in the new space
                 point_prime = inst_field_point(coord_prime, ff.resolution)
+                copy_graph(point, point_prime)
                 set_point_dir_mag(point_prime, trans_dir, point.trans_mag)
                 field_put(ff.field, point_prime, point_prime.coord)
                 -- do not cull a new point or a point that has extended the field

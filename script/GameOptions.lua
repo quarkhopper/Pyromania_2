@@ -184,26 +184,6 @@ function create_mode_option_set(name, display_name)
 	oSet.max_force.step = 10
 	oSet.options[#oSet.options + 1] = oSet.max_force
 
-	oSet.dead_threshold = create_mode_option(
-		option_type.numeric, 
-		0.1,
-		"dead_threshold",
-		"Dead force")
-	oSet.dead_threshold.range.lower = 0.001
-	oSet.dead_threshold.range.upper = 1
-	oSet.dead_threshold.step = 0.001
-	oSet.options[#oSet.options + 1] = oSet.dead_threshold
-	
-	oSet.flame_dead_threshold = create_mode_option(
-		option_type.numeric, 
-		10,
-		"flame_dead_threshold",
-		"Flame dead force")
-	oSet.flame_dead_threshold.range.lower = 0
-	oSet.flame_dead_threshold.range.upper = 10
-	oSet.flame_dead_threshold.step = 0.1
-	oSet.options[#oSet.options + 1] = oSet.flame_dead_threshold
-
 	oSet.bias_gain = create_mode_option(
 		option_type.numeric, 
 		0.01,

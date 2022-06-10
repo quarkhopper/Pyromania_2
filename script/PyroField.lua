@@ -93,9 +93,6 @@ function inst_flame(pos)
     -- A flame object is rendered as a point light in a diffusing smoke particle.
     local inst = {}
     inst.pos = pos
-    -- Normalized life of the flame as defined by the normalized magnitude of 
-    -- the underlying force field vector with burnout force as a minimum.
-    inst.life_n = 1
     -- Parent FORCE FIELD POINT that this flame was spawned for.
     inst.parent = nil
     return inst
@@ -103,12 +100,8 @@ end
 
 function make_flame_effect(pyro, flame, dt)
     -- Render effects for one flame instance.
-
-    -- Flame life is the normalized value of the underlying force field vector magnitude on a scale
-    -- from the burnout force to the max magnitude allowed for the field [0 to 1]. This differs 
-    -- from force_n that is the normalized value on a scale from the force field dead force (usually lower
-    -- than burnout force).
-    flame.life_n = math.min(1, range_value_to_fraction(flame.parent.mag, pyro.ff.graph.burnout_force, pyro.ff.graph.max_force))
+    local life_n =  math.min(0, range_value_to_fraction(flame.parent.life_timer, pyro.ff.graph.burnout_time, pyro.ff.graph.life_time))
+    local afterlife_n = math.max(0, range_value_to_fraction(flame.parent.life_timer, 0, pyro.ff.graph.burnout_time))
     local color = Vec()
     local intensity = pyro.flame_light_intensity
     if pyro.rainbow_mode == on_off.on then
@@ -121,11 +114,11 @@ function make_flame_effect(pyro, flame, dt)
         intensity = 0.5
     else
         -- when not in rainbow mode...
-        if flame.life_n >= 0 then 
+        if life_n > 0 then 
             -- Normal mode: render the color as a blend from the hot (max) color to the
             -- cool (min) color based on the SQUARE of the normalized life of the flame (so 
             -- it goes to cool faster). 
-            color = HSVToRGB(blend_color(flame.life_n^2, pyro.color_cool, pyro.color_hot))
+            color = HSVToRGB(blend_color(life_n^2, pyro.color_cool, pyro.color_hot))
         else
             -- "Ember" mode: always use the cool color for a fading, fluttering ember.
             color = HSVToRGB(pyro.color_cool)
@@ -134,12 +127,11 @@ function make_flame_effect(pyro, flame, dt)
 
     local particle_size = 0
     local puff_color_value = 1
-    if flame.life_n >= 0 then 
+    if life_n > 0 then 
         -- normal mode
-        particle_size = fraction_to_range_value(flame.life_n, pyro.cool_particle_size, pyro.hot_particle_size)
+        particle_size = fraction_to_range_value(life_n, pyro.cool_particle_size, pyro.hot_particle_size)
     else
         -- ember mode
-        local afterlife_n = math.max(0, range_value_to_fraction(flame.parent.mag, pyro.ff.graph.dead_force, pyro.ff.graph.burnout_force))
         puff_color_value = afterlife_n
         particle_size = fraction_to_range_value(afterlife_n ^ 0.5, 0.2, pyro.cool_particle_size)
         intensity = fraction_to_range_value(afterlife_n, 0.2, intensity)
@@ -165,7 +157,7 @@ function make_flame_effect(pyro, flame, dt)
     SpawnParticle(VecAdd(flame.pos, random_vec(pyro.flame_jitter)), Vec(), pyro.flame_puff_life)
 
     -- if black smoke amount is set above 0, we're not in ember mode, and chance favors it...
-    if flame.life_n > 0 and pyro.smoke_amount_n > 0 and math.random() < pyro.smoke_amount_n then
+    if life_n > 0 and pyro.smoke_amount_n > 0 and math.random() < pyro.smoke_amount_n then
             -- Set up a smoke puff
             ParticleReset()
             ParticleType("smoke")
@@ -224,7 +216,6 @@ function spawn_flames(pyro)
         local point = points[i]
         spawn_flame_group(pyro, point, new_flames)
     end
-    table.sort(new_flames, function (f1, f2) return f1.life_n < f2.life_n end )
     while #new_flames > PYRO.MAX_FLAMES do
         table.remove(new_flames, math.random(#new_flames))
     end
@@ -271,7 +262,7 @@ end
 function collision_fx(pyro)
     for i = 1, #pyro.ff.contacts do
         local contact = pyro.ff.contacts[i]
-        local force_n = range_value_to_fraction(VecLength(contact.point.vec), pyro.ff.graph.burnout_force, pyro.ff.graph.max_force)
+        local force_n = range_value_to_fraction(VecLength(contact.point.vec), 0, pyro.ff.graph.max_force)
         -- make holes
         local voxels = fraction_to_range_value(force_n ^ 0.5, PYRO.MIN_HOLE_VOXELS, PYRO.MAX_HOLE_VOXELS) * pyro.contact_damage_scale
         if voxels > 0.1 then 

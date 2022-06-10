@@ -331,12 +331,14 @@ end
 
 function tick(dt)
 	handle_input(dt)
-	flame_tick(TOOL.BOMB.pyro, dt)
-	flame_tick(TOOL.THROWER.pyro, dt)
-	flame_tick(TOOL.ROCKET.pyro, dt)
-	flame_tick(SHOCK_FIELD, dt)
-	rocket_tick(dt)
-	thrower_tick(dt)
+	if true then 
+		flame_tick(TOOL.BOMB.pyro, dt)
+		flame_tick(TOOL.THROWER.pyro, dt)
+		flame_tick(TOOL.ROCKET.pyro, dt)
+		flame_tick(SHOCK_FIELD, dt)
+		rocket_tick(dt)
+		thrower_tick(dt)
+	end
 
 	if GetPlayerHealth() == 0 then
 		action_mode = false 

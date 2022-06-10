@@ -66,16 +66,28 @@ function init_pyro(tool)
     -- These options are not configurable through the options modal or saved in
     -- the save file. 
     if tool == TOOL.BOMB then 
+        pyro.ff.graph.max_force = 5000 
+        pyro.ff.graph.shock_time = 0.2
+        pyro.ff.graph.expansion_time = 2
+        pyro.ff.graph.burnout_time = 1
+        pyro.ff.graph.expansion_transfer = 0.1
+        pyro.ff.graph.burnout_transfer = 0.8
         pyro.ff.graph.hot_prop_split = 1
-        pyro.ff.graph.cool_prop_split = 6
+        pyro.ff.graph.cool_prop_split = 5
         pyro.ff.graph.hot_prop_angle = 10
         pyro.ff.graph.cool_prop_angle = 30
-        pyro.ff.graph.hot_extend_scale = 3
+        pyro.ff.graph.hot_extend_scale = 2
         pyro.ff.graph.cool_extend_scale = 1
-        pyro.hot_particle_size = 0.3
+        pyro.hot_particle_size = 0.1
         pyro.cool_particle_size = 0.6
 
     elseif tool == TOOL.ROCKET then 
+        pyro.ff.graph.max_force = 1000 
+        pyro.ff.graph.shock_time = 0.2
+        pyro.ff.graph.expansion_time = 2
+        pyro.ff.graph.burnout_time = 1
+        pyro.ff.graph.expansion_transfer = 0.1
+        pyro.ff.graph.burnout_transfer = 0.8
         pyro.ff.graph.hot_prop_split = 1
         pyro.ff.graph.cool_prop_split = 5
         pyro.ff.graph.hot_prop_angle = 10
@@ -86,12 +98,18 @@ function init_pyro(tool)
         pyro.cool_particle_size = 0.6
 
     elseif tool == TOOL.THROWER then 
+        pyro.ff.graph.max_force = 500 
+        pyro.ff.graph.shock_time = 0.2
+        pyro.ff.graph.expansion_time = 2
+        pyro.ff.graph.burnout_time = 1
+        pyro.ff.graph.expansion_transfer = 0.1
+        pyro.ff.graph.burnout_transfer = 0.8
         pyro.ff.graph.hot_prop_split = 1
-        pyro.ff.graph.cool_prop_split = 2
+        pyro.ff.graph.cool_prop_split = 3
         pyro.ff.graph.hot_prop_angle = 10
         pyro.ff.graph.cool_prop_angle = 30
-        pyro.ff.graph.hot_extend_scale = 0.5
-        pyro.ff.graph.cool_extend_scale = 1
+        pyro.ff.graph.hot_extend_scale = 1
+        pyro.ff.graph.cool_extend_scale = 0.5
         pyro.hot_particle_size = 0.1
         pyro.cool_particle_size = 0.2
 
@@ -123,8 +141,6 @@ function init_shock_field()
     pyro.ff.resolution = 2.5
     pyro.ff.meta_resolution = 3
     pyro.ff.graph.max_force = 1000
-    pyro.ff.graph.dead_threshold = 0.01
-    pyro.ff.graph.burnout_threshold = 0
     pyro.ff.bias = Vec()
     pyro.ff.dir_jitter = 10
     pyro.ff.bias_gain = 0
