@@ -4,6 +4,7 @@ FF = {} -- library constants
 FF.FORWARD = Vec(0, 0, -1)
 FF.MAX_SIM_POINTS = 200
 FF.BIAS_CONST = 100
+FF.LOW_MAG_LIMIT = 0.001
 
 function inst_graph(shock_time, expansion_time, burnout_time)
     local inst = {}
@@ -13,7 +14,7 @@ function inst_graph(shock_time, expansion_time, burnout_time)
     inst.life_time = inst.shock_time + inst.expansion_time + inst.burnout_time
     -- boundary vars
     inst.max_force = 1000 -- mag
-    inst.dead_threshold =  0.001 -- of max_force
+    inst.extend_threshold =  0.01 -- of max_force
     -- continuous vars
     inst.hot_prop_split = 1
 	inst.cool_prop_split = 5
@@ -102,6 +103,7 @@ function inst_field_point(coord, resolution, graph)
     inst.burnout_timer = inst.graph.burnout_time
     inst.life_timer = inst.shock_timer + inst.expansion_timer + inst.burnout_timer
     inst.life_n = 1
+    inst.extend_force = inst.graph.extend_threshold * inst.graph.max_force
     return inst
 end
 
@@ -112,20 +114,20 @@ function update_point_calculations(point, ff, dt)
     point.prop_angle = fraction_to_range_value(point.life_n, ff.graph.cool_prop_angle, ff.graph.hot_prop_angle)
     -- parameteric vars
     local transfer_factor = 0
-    if point.shock_timer > 0 then 
-        -- initial phase of shock expansion
-        transfer_factor = ff.graph.shock_transfer
-        point.shock_timer = math.max(0, point.shock_timer - dt)
-    elseif point.expansion_timer > 0 then
-        -- middle phase of expansion
-        transfer_factor = ff.graph.expansion_transfer
-        point.expansion_timer = math.max(0, point.expansion_timer - dt)
-    elseif point.burnout_timer > 0 then
-        -- end phase burnout
-        transfer_factor = ff.graph.burnout_transfer
-        point.burnout_timer = math.max(0, point.burnout_timer - dt)
-    else
-        transfer_factor = 0
+    if point.mag > FF.LOW_MAG_LIMIT then 
+        if point.shock_timer > 0 then 
+            -- initial phase of shock expansion
+            transfer_factor = ff.graph.shock_transfer
+            point.shock_timer = math.max(0, point.shock_timer - dt)
+        elseif point.expansion_timer > 0 then
+            -- middle phase of expansion
+            transfer_factor = ff.graph.expansion_transfer
+            point.expansion_timer = math.max(0, point.expansion_timer - dt)
+        elseif point.burnout_timer > 0 then
+            -- end phase burnout
+            transfer_factor = ff.graph.burnout_transfer
+            point.burnout_timer = math.max(0, point.burnout_timer - dt)
+        end
     end
     local split_fraction = (point.mag / point.prop_split + 1)
     point.trans_mag = split_fraction * transfer_factor * dt
@@ -235,7 +237,7 @@ function propagate_point_force(ff, point, trans_dir, dt)
                 local new_vec = VecScale(VecNormalize(new_vec), math.min(point.mag, VecLength(new_vec)))
                 set_point_vec(point, new_vec)
                 point.hit = true
-            elseif point.mag > ff.graph.dead_threshold then 
+            elseif point.mag > point.extend_force then 
                 -- create the point in the new space
                 point_prime = inst_field_point(coord_prime, ff.resolution)
                 copy_graph(point, point_prime)

@@ -115,12 +115,8 @@ function make_flame_effect(pyro, flame, dt)
     else
         -- when not in rainbow mode...
         if life_n > 0 then 
-            -- Normal mode: render the color as a blend from the hot (max) color to the
-            -- cool (min) color based on the SQUARE of the normalized life of the flame (so 
-            -- it goes to cool faster). 
-            color = HSVToRGB(blend_color(life_n^2, pyro.color_cool, pyro.color_hot))
+            color = HSVToRGB(blend_color(life_n, pyro.color_cool, pyro.color_hot))
         else
-            -- "Ember" mode: always use the cool color for a fading, fluttering ember.
             color = HSVToRGB(pyro.color_cool)
         end
     end
@@ -129,7 +125,7 @@ function make_flame_effect(pyro, flame, dt)
     local puff_color_value = 1
     if life_n > 0 then 
         -- normal mode
-        particle_size = fraction_to_range_value(life_n, pyro.cool_particle_size, pyro.hot_particle_size)
+        particle_size = fraction_to_range_value(life_n ^ 0.5, pyro.cool_particle_size, pyro.hot_particle_size)
     else
         -- ember mode
         puff_color_value = afterlife_n

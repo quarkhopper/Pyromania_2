@@ -49,27 +49,36 @@ function init_pyro(tool)
     pyro.smoke_life = tool.smoke_life.value
     pyro.smoke_amount_n = tool.smoke_amount.value
     pyro.impulse_scale = tool.impulse_scale.value
-    pyro.impulse_radius = tool.impulse_radius.value
-    pyro.fire_ignition_radius = tool.fire_ignition_radius.value
     pyro.fire_density = tool.fire_density.value
     pyro.contact_damage_scale = tool.contact_damage_scale.value
     pyro.max_player_hurt = tool.max_player_hurt.value
     pyro.rainbow_mode = tool.rainbow_mode.value
     pyro.color_cool = tool.flame_color_cool.value
     pyro.color_hot = tool.flame_color_hot.value
-    pyro.ff.resolution = tool.field_resolution.value
-    pyro.ff.meta_resolution = tool.meta_resolution.value
-    pyro.ff.graph.max_force = tool.max_force.value
-    pyro.ff.bias = Vec(0, tool.heat_rise.value, 0)
-    pyro.ff.bias_gain = tool.bias_gain.value
 
     -- These options are not configurable through the options modal or saved in
     -- the save file. 
     if tool == TOOL.BOMB then 
+
+        tool.explosion_seeds = 100
+        tool.explosion_fireball_radius = 0.5
+
+        pyro.hot_particle_size = 0.1
+        pyro.cool_particle_size = 0.6
+        pyro.impulse_radius = 5
+        pyro.fire_ignition_radius = 5
+
+        pyro.ff.bias = Vec(0, 1, 0)
+        pyro.ff.bias_gain = 0
+        pyro.ff.resolution = 0.8
+        pyro.ff.meta_resolution = 2
+
         pyro.ff.graph.max_force = 5000 
+        pyro.ff.graph.extend_threshold =  0.01 
         pyro.ff.graph.shock_time = 0.2
         pyro.ff.graph.expansion_time = 2
         pyro.ff.graph.burnout_time = 1
+        pyro.ff.graph.shock_transfer = 0.25
         pyro.ff.graph.expansion_transfer = 0.1
         pyro.ff.graph.burnout_transfer = 0.8
         pyro.ff.graph.hot_prop_split = 1
@@ -78,14 +87,55 @@ function init_pyro(tool)
         pyro.ff.graph.cool_prop_angle = 30
         pyro.ff.graph.hot_extend_scale = 2
         pyro.ff.graph.cool_extend_scale = 1
-        pyro.hot_particle_size = 0.1
-        pyro.cool_particle_size = 0.6
 
     elseif tool == TOOL.ROCKET then 
+        tool.explosion_seeds = 50
+        tool.explosion_fireball_radius = 0.5
+
+        pyro.hot_particle_size = 0.1
+        pyro.cool_particle_size = 0.6
+        pyro.impulse_radius = 5
+        pyro.fire_ignition_radius = 5
+
+        pyro.ff.bias = Vec(0, 1, 0)
+        pyro.ff.bias_gain = 0
+        pyro.ff.resolution = 0.5
+        pyro.ff.meta_resolution = 2
+
         pyro.ff.graph.max_force = 1000 
+        pyro.ff.graph.extend_threshold =  0.01 
         pyro.ff.graph.shock_time = 0.2
-        pyro.ff.graph.expansion_time = 2
-        pyro.ff.graph.burnout_time = 1
+        pyro.ff.graph.expansion_time = 1
+        pyro.ff.graph.burnout_time = 2
+        pyro.ff.graph.shock_transfer = 0.25
+        pyro.ff.graph.expansion_transfer = 0.01
+        pyro.ff.graph.burnout_transfer = 0.01
+        pyro.ff.graph.hot_prop_split = 1
+        pyro.ff.graph.cool_prop_split = 5
+        pyro.ff.graph.hot_prop_angle = 10
+        pyro.ff.graph.cool_prop_angle = 30
+        pyro.ff.graph.hot_extend_scale = 2
+        pyro.ff.graph.cool_extend_scale = 1
+
+    elseif tool == TOOL.THROWER then 
+        tool.gravity = 0.01
+
+        pyro.hot_particle_size = 0.1
+        pyro.cool_particle_size = 0.3
+        pyro.impulse_radius = 0.5
+        pyro.fire_ignition_radius = 1
+
+        pyro.ff.bias = Vec(0, 1, 0)
+        pyro.ff.bias_gain = 0
+        pyro.ff.resolution = 0.1
+        pyro.ff.meta_resolution = 1
+
+        pyro.ff.graph.max_force = 500 
+        pyro.ff.graph.extend_threshold =  0.01 
+        pyro.ff.graph.shock_time = 0.1
+        pyro.ff.graph.expansion_time = 1
+        pyro.ff.graph.burnout_time = 0.5
+        pyro.ff.graph.shock_transfer = 0.25
         pyro.ff.graph.expansion_transfer = 0.1
         pyro.ff.graph.burnout_transfer = 0.8
         pyro.ff.graph.hot_prop_split = 1
@@ -94,25 +144,6 @@ function init_pyro(tool)
         pyro.ff.graph.cool_prop_angle = 30
         pyro.ff.graph.hot_extend_scale = 2
         pyro.ff.graph.cool_extend_scale = 1
-        pyro.hot_particle_size = 0.1
-        pyro.cool_particle_size = 0.6
-
-    elseif tool == TOOL.THROWER then 
-        pyro.ff.graph.max_force = 500 
-        pyro.ff.graph.shock_time = 0.2
-        pyro.ff.graph.expansion_time = 2
-        pyro.ff.graph.burnout_time = 1
-        pyro.ff.graph.expansion_transfer = 0.1
-        pyro.ff.graph.burnout_transfer = 0.8
-        pyro.ff.graph.hot_prop_split = 1
-        pyro.ff.graph.cool_prop_split = 3
-        pyro.ff.graph.hot_prop_angle = 10
-        pyro.ff.graph.cool_prop_angle = 30
-        pyro.ff.graph.hot_extend_scale = 1
-        pyro.ff.graph.cool_extend_scale = 0.5
-        pyro.hot_particle_size = 0.1
-        pyro.cool_particle_size = 0.2
-
     end
 
     tool.pyro = pyro
@@ -142,8 +173,8 @@ function init_shock_field()
     pyro.ff.meta_resolution = 3
     pyro.ff.graph.max_force = 1000
     pyro.ff.bias = Vec()
-    pyro.ff.dir_jitter = 10
     pyro.ff.bias_gain = 0
+    pyro.ff.dir_jitter = 10
     pyro.ff.graph.hot_prop_split = 4
     pyro.ff.graph.cool_prop_split = 4
     pyro.ff.graph.hot_prop_angle = 10

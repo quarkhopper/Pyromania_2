@@ -76,8 +76,8 @@ function rocket_tick(dt)
             SetBodyDynamic(rocket, true)
             Explosion(rocket.trans.pos, 1)
             local force_mag = TOOL.ROCKET.pyro.ff.graph.max_force
-            local fireball_rad = TOOL.ROCKET.explosion_fireball_radius.value
-            local explosion_seeds =  TOOL.ROCKET.explosion_seeds.value
+            local fireball_rad = TOOL.ROCKET.explosion_fireball_radius
+            local explosion_seeds =  TOOL.ROCKET.explosion_seeds
             local pos = rocket.trans.pos
             for i = 1, explosion_seeds do
                 local spawn_dir = VecNormalize(random_vec(1))

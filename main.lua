@@ -13,11 +13,15 @@
 ------------------------------------------------
 -- INIT
 -------------------------------------------------
-
 function init()
 	RegisterTool(REG.TOOL_KEY, TOOL_NAME, "MOD/vox/thrower.vox", 5)
 	SetBool("game.tool."..REG.TOOL_KEY..".enabled", true)
 	SetFloat("game.tool."..REG.TOOL_KEY..".ammo", 1000)
+	
+	-- setting to true will skip all PyroField and tool ticks. Used to
+	-- debug some issues so the debug console doesn't scroll the error
+	-- away. 
+	suspend_ticks = false
 
 	rumble_sound = LoadSound("MOD/snd/rumble.ogg")
 	thrower_sound = LoadLoop("MOD/snd/thrower.ogg")
@@ -331,7 +335,7 @@ end
 
 function tick(dt)
 	handle_input(dt)
-	if true then 
+	if not suspend_ticks then 
 		flame_tick(TOOL.BOMB.pyro, dt)
 		flame_tick(TOOL.THROWER.pyro, dt)
 		flame_tick(TOOL.ROCKET.pyro, dt)

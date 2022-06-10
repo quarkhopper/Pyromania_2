@@ -22,8 +22,8 @@ end
 
 function blast_at(pos)
     local force_mag = TOOL.BOMB.pyro.ff.graph.max_force
-	local fireball_rad = TOOL.BOMB.explosion_fireball_radius.value
-	local explosion_seeds = TOOL.BOMB.explosion_seeds.value
+	local fireball_rad = TOOL.BOMB.explosion_fireball_radius
+	local explosion_seeds = TOOL.BOMB.explosion_seeds
     for i = 1, explosion_seeds do
         local spawn_dir = VecNormalize(random_vec(1))
         local spawn_offset = VecScale(spawn_dir, fireball_rad)

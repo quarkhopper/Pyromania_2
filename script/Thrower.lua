@@ -59,7 +59,7 @@ function thrower_tick(dt)
                 end
             else
                 -- continued flight
-                fireball.dir = VecNormalize(VecAdd(fireball.dir, Vec(0, -TOOL.THROWER.gravity.value, 0)))
+                fireball.dir = VecNormalize(VecAdd(fireball.dir, Vec(0, -TOOL.THROWER.gravity, 0)))
                 local advance = VecScale(fireball.dir, fireball.speed)
                 fireball.pos = VecAdd(fireball.pos, advance)
                 fireball.dist_left = fireball.dist_left - fireball.speed
