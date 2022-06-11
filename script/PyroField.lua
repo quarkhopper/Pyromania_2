@@ -100,9 +100,8 @@ end
 
 function make_flame_effect(pyro, flame, dt)
     -- Render effects for one flame instance.
-    local life_n =  math.max(0, range_value_to_fraction(flame.parent.life_timer, pyro.ff.graph.burnout_time, pyro.ff.graph.life_time))
-    -- DebugPrint("l_n="..tostring(life_n)..", lt="..tostring(pyro.ff.graph.life_time)..", ltr="..tostring(flame.parent.life_timer)..", bt="..tostring(pyro.ff.graph.burnout_time))
-    local afterlife_n = math.max(0, range_value_to_fraction(flame.parent.life_timer, 0, pyro.ff.graph.burnout_time))
+    local life_n =  bracket_value(range_value_to_fraction(flame.parent.life_timer, pyro.ff.graph.burnout_time, pyro.ff.graph.life_time), 1, 0)
+    local afterlife_n = bracket_value(range_value_to_fraction(flame.parent.life_timer, 0, pyro.ff.graph.burnout_time), 1, 0)
     local color = Vec()
     local intensity = pyro.flame_light_intensity
     if pyro.rainbow_mode == on_off.on then
@@ -116,7 +115,7 @@ function make_flame_effect(pyro, flame, dt)
     else
         -- when not in rainbow mode...
         if life_n > 0 then 
-            color = HSVToRGB(blend_color(life_n, pyro.color_cool, pyro.color_hot))
+            color = HSVToRGB(blend_color(life_n ^ 2, pyro.color_cool, pyro.color_hot))
         else
             color = HSVToRGB(pyro.color_cool)
         end
@@ -130,7 +129,7 @@ function make_flame_effect(pyro, flame, dt)
     else
         -- ember mode
         puff_color_value = afterlife_n
-        particle_size = fraction_to_range_value(afterlife_n ^ 0.5, 0.2, pyro.cool_particle_size)
+        particle_size = fraction_to_range_value(afterlife_n, 0.2, pyro.cool_particle_size)
         intensity = fraction_to_range_value(afterlife_n, 0.2, intensity)
         -- Jitter is added to an ember to simulate flutter. this prevents the smaller sized particules from 
         -- exposing the field grid too much. 
@@ -154,7 +153,7 @@ function make_flame_effect(pyro, flame, dt)
     SpawnParticle(VecAdd(flame.pos, random_vec(pyro.flame_jitter)), Vec(), pyro.flame_puff_life)
 
     -- if black smoke amount is set above 0, we're not in ember mode, and chance favors it...
-    if life_n > 0 and math.random() < pyro.smoke_amount_n then
+    if math.random() < pyro.smoke_amount_n then
         -- Set up a smoke puff
         ParticleReset()
         ParticleType("smoke")

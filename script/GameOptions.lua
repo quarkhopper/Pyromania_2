@@ -366,7 +366,7 @@ function create_rocket_option_set()
 	oSet.smoke_amount.value = 0.1
 	oSet.impulse_scale.value = 0.28
 	oSet.fire_density.value = 8
-	oSet.contact_damage_scale.value = 0.1
+	oSet.contact_damage_scale.value = 0.04
 	oSet.max_player_hurt.value = 0.55
 
 	return oSet

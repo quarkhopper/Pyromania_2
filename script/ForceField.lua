@@ -95,7 +95,6 @@ function inst_field_point(coord, resolution, graph)
     inst.vec = Vec()
     inst.type = point_type.base
     inst.cull = false
-    inst.hit = false
     inst.extend_scale = 0
     inst.graph = graph or inst_graph()
     inst.shock_timer = inst.graph.shock_time
@@ -141,8 +140,25 @@ function copy_graph(source, target)
     target.life_n = target.life_timer / target.graph.life_time
 end
 
+function apply_force(ff, pos, force)
+    -- This is an interface function that sparks a force propagation through
+    -- through the field. 
+    local coord = pos_to_coord(pos, ff.resolution)
+    local point = field_get(ff.field, coord)
+    -- if this point doesn't exist yet in the coord of the field, we
+    -- have a couple things to do
+    if point == nil then 
+        point = inst_field_point(coord, ff.resolution, ff.graph)
+        -- insert a point into the field
+        field_put(ff.field, point, point.coord)
+    end
+    set_point_vec(point, VecAdd(point.vec, force))
+    reset_graph(point)
+end
+
 function update_point_calculations(point, ff, dt)
     -- continuous vars
+    point.life_n = point.life_timer / point.graph.life_time
     point.prop_split = round(fraction_to_range_value(point.life_n, ff.graph.cool_prop_split, ff.graph.hot_prop_split))
     point.extend_scale = fraction_to_range_value(point.life_n, ff.graph.cool_extend_scale, ff.graph.hot_extend_scale)
     point.prop_angle = fraction_to_range_value(point.life_n, ff.graph.cool_prop_angle, ff.graph.hot_prop_angle)
@@ -162,26 +178,12 @@ function update_point_calculations(point, ff, dt)
             transfer_factor = ff.graph.burnout_transfer
             point.burnout_timer = math.max(0, point.burnout_timer - dt)
         end
+    else
+        point.trans_mag = 0
     end
     local split_fraction = (point.mag / point.prop_split + 1)
     point.trans_mag = split_fraction * transfer_factor * dt
     point.life_timer = point.shock_timer + point.expansion_timer + point.burnout_timer
-end
-
-function apply_force(ff, pos, force)
-    -- This is an interface function that sparks a force propagation through
-    -- through the field. 
-    local coord = pos_to_coord(pos, ff.resolution)
-    local point = field_get(ff.field, coord)
-    -- if this point doesn't exist yet in the coord of the field, we
-    -- have a couple things to do
-    if point == nil then 
-        point = inst_field_point(coord, ff.resolution, ff.graph)
-        -- insert a point into the field
-        field_put(ff.field, point, point.coord)
-    end
-    set_point_vec(point, VecAdd(point.vec, force))
-    reset_graph(point)
 end
 
 function propagate_field_forces(ff, dt)
@@ -191,10 +193,6 @@ function propagate_field_forces(ff, dt)
     local points = flatten(ff.field)
     for i = 1, #points do
         local point = points[i]
-        -- points start the cycle with the call flag set to true. If the propagation cycle ends
-        -- and the cull flag has not been set to false then the point will be culled 
-        -- in the normalization phase this cycle.
-        point.cull = true
         update_point_calculations(point, ff, dt)
         if point.trans_mag > 0 then 
             propagate_point_force(ff, point, point.dir, dt)
@@ -206,6 +204,8 @@ function propagate_field_forces(ff, dt)
                 local prop_dir = prop_dirs[i]
                 propagate_point_force(ff, point, prop_dir, dt)
             end
+        else
+            point.cull = true
         end
     end
 end
@@ -215,12 +215,11 @@ function propagate_point_force(ff, point, trans_dir, dt)
     local jitter_mag = fraction_to_range_value(ff.dir_jitter/10, 0, 1)
     trans_dir = VecNormalize(VecAdd(trans_dir, jitter_mag))
     local trans_vec = VecScale(trans_dir, point.trans_mag)
-    local coord_prime = round_vec(VecAdd(point.coord, VecScale(trans_dir, point.extend_scale))) -- random_float_in_range(1, point.extend_scale))))
+    local coord_prime = round_vec(VecAdd(point.coord, VecScale(trans_dir, random_float_in_range(0, point.extend_scale))))
     if not vecs_equal(coord_prime, point.coord) then 
         local point_prime = field_get(ff.field, coord_prime)
         if point_prime == nil then
             -- check if we're hitting something on the way to extending\
-            DebugPrint("mag="..tostring(point.mag)..", ef="..tostring(point.extend_force))
             local hit, dist, normal, shape = QueryRaycast(point.pos, trans_dir, 2 * ff.resolution * point.extend_scale, 0.025)
             if hit then 
                 -- log the contact, don't create a new extension
@@ -236,26 +235,16 @@ function propagate_point_force(ff, point, trans_dir, dt)
                 -- readjust as this sometimes results in added energy. 
                 local new_vec = VecScale(VecNormalize(new_vec), math.min(point.mag, VecLength(new_vec)))
                 set_point_vec(point, new_vec)
-                point.hit = true
             elseif point.mag > point.extend_force then 
                 -- create the point in the new space
                 point_prime = inst_field_point(coord_prime, ff.resolution)
                 copy_graph(point, point_prime)
                 set_point_dir_mag(point_prime, trans_dir, point.trans_mag)
                 field_put(ff.field, point_prime, point_prime.coord)
-                -- do not cull a new point or a point that has extended the field
-                point_prime.cull = false
-                point.cull = false
             end
         else
             local new_dir = VecNormalize(VecAdd(point_prime.dir, trans_dir))
-            if point.mag > point_prime.mag then 
-                -- if there is a significant transfer of force then do not call
-                point_prime.cull = false
-                point.cull = false
-            end
             set_point_dir_mag(point_prime, new_dir, point_prime.mag + point.trans_mag)
-
         end
         set_point_dir_mag(point, point.dir, math.max(0, point.mag - point.trans_mag))
     end

@@ -141,6 +141,11 @@ function bracket_value(value, max, min)
     return math.max(math.min(max, value), min)
 end
 
+function vary_by_fraction(value, fraction)
+    local variation = value * fraction
+    return value + random_float_in_range(-variation, variation)
+end
+
 function round_to_interval(value, interval)
     return math.floor((value + (interval/2)) / interval) * interval
 end
