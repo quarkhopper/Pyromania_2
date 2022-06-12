@@ -15,7 +15,7 @@ PYRO.RAINBOW = Vec(0, 1, 0.8)
 PYRO.MIN_PLAYER_PUSH = 1
 PYRO.MAX_PLAYER_PUSH = 5
 PYRO.MIN_IMPULSE = 50
-PYRO.MAX_IMPULSE = 10000
+PYRO.MAX_IMPULSE = 1000
 PYRO.MIN_HOLE_VOXELS = 0.1
 PYRO.MAX_HOLE_VOXELS = 5
 PYRO.GRAVITY = 0.5
@@ -82,7 +82,7 @@ function inst_pyro()
     inst.color_cool = Vec(7.7, 1, 0.8)
     -- The flame color when based on a force field vector point at maximum magnitude.
     inst.color_hot = Vec(7.7, 1, 0.8)
-    inst.fade_threshold = 0.1
+    inst.fade_magnitude = 10
 
     -- The force field wrapped by this pyro field.
     inst.ff = inst_force_field_ff()
@@ -114,28 +114,19 @@ function make_flame_effect(pyro, flame, dt)
         intensity = 0.5
     else
         -- when not in rainbow mode...
-        if life_n > pyro.fade_threshold then 
+        if flame.parent.mag > pyro.fade_magnitude then 
             color = HSVToRGB(blend_color(life_n ^ 2, pyro.color_cool, pyro.color_hot))
         else
             color = HSVToRGB(pyro.color_cool)
         end
     end
 
-    local particle_size = 0
     local puff_color_value = 1
-    if life_n > pyro.fade_threshold then 
-        -- normal mode
-        particle_size = fraction_to_range_value(life_n ^ 0.5, pyro.cool_particle_size, pyro.hot_particle_size)
-    else
-        -- ember mode
-        local burnout_n = range_value_to_fraction(life_n, 0, pyro.fade_threshold)
-        puff_color_value = burnout_n
-        particle_size = fraction_to_range_value(burnout_n, 0.2, pyro.cool_particle_size)
+    local particle_size = fraction_to_range_value(life_n ^ 0.5, pyro.cool_particle_size, pyro.hot_particle_size)
+    if flame.parent.mag < pyro.fade_magnitude then 
+        local burnout_n = range_value_to_fraction(flame.parent.mag, 0, pyro.fade_magnitude)
+        puff_color_value = bracket_value(burnout_n, 1, 0.15)
         intensity = fraction_to_range_value(burnout_n, 0.2, intensity)
-        -- Jitter is added to an ember to simulate flutter. this prevents the smaller sized particules from 
-        -- exposing the field grid too much. 
-        local jitter = random_vec(pyro.ff.resolution)
-        flame.pos = VecAdd(flame.pos, jitter)
     end
     -- Put the light source in the middle of where the diffusing flame puff will be
     PointLight(flame.pos, color[1], color[2], color[3], intensity)
@@ -237,20 +228,20 @@ function impulse_fx(pyro)
         -- apply impulse
         local box = box_vec(point.pos, pyro.impulse_radius)
         local push_bodies = QueryAabbBodies(box[1], box[2])
-        local force_mag = VecLength(point.vec)
+        -- local force_mag = VecLength(point.vec)
         local force_dir = VecNormalize(point.vec)
-        local force_n = force_mag / pyro.ff.graph.max_force
+        -- local force_n = force_mag / pyro.ff.graph.max_force
         for i = 1, #push_bodies do
             local push_body = push_bodies[i]
             local body_center = TransformToParentPoint(GetBodyTransform(push_body), GetBodyCenterOfMass(push_body))
             local hit = QueryRaycast(point.pos, force_dir, pyro.impulse_radius, 0.025)
             if hit then 
-                local impulse_mag = fraction_to_range_value(force_n ^ 0.5, PYRO.MIN_IMPULSE, PYRO.MAX_IMPULSE) * pyro.impulse_scale
+                local impulse_mag = fraction_to_range_value(point.life_n ^ 0.5, PYRO.MIN_IMPULSE, PYRO.MAX_IMPULSE) * pyro.impulse_scale
                 ApplyBodyImpulse(push_body, body_center, VecScale(force_dir, impulse_mag))
             end
         end
         if VecLength(VecSub(player_trans.pos, point.pos)) <= pyro.impulse_radius then
-            local push_mag = fraction_to_range_value(force_n^2, PYRO.MIN_PLAYER_PUSH, PYRO.MAX_PLAYER_PUSH) * pyro.impulse_scale
+            local push_mag = fraction_to_range_value(point.life_n ^ 2, PYRO.MIN_PLAYER_PUSH, PYRO.MAX_PLAYER_PUSH) * pyro.impulse_scale
             SetPlayerVelocity(VecAdd(GetPlayerVelocity(), VecScale(force_dir, push_mag)))
         end
     end

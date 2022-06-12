@@ -174,16 +174,6 @@ function create_mode_option_set(name, display_name)
     oSet.version = CURRENT_VERSION
 	oSet.options = {}
 
-	oSet.dir_jitter = create_mode_option(
-		option_type.numeric, 
-		0,
-		"dir_jitter",
-		"Directional instability")
-	oSet.dir_jitter.range.lower = 0
-	oSet.dir_jitter.range.upper = 10
-	oSet.dir_jitter.step = 0.1
-	oSet.options[#oSet.options + 1] = oSet.dir_jitter
-
 	oSet.flames_per_point = create_mode_option(
 		option_type.numeric, 
 		5,
@@ -313,7 +303,6 @@ function create_bomb_option_set()
 	oSet.options[#oSet.options + 1] = oSet.max_random_radius
 
 	-- default values
-	oSet.dir_jitter.value = 0
 	oSet.flames_per_point.value = 4
 	oSet.smoke_life.value = 2
 	oSet.smoke_amount.value = 0.3
@@ -359,7 +348,6 @@ function create_rocket_option_set()
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
 
 	-- default values
-	oSet.dir_jitter.value = 0
 	oSet.flames_per_point.value = 4
 	oSet.flame_light_intensity.value = 3
 	oSet.smoke_life.value = 1
@@ -406,7 +394,6 @@ function create_thrower_option_set()
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
 
 	-- default values
-	oSet.dir_jitter.value = 0.1
 	oSet.flames_per_point.value = 1
 	oSet.flame_light_intensity.value = 1
 	oSet.flame_color_hot.value = Vec(7.5, 0.9, 0.6)

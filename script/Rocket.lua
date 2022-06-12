@@ -77,21 +77,19 @@ function rocket_tick(dt)
             Explosion(rocket.trans.pos, 1)
             local force_mag = TOOL.ROCKET.pyro.ff.graph.max_force
             local fireball_rad = TOOL.ROCKET.explosion_fireball_radius
-            local explosion_seeds = 1 -- TOOL.ROCKET.explosion_seeds
+            local explosion_seeds = TOOL.ROCKET.explosion_seeds
             local pos = rocket.trans.pos
             for i = 1, explosion_seeds do
-                local spawn_dir = VecNormalize(random_vec(1))
-                local spawn_offset = VecScale(spawn_dir, fireball_rad)
-                local point_position = VecAdd(pos, spawn_offset)
-                local force_dir = VecNormalize(VecSub(point_position, pos))
-                local hit, dist, normal, shape = QueryRaycast(pos, force_dir, fireball_rad + 0.1, 0.025)
+                local spark_dir = VecNormalize(random_vec(1))
+                local spark_offset = VecScale(spark_dir, random_float_in_range(0, fireball_rad))
+                local spark_pos = VecAdd(pos, spark_offset)
+                local force_dir = VecNormalize(random_vec(1)) -- VecNormalize(VecSub(spark_pos, pos))
+                local hit, dist = QueryRaycast(pos, force_dir, spark_offset, 0.025)
                 if hit then
-                    local hit_point = VecAdd(pos, VecScale(force_dir, dist)) 
-                    local force_dir = normal
+                    local spark_pos = VecAdd(pos, VecScale(force_dir, dist - 0.1)) 
                 end
-                -- local point_force = VecScale(force_dir, force_mag)
-                local point_force = VecScale(Vec(0,1,0), force_mag)
-                apply_force(TOOL.ROCKET.pyro.ff, point_position, point_force)
+                local point_force = VecScale(force_dir, force_mag)
+                apply_force(TOOL.ROCKET.pyro.ff, spark_pos, point_force)
             end
             PlaySound(rocket_boom_sound, bomb_pos, 100)
         elseif rocket.dist_left <= 0 then 
