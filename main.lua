@@ -472,11 +472,3 @@ function stop_all_flames()
 	reset_ff(TOOL.THROWER.pyro.ff)
 	reset_ff(TOOL.ROCKET.pyro.ff)
 end
-
--- function create_shock(pos, scale)
--- 	SHOCK_FIELD.render_flames = TOOL.GENERAL.visible_shock_waves.value == on_off.on
--- 	for i = 1, 100 do
--- 		local dir = VecNormalize(random_vec(1))
--- 		apply_force(SHOCK_FIELD.ff, VecAdd(pos, VecScale(dir, 2)), VecScale(dir, scale * 10))
--- 	end
--- end

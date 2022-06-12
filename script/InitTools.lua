@@ -64,15 +64,15 @@ function init_pyro(tool)
         tool.explosion_fireball_radius = 1
 
         pyro.fade_magnitude = 0.5
-        pyro.hot_particle_size = 0.2
-        pyro.cool_particle_size = 0.4
+        pyro.hot_particle_size = 0.3
+        pyro.cool_particle_size = 0.5
         pyro.impulse_radius = 5
         pyro.fire_ignition_radius = 5
         pyro.flame_jitter = 0.5
 
         pyro.ff.dir_jitter = 0.3
         pyro.ff.bias = Vec(0, 1, 0)
-        pyro.ff.bias_gain = 0.05
+        pyro.ff.bias_gain = 0.1
         pyro.ff.resolution = 0.5
         pyro.ff.meta_resolution = 2
 
@@ -99,7 +99,7 @@ function init_pyro(tool)
 
         pyro.ff.dir_jitter = 0
         pyro.ff.bias = Vec(0, 1, 0)
-        pyro.ff.bias_gain = 0
+        pyro.ff.bias_gain = 0.1
         pyro.ff.resolution = 0.3
         pyro.ff.meta_resolution = 2
 

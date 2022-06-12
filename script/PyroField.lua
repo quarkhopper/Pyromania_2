@@ -14,8 +14,9 @@ PYRO.MAX_FLAMES = 500 -- default maximum number of flames to render
 PYRO.RAINBOW = Vec(0, 1, 0.8)
 PYRO.MIN_PLAYER_PUSH = 1
 PYRO.MAX_PLAYER_PUSH = 5
+PYRO.MAX_PLAYER_VEL = 10
 PYRO.MIN_IMPULSE = 50
-PYRO.MAX_IMPULSE = 1000
+PYRO.MAX_IMPULSE = 800
 PYRO.MIN_HOLE_VOXELS = 0.1
 PYRO.MAX_HOLE_VOXELS = 5
 PYRO.GRAVITY = 0.5
@@ -82,7 +83,7 @@ function inst_pyro()
     inst.color_cool = Vec(7.7, 1, 0.8)
     -- The flame color when based on a force field vector point at maximum magnitude.
     inst.color_hot = Vec(7.7, 1, 0.8)
-    inst.fade_magnitude = 10
+    inst.fade_magnitude = 20
 
     -- The force field wrapped by this pyro field.
     inst.ff = inst_force_field_ff()
@@ -240,7 +241,9 @@ function impulse_fx(pyro)
                 ApplyBodyImpulse(push_body, body_center, VecScale(force_dir, impulse_mag))
             end
         end
-        if VecLength(VecSub(player_trans.pos, point.pos)) <= pyro.impulse_radius then
+        local player_vel = VecLength(GetPlayerVelocity())
+        if VecLength(VecSub(player_trans.pos, point.pos)) <= pyro.impulse_radius and player_vel < PYRO.MAX_PLAYER_VEL then
+
             local push_mag = fraction_to_range_value(point.life_n ^ 2, PYRO.MIN_PLAYER_PUSH, PYRO.MAX_PLAYER_PUSH) * pyro.impulse_scale
             SetPlayerVelocity(VecAdd(GetPlayerVelocity(), VecScale(force_dir, push_mag)))
         end

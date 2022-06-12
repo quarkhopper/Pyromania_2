@@ -138,7 +138,7 @@ function create_general_option_set()
 
 	oSet.max_flames = create_mode_option(
 		option_type.numeric, 
-		500,
+		400,
 		"max_flames",
 		"Max flames to render")
 	oSet.max_flames.range.lower = 1
@@ -148,7 +148,7 @@ function create_general_option_set()
 
 	oSet.simulation_points = create_mode_option(
 		option_type.numeric, 
-		200,
+		300,
 		"simulation_points",
 		"Max field points")
 	oSet.simulation_points.range.lower = 1
@@ -305,7 +305,7 @@ function create_bomb_option_set()
 	-- default values
 	oSet.flames_per_point.value = 4
 	oSet.smoke_life.value = 2
-	oSet.smoke_amount.value = 0.3
+	oSet.smoke_amount.value = 0.2
 	oSet.impulse_scale.value = 0.8
 	oSet.fire_density.value = 8
 	oSet.contact_damage_scale.value = 0.1
@@ -398,7 +398,7 @@ function create_thrower_option_set()
 	oSet.flame_light_intensity.value = 1
 	oSet.flame_color_hot.value = Vec(7.5, 0.9, 0.6)
 	oSet.smoke_life.value = 1
-	oSet.smoke_amount.value = 0.1
+	oSet.smoke_amount.value = 0
 	oSet.impulse_scale.value = 0.01
 	oSet.fire_density.value = 10
 	oSet.contact_damage_scale.value = 0.01
