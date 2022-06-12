@@ -82,6 +82,7 @@ function inst_pyro()
     inst.color_cool = Vec(7.7, 1, 0.8)
     -- The flame color when based on a force field vector point at maximum magnitude.
     inst.color_hot = Vec(7.7, 1, 0.8)
+    inst.fade_threshold = 0.1
 
     -- The force field wrapped by this pyro field.
     inst.ff = inst_force_field_ff()
@@ -100,8 +101,7 @@ end
 
 function make_flame_effect(pyro, flame, dt)
     -- Render effects for one flame instance.
-    local life_n =  bracket_value(range_value_to_fraction(flame.parent.life_timer, pyro.ff.graph.burnout_time, pyro.ff.graph.life_time), 1, 0)
-    local afterlife_n = bracket_value(range_value_to_fraction(flame.parent.life_timer, 0, pyro.ff.graph.burnout_time), 1, 0)
+    local life_n =  bracket_value(range_value_to_fraction(flame.parent.mag, FF.LOW_MAG_LIMIT, pyro.ff.graph.max_force), 1, 0)
     local color = Vec()
     local intensity = pyro.flame_light_intensity
     if pyro.rainbow_mode == on_off.on then
@@ -114,7 +114,7 @@ function make_flame_effect(pyro, flame, dt)
         intensity = 0.5
     else
         -- when not in rainbow mode...
-        if life_n > 0 then 
+        if life_n > pyro.fade_threshold then 
             color = HSVToRGB(blend_color(life_n ^ 2, pyro.color_cool, pyro.color_hot))
         else
             color = HSVToRGB(pyro.color_cool)
@@ -123,14 +123,15 @@ function make_flame_effect(pyro, flame, dt)
 
     local particle_size = 0
     local puff_color_value = 1
-    if life_n > 0 then 
+    if life_n > pyro.fade_threshold then 
         -- normal mode
         particle_size = fraction_to_range_value(life_n ^ 0.5, pyro.cool_particle_size, pyro.hot_particle_size)
     else
         -- ember mode
-        puff_color_value = afterlife_n
-        particle_size = fraction_to_range_value(afterlife_n, 0.2, pyro.cool_particle_size)
-        intensity = fraction_to_range_value(afterlife_n, 0.2, intensity)
+        local burnout_n = range_value_to_fraction(life_n, 0, pyro.fade_threshold)
+        puff_color_value = burnout_n
+        particle_size = fraction_to_range_value(burnout_n, 0.2, pyro.cool_particle_size)
+        intensity = fraction_to_range_value(burnout_n, 0.2, intensity)
         -- Jitter is added to an ember to simulate flutter. this prevents the smaller sized particules from 
         -- exposing the field grid too much. 
         local jitter = random_vec(pyro.ff.resolution)

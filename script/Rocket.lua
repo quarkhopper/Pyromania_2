@@ -77,7 +77,7 @@ function rocket_tick(dt)
             Explosion(rocket.trans.pos, 1)
             local force_mag = TOOL.ROCKET.pyro.ff.graph.max_force
             local fireball_rad = TOOL.ROCKET.explosion_fireball_radius
-            local explosion_seeds =  TOOL.ROCKET.explosion_seeds
+            local explosion_seeds = 1 -- TOOL.ROCKET.explosion_seeds
             local pos = rocket.trans.pos
             for i = 1, explosion_seeds do
                 local spawn_dir = VecNormalize(random_vec(1))
@@ -89,7 +89,8 @@ function rocket_tick(dt)
                     local hit_point = VecAdd(pos, VecScale(force_dir, dist)) 
                     local force_dir = normal
                 end
-                local point_force = VecScale(force_dir, force_mag)
+                -- local point_force = VecScale(force_dir, force_mag)
+                local point_force = VecScale(Vec(0,1,0), force_mag)
                 apply_force(TOOL.ROCKET.pyro.ff, point_position, point_force)
             end
             PlaySound(rocket_boom_sound, bomb_pos, 100)
