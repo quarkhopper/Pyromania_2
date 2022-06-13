@@ -136,33 +136,21 @@ function create_general_option_set()
 	oSet.display_name = "General"
     oSet.version = CURRENT_VERSION
 
-	oSet.max_flames = create_mode_option(
-		option_type.numeric, 
-		400,
-		"max_flames",
-		"Max flames to render")
-	oSet.max_flames.range.lower = 1
-	oSet.max_flames.range.upper = 1000
-	oSet.max_flames.step = 1
-	oSet.options[#oSet.options + 1] = oSet.max_flames
-
-	oSet.simulation_points = create_mode_option(
-		option_type.numeric, 
-		300,
-		"simulation_points",
-		"Max field points")
-	oSet.simulation_points.range.lower = 1
-	oSet.simulation_points.range.upper = 1000
-	oSet.simulation_points.step = 1
-	oSet.options[#oSet.options + 1] = oSet.simulation_points
-
-	oSet.visible_shock_waves = create_mode_option(
+	oSet.boomness = create_mode_option(
 		option_type.enum,
-		on_off.on,
-		"visible_shock_waves",
-		"Visible shock waves")
-	oSet.visible_shock_waves.accepted_values = on_off
-	oSet.options[#oSet.options + 1] = oSet.visible_shock_waves
+		boomness.explody,
+		"boomness",
+		"Boomness")
+	oSet.boomness.accepted_values = boomness
+	oSet.options[#oSet.options + 1] = oSet.boomness
+
+	oSet.rainbow_mode = create_mode_option(
+		option_type.enum,
+		on_off.off,
+		"rainbow_mode",
+		"Rainbow mode")
+	oSet.rainbow_mode.accepted_values = on_off
+	oSet.options[#oSet.options + 1] = oSet.rainbow_mode
 
 	return oSet
 end
@@ -173,26 +161,6 @@ function create_mode_option_set(name, display_name)
 	oSet.display_name = display_name
     oSet.version = CURRENT_VERSION
 	oSet.options = {}
-
-	oSet.flames_per_point = create_mode_option(
-		option_type.numeric, 
-		5,
-		"flames_per_point",
-		"Flames spawn per field point")
-	oSet.flames_per_point.range.lower = 1
-	oSet.flames_per_point.range.upper = 100
-	oSet.flames_per_point.step = 1
-	oSet.options[#oSet.options + 1] = oSet.flames_per_point
-
-	oSet.flame_light_intensity = create_mode_option(
-		option_type.numeric, 
-		3,
-		"flame_light_intensity",
-		"Flame light intensity")
-	oSet.flame_light_intensity.range.lower = 0.1
-	oSet.flame_light_intensity.range.upper = 10
-	oSet.flame_light_intensity.step = 0.1
-	oSet.options[#oSet.options + 1] = oSet.flame_light_intensity
 
     oSet.flame_color_hot = create_mode_option(
 		option_type.color,
@@ -207,74 +175,6 @@ function create_mode_option_set(name, display_name)
 		"flame_color_cool",
 		"Cool flame color")
 	oSet.options[#oSet.options + 1] = oSet.flame_color_cool
-
-	oSet.rainbow_mode = create_mode_option(
-		option_type.enum,
-		on_off.off,
-		"rainbow_mode",
-		"Rainbow mode")
-	oSet.rainbow_mode.accepted_values = on_off
-	oSet.options[#oSet.options + 1] = oSet.rainbow_mode
-
-	oSet.smoke_life = create_mode_option(
-		option_type.numeric, 
-		2,
-		"smoke_life",
-		"Lifetime of smoke particles")
-	oSet.smoke_life.range.lower = 0
-	oSet.smoke_life.range.upper = 5
-	oSet.smoke_life.step = 0.5
-	oSet.options[#oSet.options + 1] = oSet.smoke_life
-
-	oSet.smoke_amount = create_mode_option(
-		option_type.numeric, 
-		0.1,
-		"smoke_amount",
-		"Relative smoke per flame")
-	oSet.smoke_amount.range.lower = 0
-	oSet.smoke_amount.range.upper = 1
-	oSet.smoke_amount.step = 0.01
-	oSet.options[#oSet.options + 1] = oSet.smoke_amount
-
-	oSet.impulse_scale = create_mode_option(
-		option_type.numeric, 
-		1,
-		"impulse_scale",
-		"Impulse (pushing) scale")
-	oSet.impulse_scale.range.lower = 0
-	oSet.impulse_scale.range.upper = 1
-	oSet.impulse_scale.step = 0.01
-	oSet.options[#oSet.options + 1] = oSet.impulse_scale
-
-	oSet.fire_density = create_mode_option(
-		option_type.numeric, 
-		4,
-		"fire_density",
-		"Fire density")
-	oSet.fire_density.range.lower = 0
-	oSet.fire_density.range.upper = 10
-	oSet.fire_density.step = 0.1
-	oSet.options[#oSet.options + 1] = oSet.fire_density
-
-	oSet.contact_damage_scale = create_mode_option(
-		option_type.numeric, 
-		1,
-		"contact_damage_scale",
-		"Field contact damage scale")
-	oSet.contact_damage_scale.range.lower = 0
-	oSet.contact_damage_scale.range.upper = 1
-	oSet.contact_damage_scale.step = 0.01
-	oSet.options[#oSet.options + 1] = oSet.contact_damage_scale
-
-	oSet.max_player_hurt = create_mode_option(
-		option_type.numeric, 
-		0.55,
-		"max_player_hurt",
-		"Maximum player damage per tick")
-	oSet.max_player_hurt.range.lower = 0
-	oSet.max_player_hurt.range.upper = 1
-	oSet.max_player_hurt.step = 0.01
-	oSet.options[#oSet.options + 1] = oSet.max_player_hurt
 
     return oSet
 end	
@@ -301,15 +201,6 @@ function create_bomb_option_set()
 	oSet.max_random_radius.range.upper = 100
 	oSet.max_random_radius.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_random_radius
-
-	-- default values
-	oSet.flames_per_point.value = 4
-	oSet.smoke_life.value = 2
-	oSet.smoke_amount.value = 0.2
-	oSet.impulse_scale.value = 0.8
-	oSet.fire_density.value = 8
-	oSet.contact_damage_scale.value = 0.1
-	oSet.max_player_hurt.value = 0.55
 
 	return oSet
 end
@@ -346,16 +237,6 @@ function create_rocket_option_set()
 	oSet.max_dist.range.upper = 500
 	oSet.max_dist.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
-
-	-- default values
-	oSet.flames_per_point.value = 4
-	oSet.flame_light_intensity.value = 3
-	oSet.smoke_life.value = 1
-	oSet.smoke_amount.value = 0.1
-	oSet.impulse_scale.value = 0.28
-	oSet.fire_density.value = 8
-	oSet.contact_damage_scale.value = 0.04
-	oSet.max_player_hurt.value = 0.55
 
 	return oSet
 end
@@ -394,15 +275,7 @@ function create_thrower_option_set()
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
 
 	-- default values
-	oSet.flames_per_point.value = 1
-	oSet.flame_light_intensity.value = 1
 	oSet.flame_color_hot.value = Vec(7.5, 0.9, 0.6)
-	oSet.smoke_life.value = 1
-	oSet.smoke_amount.value = 0
-	oSet.impulse_scale.value = 0.01
-	oSet.fire_density.value = 10
-	oSet.contact_damage_scale.value = 0.01
-	oSet.max_player_hurt.value = 0.1
 	oSet.speed.value = 0.6
 	
 	return oSet
@@ -430,5 +303,14 @@ option_type = enum {
 on_off = enum {
 	"off",
 	"on"
+}
+
+boomness = enum {
+	"invisible",
+	"performance",
+	"explody",
+	"tactical",
+	"vaporizing",
+	"nuclear",
 }
 

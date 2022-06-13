@@ -12,6 +12,7 @@ PYRO.MAX_FLAMES = 500 -- default maximum number of flames to render
 -- If the pyro field is in rainbow mode, this one color will be cycled and 
 -- coordinates the color of all flames and smoke particules generated. 
 PYRO.RAINBOW = Vec(0, 1, 0.8)
+PYRO.RAINBOW_MODE = false
 PYRO.MIN_PLAYER_PUSH = 1
 PYRO.MAX_PLAYER_PUSH = 5
 PYRO.MAX_PLAYER_VEL = 10
@@ -76,9 +77,6 @@ function inst_pyro()
     inst.contact_damage_scale = 1
     -- The gretest proportion of player health that can be taken away in a tick
     inst.max_player_hurt = 0.5
-    -- Why did you guys ask for this? If set to "on" will cause all flame effects to rotate 
-    -- colors in sync and new smoke particules to spawn in that color. 
-    inst.rainbow_mode = on_off.off
     -- The flame color when based on a force field vector point just above dead force.
     inst.color_cool = Vec(7.7, 1, 0.8)
     -- The flame color when based on a force field vector point at maximum magnitude.
@@ -105,7 +103,7 @@ function make_flame_effect(pyro, flame, dt)
     local life_n =  bracket_value(range_value_to_fraction(flame.parent.mag, FF.LOW_MAG_LIMIT, pyro.ff.graph.max_force), 1, 0)
     local color = Vec()
     local intensity = pyro.flame_light_intensity
-    if pyro.rainbow_mode == on_off.on then
+    if PYRO.RAINBOW_MODE then
         -- Rainbow mode just cycles one color for the entire field and uses that color 
         -- for all fire effects universally
         PYRO.RAINBOW[1] = cycle_value(PYRO.RAINBOW[1], dt, 0, 359)
@@ -153,7 +151,7 @@ function make_flame_effect(pyro, flame, dt)
         -- ParticleDrag(0)
         ParticleAlpha(0.5, 0.9, "linear", 0.05, 0.5)
         ParticleRadius(particle_size)
-        if pyro.rainbow_mode == on_off.on then
+        if PYRO.RAINBOW_MODE then
             -- Rainbow mode: smoke puff is the universal color of the tick
             smoke_color = PYRO.RAINBOW
             smoke_color[3] = 1

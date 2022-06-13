@@ -5,6 +5,7 @@ FF.FORWARD = Vec(0, 0, -1)
 FF.MAX_SIM_POINTS = 200
 FF.BIAS_CONST = 100
 FF.LOW_MAG_LIMIT = 0.01
+FF.POINT_MAX_LIFE = 5
 
 function inst_graph(shock_time, expansion_time, burnout_time)
     local inst = {}
@@ -50,6 +51,7 @@ function inst_force_field_ff()
     inst.energy = 0
     inst.bias_gain = 0.8
     inst.extend_scale = 1.5
+    inst.extend_force = FF.LOW_MAG_LIMIT
     inst.graph = inst_graph()
     return inst
 end
@@ -91,7 +93,7 @@ function inst_field_point(coord, resolution, graph)
     inst.cull = false
     inst.graph = graph or inst_graph()
     inst.life_n = 1
-    inst.extend_force = 0.01
+    inst.life_timer = FF.POINT_MAX_LIFE
     return inst
 end
 
@@ -165,7 +167,8 @@ function propagate_field_forces(ff, dt)
     for i = 1, #points do
         local point = points[i]
         update_point_calculations(point, ff, dt)
-        if point.trans_mag > 0 then 
+        point.life_timer = math.max(0, point.life_timer - dt)
+        if point.life_timer > 0 and point.trans_mag > 0 then 
             propagate_point_force(ff, point, point.dir, dt)
             -- propagate the force in a spread to other vectors around the direction it's pointing.
             -- See extension method above for details about radiate(). 
@@ -206,9 +209,10 @@ function propagate_point_force(ff, point, trans_dir, dt)
                 -- readjust as this sometimes results in added energy. 
                 local new_vec = VecScale(VecNormalize(new_vec), math.min(point.mag, VecLength(new_vec)))
                 set_point_vec(point, new_vec)
-            elseif point.mag > point.extend_force then 
+            else -- if point.mag > ff.extend_force then 
                 -- create the point in the new space
                 point_prime = inst_field_point(coord_prime, ff.resolution)
+                point_prime.life_timer = point.life_timer
                 set_point_dir_mag(point_prime, trans_dir, point.trans_mag)
                 field_put(ff.field, point_prime, point_prime.coord)
             end
@@ -262,7 +266,8 @@ function apply_bias(ff, dt)
     local points = flatten(ff.field)
     for i = 1, #points do
         local point = points[i]
-        local new_dir = VecNormalize(VecAdd(point.dir, VecScale(ff.bias, ff.bias_gain * FF.BIAS_CONST * dt)))
+        local bias_component = VecScale(ff.bias, random_float_in_range(0, ff.bias_gain * FF.BIAS_CONST * dt))
+        local new_dir = VecNormalize(VecAdd(point.dir, bias_component))
         set_point_dir_mag(point, new_dir, point.mag)
     end
 end

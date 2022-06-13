@@ -46,7 +46,7 @@ function init()
 
 	-- true while the player has the options editor open
 	editing_options = false
-	option_page = 1
+	option_page = 4
 
 	DEBUG_MODE = false
 end
@@ -471,4 +471,5 @@ function stop_all_flames()
 	reset_ff(TOOL.BOMB.pyro.ff)
 	reset_ff(TOOL.THROWER.pyro.ff)
 	reset_ff(TOOL.ROCKET.pyro.ff)
+	reset_ff(SHOCK_FIELD.ff)
 end

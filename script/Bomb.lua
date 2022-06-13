@@ -28,7 +28,7 @@ function blast_at(pos)
         local spawn_dir = VecNormalize(random_vec(1))
         local spark_offset = VecScale(spawn_dir, random_float_in_range(0, fireball_rad))
         local spark_pos = VecAdd(pos, spark_offset)
-        local force_dir = VecNormalize(random_vec(1)) -- VecNormalize(VecSub(spark_pos, pos))
+        force_dir = VecNormalize(random_vec(1))
         local hit, dist = QueryRaycast(pos, force_dir, spark_offset, 0.025)
         if hit then
             local spark_pos = VecAdd(pos, VecScale(force_dir, dist - 0.1)) 
@@ -46,7 +46,6 @@ function blast_at(pos)
 end
 
 function shock_at(pos)
-    SHOCK_FIELD.render_flames = TOOL.GENERAL.visible_shock_waves.value == on_off.on
     local force_mag = SHOCK_FIELD.ff.graph.max_force
     local fireball_rad = TOOL.BOMB.explosion_fireball_radius
     local explosion_seeds = TOOL.BOMB.explosion_seeds
