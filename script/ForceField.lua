@@ -52,6 +52,7 @@ function inst_force_field_ff()
     inst.bias_gain = 0.8
     inst.extend_scale = 1.5
     inst.extend_force = FF.LOW_MAG_LIMIT
+    inst.transfer_loss = 0
     inst.graph = inst_graph()
     return inst
 end
@@ -220,7 +221,8 @@ function propagate_point_force(ff, point, trans_dir, dt)
             local new_dir = VecNormalize(VecAdd(point_prime.dir, trans_dir))
             set_point_dir_mag(point_prime, new_dir, point_prime.mag + point.trans_mag)
         end
-        set_point_dir_mag(point, point.dir, math.max(0, point.mag - point.trans_mag))
+        local loss = point.mag * ff.transfer_loss
+        set_point_dir_mag(point, point.dir, math.max(0, point.mag - point.trans_mag - loss))
     end
 end
 

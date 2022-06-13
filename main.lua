@@ -46,7 +46,7 @@ function init()
 
 	-- true while the player has the options editor open
 	editing_options = false
-	option_page = 4
+	option_page = 1
 
 	DEBUG_MODE = false
 end

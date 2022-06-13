@@ -25,7 +25,7 @@ end
 
 function load_option_set(name, create_if_not_found)
 	local ser = GetString(REG.PREFIX_TOOL_OPTIONS.."."..name)
-	if ser == "" then
+	if ser == "" or not can_migrate(ser) then
 		if create_if_not_found then
 			local test = create_option_set_by_name(name)
 			return test

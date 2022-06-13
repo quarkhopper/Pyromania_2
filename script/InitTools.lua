@@ -52,7 +52,7 @@ function load_option_sets()
     init_pyro(TOOL.ROCKET)
 	TOOL.THROWER = load_option_set("thrower", true)
     init_pyro(TOOL.THROWER)
-    all_option_sets = {TOOL.BOMB, TOOL.ROCKET, TOOL.THROWER, TOOL.GENERAL}
+    all_option_sets = {TOOL.GENERAL, TOOL.BOMB, TOOL.ROCKET, TOOL.THROWER}
 end
 
 function init_pyro(tool)
@@ -140,17 +140,18 @@ function init_pyro(tool)
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 5
             pyro.contact_damage_scale = 0.2
-            pyro.ff.bias_gain = 0.15
+            pyro.ff.bias_gain = 0.1
             pyro.ff.resolution = 0.3
+            -- pyro.ff.transfer_loss = 0.08
             pyro.ff.graph.curve = curve_type.linear
             pyro.ff.graph.max_force = 100000
             pyro.ff.graph.dead_force = 1
             pyro.ff.graph.hot_transfer = 500
-            pyro.ff.graph.cool_transfer = 0.1
-            pyro.ff.graph.hot_prop_split = 2
-            pyro.ff.graph.cool_prop_split = 3
-            pyro.ff.graph.hot_prop_angle = 20
-            pyro.ff.graph.cool_prop_angle = 35
+            pyro.ff.graph.cool_transfer = 0.01
+            pyro.ff.graph.hot_prop_split = 3
+            pyro.ff.graph.cool_prop_split = 2
+            pyro.ff.graph.hot_prop_angle = 35
+            pyro.ff.graph.cool_prop_angle = 24
             pyro.ff.graph.extend_scale = 1.5
 
         elseif intensity == boomness.vaporizing then 
@@ -365,7 +366,7 @@ function init_pyro(tool)
             pyro.flame_light_intensity = 1
             pyro.fire_ignition_radius = 1
             pyro.fire_density = 10
-            pyro.ff.resolution = 0.1
+            pyro.ff.resolution = 0.2
             pyro.ff.graph.max_force = 500 
             pyro.ff.graph.dead_force = 10
             pyro.ff.graph.hot_transfer = 100
