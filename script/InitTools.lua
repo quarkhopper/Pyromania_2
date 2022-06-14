@@ -110,13 +110,13 @@ function init_pyro(tool)
             pyro.ff.resolution = 0.5
             pyro.ff.graph.curve = curve_type.linear
             pyro.ff.graph.max_force = 100000
-            pyro.ff.graph.dead_force = 0.05
+            pyro.ff.graph.dead_force = 0.15
             pyro.ff.graph.hot_transfer = 300
             pyro.ff.graph.cool_transfer = 0.5
             pyro.ff.graph.hot_prop_split = 5
             pyro.ff.graph.cool_prop_split = 2
-            pyro.ff.graph.hot_prop_angle = 20
-            pyro.ff.graph.cool_prop_angle = 35
+            pyro.ff.graph.hot_prop_angle = 40
+            pyro.ff.graph.cool_prop_angle = 25
             pyro.ff.graph.extend_scale = 1.5
 
         elseif intensity == boomness.tactical then 
@@ -132,9 +132,9 @@ function init_pyro(tool)
             pyro.ff.resolution = 0.3
             pyro.ff.graph.curve = curve_type.linear
             pyro.ff.graph.max_force = 100000
-            pyro.ff.graph.dead_force = 1
-            pyro.ff.graph.hot_transfer = 500
-            pyro.ff.graph.cool_transfer = 0.01
+            pyro.ff.graph.dead_force = 0.15 --1
+            pyro.ff.graph.hot_transfer = 3000
+            pyro.ff.graph.cool_transfer = 0.5
             pyro.ff.graph.hot_prop_split = 3
             pyro.ff.graph.cool_prop_split = 2
             pyro.ff.graph.hot_prop_angle = 35
@@ -197,7 +197,7 @@ function init_pyro(tool)
         pyro.smoke_life = 1
         pyro.smoke_amount_n = 0.1
         pyro.max_player_hurt = 0.55
-        pyro.ff.dir_jitter = 0
+        pyro.ff.dir_jitter = 0.5
         pyro.ff.bias_gain = 0.3
         pyro.ff.meta_resolution = 2
 
@@ -283,11 +283,11 @@ function init_pyro(tool)
             pyro.ff.graph.max_force = 100000
             pyro.ff.graph.dead_force = 0.15
             pyro.ff.graph.hot_transfer = 5000
-            pyro.ff.graph.cool_transfer = 1
+            pyro.ff.graph.cool_transfer = 1.2
             pyro.ff.graph.hot_prop_split = 3
             pyro.ff.graph.cool_prop_split = 6
             pyro.ff.graph.hot_prop_angle = 60
-            pyro.ff.graph.cool_prop_angle = 20
+            pyro.ff.graph.cool_prop_angle = 30
             pyro.ff.graph.extend_scale = 1.5
 
         elseif intensity == boomness.vaporizing then 
@@ -306,12 +306,12 @@ function init_pyro(tool)
             pyro.ff.graph.max_force = 100000
             pyro.ff.graph.dead_force = 0.15
             pyro.ff.graph.hot_transfer = 5000
-            pyro.ff.graph.cool_transfer = 1
+            pyro.ff.graph.cool_transfer = 1.2
             pyro.ff.graph.hot_prop_split = 3
             pyro.ff.graph.cool_prop_split = 6
             pyro.ff.graph.hot_prop_angle = 60
-            pyro.ff.graph.cool_prop_angle = 20
-            pyro.ff.graph.extend_scale = 1.5
+            pyro.ff.graph.cool_prop_angle = 30
+            pyro.ff.graph.extend_scale = 1.8
 
         elseif intensity == boomness.nuclear then 
             tool.explosion_seeds = 100
@@ -323,17 +323,17 @@ function init_pyro(tool)
             pyro.impulse_scale = 0.28
             pyro.max_flames = 1000
             pyro.ff.max_sim_points = 1000
-            pyro.ff.bias_gain = 0.15
+            pyro.ff.bias_gain = 0.12
             pyro.ff.resolution = 0.3
             pyro.ff.graph.curve = curve_type.linear
             pyro.ff.graph.max_force = 100000
-            pyro.ff.graph.dead_force = 1
-            pyro.ff.graph.hot_transfer = 500
-            pyro.ff.graph.cool_transfer = 0.1
-            pyro.ff.graph.hot_prop_split = 2
-            pyro.ff.graph.cool_prop_split = 3
-            pyro.ff.graph.hot_prop_angle = 20
-            pyro.ff.graph.cool_prop_angle = 35
+            pyro.ff.graph.dead_force = 0.15
+            pyro.ff.graph.hot_transfer = 5000
+            pyro.ff.graph.cool_transfer = 0.5
+            pyro.ff.graph.hot_prop_split = 3
+            pyro.ff.graph.cool_prop_split = 6
+            pyro.ff.graph.hot_prop_angle = 60
+            pyro.ff.graph.cool_prop_angle = 30
             pyro.ff.graph.extend_scale = 2
 
         end
