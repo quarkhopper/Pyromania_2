@@ -125,7 +125,7 @@ function init_pyro(tool)
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 5
-            pyro.contact_damage_scale = 0.2
+            pyro.contact_damage_scale = 0.1
             pyro.max_flames = 600
             pyro.ff.max_sim_points = 500
             pyro.ff.bias_gain = 0.1
@@ -146,7 +146,7 @@ function init_pyro(tool)
             tool.explosion_fireball_radius = 0.5
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.5
-            pyro.contact_damage_scale = 0.3
+            pyro.contact_damage_scale = 0.1
             pyro.flames_per_spawn = 5
             pyro.max_flames = 800
             pyro.ff.max_sim_points = 800
@@ -169,7 +169,7 @@ function init_pyro(tool)
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 5
-            pyro.contact_damage_scale = 0.5
+            pyro.contact_damage_scale = 0.2
             pyro.max_flames = 1000
             pyro.ff.max_sim_points = 1000
             pyro.ff.bias_gain = 0.05
