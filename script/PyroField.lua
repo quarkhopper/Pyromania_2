@@ -8,9 +8,6 @@
 
 
 PYRO = {} -- Static PyroField options
-PYRO.MAX_FLAMES = 500 -- default maximum number of flames to render
--- If the pyro field is in rainbow mode, this one color will be cycled and 
--- coordinates the color of all flames and smoke particules generated. 
 PYRO.RAINBOW = Vec(0, 1, 0.8)
 PYRO.RAINBOW_MODE = false
 PYRO.MIN_PLAYER_PUSH = 1
@@ -82,7 +79,7 @@ function inst_pyro()
     -- The flame color when based on a force field vector point at maximum magnitude.
     inst.color_hot = Vec(7.7, 1, 0.8)
     inst.fade_magnitude = 20
-
+    inst.max_flames = 400
     -- The force field wrapped by this pyro field.
     inst.ff = inst_force_field_ff()
 
@@ -203,17 +200,22 @@ function spawn_flames(pyro)
         local point = points[i]
         spawn_flame_group(pyro, point, new_flames)
     end
-    while #new_flames > PYRO.MAX_FLAMES do
+    for i = 1, #pyro.ff.contacts do
+        local contact = pyro.ff.contacts[i]
+        spawn_flame_group(pyro, contact.point, new_flames, contact.hit_point)      
+    end
+    while #new_flames > pyro.max_flames do
         table.remove(new_flames, math.random(#new_flames))
     end
     pyro.flames = new_flames
 end
 
-function spawn_flame_group(pyro, point, flame_table)
+function spawn_flame_group(pyro, point, flame_table, pos)
+    pos = pos or point.pos
     for i = 1, pyro.flames_per_spawn do
         local offset_dir = VecNormalize(random_vec(1))
-        local flame_pos = VecAdd(point.pos, VecScale(offset_dir, pyro.ff.resolution))
-        local flame = inst_flame(point.pos)
+        local flame_pos = VecAdd(pos, VecScale(offset_dir, pyro.ff.resolution))
+        local flame = inst_flame(pos)
         flame.parent = point
         table.insert(flame_table, flame)
     end
@@ -229,7 +231,6 @@ function impulse_fx(pyro)
         local push_bodies = QueryAabbBodies(box[1], box[2])
         -- local force_mag = VecLength(point.vec)
         local force_dir = VecNormalize(point.vec)
-        -- local force_n = force_mag / pyro.ff.graph.max_force
         for i = 1, #push_bodies do
             local push_body = push_bodies[i]
             local body_center = TransformToParentPoint(GetBodyTransform(push_body), GetBodyCenterOfMass(push_body))
@@ -251,9 +252,8 @@ end
 function collision_fx(pyro)
     for i = 1, #pyro.ff.contacts do
         local contact = pyro.ff.contacts[i]
-        local force_n = range_value_to_fraction(VecLength(contact.point.vec), 0, pyro.ff.graph.max_force)
         -- make holes
-        local voxels = fraction_to_range_value(force_n ^ 0.5, PYRO.MIN_HOLE_VOXELS, PYRO.MAX_HOLE_VOXELS) * pyro.contact_damage_scale
+        local voxels = fraction_to_range_value(contact.point.life_n, PYRO.MIN_HOLE_VOXELS, PYRO.MAX_HOLE_VOXELS) * pyro.contact_damage_scale * 0.05
         if voxels > 0.1 then 
             MakeHole(contact.hit_point, voxels * 10, voxels * 5, voxels, true)
         end

@@ -136,14 +136,6 @@ function create_general_option_set()
 	oSet.display_name = "General"
     oSet.version = CURRENT_VERSION
 
-	oSet.boomness = create_mode_option(
-		option_type.enum,
-		boomness.explody,
-		"boomness",
-		"Boomness")
-	oSet.boomness.accepted_values = boomness
-	oSet.options[#oSet.options + 1] = oSet.boomness
-
 	oSet.rainbow_mode = create_mode_option(
 		option_type.enum,
 		on_off.off,
@@ -175,6 +167,14 @@ function create_mode_option_set(name, display_name)
 		"flame_color_cool",
 		"Cool flame color")
 	oSet.options[#oSet.options + 1] = oSet.flame_color_cool
+
+	oSet.boomness = create_mode_option(
+		option_type.enum,
+		boomness.explody,
+		"boomness",
+		"Performance")
+	oSet.boomness.accepted_values = boomness
+	oSet.options[#oSet.options + 1] = oSet.boomness
 
     return oSet
 end	

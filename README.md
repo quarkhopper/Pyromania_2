@@ -15,6 +15,8 @@ All flames and resulting smoke particles in the pyro field cycle hue values.
 The HSV color of a flame when the controlling vector field force is at its maximum and blends towards flame_color_cool linearly as the vector force falls to flame_dead_force.
 #### Cool flame color (flame_color_cool)
 The HSV color of a flame when the controlling vector field force is at its minimum (flame_dead_force).
+#### Performance (boomness)
+Allows you to choose from parameters that match the kind of performance you need. The principle means of adjusting the scale and quality of fire and explosion effects. 
 ### Bomb tool options
 #### Maximum radius of random explosions (max_random_radius)
 Sets a bounding box for where a random explosion can spawn to a box centered on the player with sides this far from the player.

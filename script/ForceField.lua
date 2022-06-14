@@ -2,10 +2,9 @@
 
 FF = {} -- library constants
 FF.FORWARD = Vec(0, 0, -1)
-FF.MAX_SIM_POINTS = 200
 FF.BIAS_CONST = 100
 FF.LOW_MAG_LIMIT = 0.01
-FF.POINT_MAX_LIFE = 5
+FF.POINT_MAX_LIFE = 3
 
 function inst_graph(shock_time, expansion_time, burnout_time)
     local inst = {}
@@ -233,8 +232,8 @@ function normalize_field(ff, dt)
 
     -- remove points until we're under the sim limit
     local points = flatten(ff.field)
-    if #points > FF.MAX_SIM_POINTS then
-        while #points > FF.MAX_SIM_POINTS do
+    if #points > ff.max_sim_points then
+        while #points > ff.max_sim_points do
             local index = math.random(#points)
             if index ~= 0 then 
                 local remove_point = points[index]
