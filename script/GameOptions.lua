@@ -56,6 +56,15 @@ function option_set_from_string(ser)
 	return options
 end
 
+function reset_all_options()
+	-- This is an emergency reset that the main menu option screen uses.
+	-- it does not rely on the TOOL globals being loaded.
+	local option_set_keys = {"general", "bomb", "rocket", "thrower"}
+	for i = 1, #option_set_keys do
+		option_set_reset(option_set_keys[i])
+	end
+end
+
 function option_set_reset(name)
 	ClearKey(REG.PREFIX_TOOL_OPTIONS.."."..name)
 end
