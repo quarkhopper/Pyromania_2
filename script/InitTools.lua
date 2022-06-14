@@ -200,6 +200,7 @@ function init_pyro(tool)
         pyro.smoke_life = 1
         pyro.smoke_amount_n = 0.1
         pyro.max_player_hurt = 0.55
+        pyro.ff.point_max_life = 2
         pyro.ff.dir_jitter = 0.5
         pyro.ff.bias_gain = 0.3
         pyro.ff.meta_resolution = 2

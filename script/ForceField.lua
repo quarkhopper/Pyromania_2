@@ -4,7 +4,6 @@ FF = {} -- library constants
 FF.FORWARD = Vec(0, 0, -1)
 FF.BIAS_CONST = 100
 FF.LOW_MAG_LIMIT = 0.01
-FF.POINT_MAX_LIFE = 3
 
 function inst_graph(shock_time, expansion_time, burnout_time)
     local inst = {}
@@ -52,6 +51,7 @@ function inst_force_field_ff()
     inst.extend_scale = 1.5
     inst.extend_force = FF.LOW_MAG_LIMIT
     inst.transfer_loss = 0
+    inst.point_max_life = 3
     inst.graph = inst_graph()
     return inst
 end
@@ -76,7 +76,7 @@ function inst_field_contact(point, hit_point, normal, shape)
     return inst
 end
 
-function inst_field_point(coord, resolution, graph)
+function inst_field_point(coord, resolution, ff)
     -- One vector in the field. There's a static for setting either the position
     -- or the dir/mag combo to keep them consistent for efficiency so this doesn't
     -- have to be recalculated over and over. (I would love it if OOP was allowed in 
@@ -91,9 +91,14 @@ function inst_field_point(coord, resolution, graph)
     inst.vec = Vec()
     inst.type = point_type.base
     inst.cull = false
-    inst.graph = graph or inst_graph()
+    if ff ~= nil then 
+        inst.graph = ff.graph
+        inst.life_timer = ff.point_max_life
+    else
+        inst.graph = inst_graph()
+        inst.life_timer = 3
+    end
     inst.life_n = 1
-    inst.life_timer = FF.POINT_MAX_LIFE
     return inst
 end
 
@@ -122,7 +127,7 @@ function apply_force(ff, pos, force)
     -- if this point doesn't exist yet in the coord of the field, we
     -- have a couple things to do
     if point == nil then 
-        point = inst_field_point(coord, ff.resolution, ff.graph)
+        point = inst_field_point(coord, ff.resolution, ff)
         -- insert a point into the field
         field_put(ff.field, point, point.coord)
     end
