@@ -39,6 +39,7 @@ function init_pyro(tool)
     local pyro = inst_pyro()
     pyro.color_cool = tool.flame_color_cool.value
     pyro.color_hot = tool.flame_color_hot.value
+    pyro.physical_damage_factor = tool.physical_damage_factor.value
 
     pyro.ff.bias = Vec(0, 1, 0)
     local intensity = tool.boomness.value
@@ -56,6 +57,7 @@ function init_pyro(tool)
         pyro.smoke_life = 1
         pyro.smoke_amount_n = 0.2
         pyro.max_player_hurt = 0.55
+        pyro.ff.point_max_life = 2
         pyro.ff.dir_jitter = 0.3
         pyro.ff.meta_resolution = 2
 
@@ -63,8 +65,8 @@ function init_pyro(tool)
             tool.explosion_seeds = 100
             tool.explosion_fireball_radius = 1.5
             pyro.flames_per_spawn = 0
-            pyro.contact_damage_scale = 0.1
             pyro.max_flames = 0
+            pyro.physical_damage_scale = 0.08
             pyro.ff.max_sim_points = 100
             pyro.ff.bias_gain = 0.5
             pyro.ff.resolution = 0.5
@@ -83,8 +85,8 @@ function init_pyro(tool)
             tool.explosion_seeds = 100
             tool.explosion_fireball_radius = 1.5
             pyro.flames_per_spawn = 2
-            pyro.contact_damage_scale = 0.1
             pyro.max_flames = 200
+            pyro.physical_damage_scale = 0.08
             pyro.ff.max_sim_points = 250
             pyro.ff.bias_gain = 0.5
             pyro.ff.resolution = 0.5
@@ -103,8 +105,8 @@ function init_pyro(tool)
             tool.explosion_seeds = 100
             tool.explosion_fireball_radius = 1.5
             pyro.flames_per_spawn = 4
-            pyro.contact_damage_scale = 0.03
             pyro.max_flames = 400
+            pyro.physical_damage_scale = 0.08
             pyro.ff.max_sim_points = 300
             pyro.ff.bias_gain = 0.5
             pyro.ff.resolution = 0.5
@@ -125,8 +127,8 @@ function init_pyro(tool)
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 5
-            pyro.contact_damage_scale = 0.04
             pyro.max_flames = 600
+            pyro.physical_damage_scale = 0.02
             pyro.ff.max_sim_points = 500
             pyro.ff.bias_gain = 0.1
             pyro.ff.resolution = 0.3
@@ -146,10 +148,10 @@ function init_pyro(tool)
             tool.explosion_fireball_radius = 0.5
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.5
-            pyro.contact_damage_scale = 0.1
+            pyro.physical_damage_factor = 0.1
             pyro.flames_per_spawn = 5
             pyro.max_flames = 800
-            pyro.contact_damage_scale = 0.05
+            pyro.physical_damage_scale = 0.02
             pyro.ff.max_sim_points = 800
             pyro.ff.bias_gain = 0.15
             pyro.ff.resolution = 0.3
@@ -170,11 +172,11 @@ function init_pyro(tool)
             pyro.hot_particle_size = 0.5
             pyro.cool_particle_size = 0.7
             pyro.flames_per_spawn = 6
-            pyro.contact_damage_scale = 0.1
             pyro.max_flames = 1000
             pyro.flame_jitter = 0.1
             pyro.flame_light_intensity = 5
             pyro.smoke_amount_n = 0.2
+            pyro.physical_damage_scale = 0.04
             pyro.ff.max_sim_points = 1000
             pyro.ff.bias_gain = 0.3
             pyro.ff.resolution = 0.5
@@ -211,9 +213,9 @@ function init_pyro(tool)
             pyro.hot_particle_size = 0.2
             pyro.cool_particle_size = 0.4
             pyro.flames_per_spawn = 0
-            pyro.contact_damage_scale = 0.1
             pyro.impulse_scale = 0.1
             pyro.max_flames = 0
+            pyro.physical_damage_scale = 0.08
             pyro.ff.max_sim_points = 100
             pyro.ff.resolution = 0.3
             pyro.ff.graph.curve = curve_type.linear
@@ -233,9 +235,9 @@ function init_pyro(tool)
             pyro.hot_particle_size = 0.2
             pyro.cool_particle_size = 0.4
             pyro.flames_per_spawn = 2
-            pyro.contact_damage_scale = 0.1
             pyro.impulse_scale = 0.1
             pyro.max_flames = 100
+            pyro.physical_damage_scale = 0.08
             pyro.ff.max_sim_points = 200
             pyro.ff.resolution = 0.3
             pyro.ff.graph.curve = curve_type.linear
@@ -255,9 +257,9 @@ function init_pyro(tool)
             pyro.hot_particle_size = 0.2
             pyro.cool_particle_size = 0.4
             pyro.flames_per_spawn = 4
-            pyro.contact_damage_scale = 0.05
             pyro.impulse_scale = 0.1
             pyro.max_flames = 400
+            pyro.physical_damage_scale = 0.08
             pyro.ff.max_sim_points = 300
             pyro.ff.resolution = 0.3
             pyro.ff.graph.curve = curve_type.linear
@@ -277,9 +279,9 @@ function init_pyro(tool)
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 4
-            pyro.contact_damage_scale = 0.02
             pyro.impulse_scale = 0.2
             pyro.max_flames = 600
+            pyro.physical_damage_scale = 0.02
             pyro.ff.max_sim_points = 500
             pyro.ff.bias_gain = 0.2
             pyro.ff.resolution = 0.5
@@ -300,9 +302,9 @@ function init_pyro(tool)
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 4
-            pyro.contact_damage_scale = 0.02
             pyro.impulse_scale = 0.28
             pyro.max_flames = 800
+            pyro.physical_damage_scale = 0.02
             pyro.ff.max_sim_points = 800
             pyro.ff.bias_gain = 0.2
             pyro.ff.resolution = 0.5
@@ -323,9 +325,9 @@ function init_pyro(tool)
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 5
-            pyro.contact_damage_scale = 0.05
             pyro.impulse_scale = 0.28
             pyro.max_flames = 1000
+            pyro.physical_damage_scale = 0.04
             pyro.ff.max_sim_points = 1000
             pyro.ff.bias_gain = 0.12
             pyro.ff.resolution = 0.3
@@ -354,7 +356,6 @@ function init_pyro(tool)
         pyro.fire_density = 10
         pyro.smoke_life = 1
         pyro.smoke_amount_n = 0
-        pyro.contact_damage_scale = 0.01
         pyro.max_player_hurt = 0.1
         pyro.ff.dir_jitter = 0
         pyro.ff.bias = Vec(0, 1, 0)
@@ -485,7 +486,7 @@ function init_shock_field()
     pyro.impulse_scale = 1
     pyro.fire_ignition_radius = 0
     pyro.fire_density = 0
-    pyro.contact_damage_scale = 0.1
+    pyro.physical_damage_factor = TOOL.BOMB.physical_damage_factor.value * 0.01
     pyro.max_player_hurt = 0.01
     pyro.rainbow_mode = false
     pyro.flame_light_intensity = 0
@@ -571,8 +572,8 @@ function init_shock_field()
     elseif intensity == boomness.nuclear then 
         pyro.flames_per_spawn = 6
         pyro.impulse_radius = 20
-        pyro.max_flames = 800
-        pyro.ff.max_sim_points = 800
+        pyro.max_flames = 1000
+        pyro.ff.max_sim_points = 500
         pyro.ff.graph.max_force = 1000000
         pyro.ff.graph.dead_force = 6
         pyro.ff.graph.hot_transfer = 1000

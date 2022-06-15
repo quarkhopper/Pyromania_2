@@ -185,6 +185,16 @@ function create_mode_option_set(name, display_name)
 	oSet.boomness.accepted_values = boomness
 	oSet.options[#oSet.options + 1] = oSet.boomness
 
+	oSet.physical_damage_factor = create_mode_option(
+		option_type.numeric, 
+		0.5,
+		"physical_damage_factor",
+		"Physical damange modifier")
+	oSet.physical_damage_factor.range.lower = 0
+	oSet.physical_damage_factor.range.upper = 1
+	oSet.physical_damage_factor.step = 0.001
+	oSet.options[#oSet.options + 1] = oSet.physical_damage_factor
+
     return oSet
 end	
 
@@ -210,6 +220,8 @@ function create_bomb_option_set()
 	oSet.max_random_radius.range.upper = 100
 	oSet.max_random_radius.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_random_radius
+
+	oSet.physical_damage_factor.value = 0.6
 
 	return oSet
 end
@@ -246,6 +258,8 @@ function create_rocket_option_set()
 	oSet.max_dist.range.upper = 500
 	oSet.max_dist.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
+
+	oSet.physical_damage_factor.value = 0.5
 
 	return oSet
 end
@@ -286,7 +300,8 @@ function create_thrower_option_set()
 	-- default values
 	oSet.flame_color_hot.value = Vec(7.5, 0.9, 0.6)
 	oSet.speed.value = 0.6
-	
+	oSet.physical_damage_factor.value = 0.01
+
 	return oSet
 end
 

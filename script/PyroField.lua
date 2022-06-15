@@ -15,8 +15,8 @@ PYRO.MAX_PLAYER_PUSH = 5
 PYRO.MAX_PLAYER_VEL = 10
 PYRO.MIN_IMPULSE = 50
 PYRO.MAX_IMPULSE = 800
-PYRO.MIN_HOLE_VOXELS = 0.1
-PYRO.MAX_HOLE_VOXELS = 5
+PYRO.MIN_HOLE_VOXELS = 2
+PYRO.MAX_HOLE_VOXELS = 20
 PYRO.GRAVITY = 0.5
 
 function inst_pyro()
@@ -65,13 +65,9 @@ function inst_pyro()
     inst.impulse_radius = 5
     -- Radius from a force field vector point that flames can arise.
     inst.fire_ignition_radius = 1
-    -- Number of flames per LINEAR world unit to attempt to spawn AS THOUGH a value of 1 equates to
-    -- a volume of a 1x1x1 cube of voxels having only 1^3 (or 1) fire spawn. A value of 2 
-    -- yields 2^3 or 8 fire spawns. The reality is that this number of fires is calculated and then
-    -- than many attempts to cast out from a central point in a random direction a distance of 
-    -- fire_ignition_radius away are made. If that cast hits something, a fire is started.
     inst.fire_density = 1
-    inst.contact_damage_scale = 1
+    inst.physical_damage_factor = 0.5
+    inst.physical_damage_scale = 0.08
     -- The gretest proportion of player health that can be taken away in a tick
     inst.max_player_hurt = 0.5
     -- The flame color when based on a force field vector point just above dead force.
@@ -253,9 +249,9 @@ function collision_fx(pyro)
     for i = 1, #pyro.ff.contacts do
         local contact = pyro.ff.contacts[i]
         -- make holes
-        local voxels = fraction_to_range_value(contact.point.life_n, PYRO.MIN_HOLE_VOXELS, PYRO.MAX_HOLE_VOXELS) * pyro.contact_damage_scale * 0.05
-        if voxels > 0.1 then 
-            MakeHole(contact.hit_point, voxels * 10, voxels * 5, voxels, true)
+        local voxels = fraction_to_range_value(contact.point.life_n, PYRO.MIN_HOLE_VOXELS, PYRO.MAX_HOLE_VOXELS) * pyro.physical_damage_factor * pyro.physical_damage_scale
+        if voxels > 2 then 
+            MakeHole(contact.hit_point, voxels, voxels/3, voxels/5, true)
         end
     end
 end
