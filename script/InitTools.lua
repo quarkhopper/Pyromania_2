@@ -281,7 +281,7 @@ function init_pyro(tool)
             pyro.flames_per_spawn = 4
             pyro.impulse_scale = 0.2
             pyro.max_flames = 600
-            pyro.physical_damage_scale = 0.02
+            pyro.physical_damage_scale = 0.01
             pyro.ff.max_sim_points = 500
             pyro.ff.bias_gain = 0.2
             pyro.ff.resolution = 0.5
