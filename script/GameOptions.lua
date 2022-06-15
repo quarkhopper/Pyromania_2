@@ -221,7 +221,7 @@ function create_bomb_option_set()
 	oSet.max_random_radius.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_random_radius
 
-	oSet.physical_damage_factor.value = 0.6
+	oSet.physical_damage_factor.value = 0.2
 
 	return oSet
 end

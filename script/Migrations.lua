@@ -48,7 +48,7 @@ function migrate_option_set(option_set_ser)
             physical_damage_factor.range.upper = 1
             physical_damage_factor.step = 0.001
 
-            if set_name == "bomb" then physical_damage_factor.value = 0.6
+            if set_name == "bomb" then physical_damage_factor.value = 0.2
             elseif set_name == "rocket" then physical_damage_factor.value = 0.5
             elseif set_name == "thrower" then physical_damage_factor.value = 0.01
             end
