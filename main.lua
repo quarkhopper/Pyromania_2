@@ -330,11 +330,10 @@ function draw_slider(value, width, label, label_width)
 end
 
 -------------------------------------------------
--- TICK 
+-- TICK and UPDATE
 -------------------------------------------------
 
-function tick(dt)
-	handle_input(dt)
+function update(dt)
 	if not suspend_ticks then 
 		flame_tick(TOOL.BOMB.pyro, dt)
 		flame_tick(TOOL.THROWER.pyro, dt)
@@ -343,6 +342,10 @@ function tick(dt)
 		rocket_tick(dt)
 		thrower_tick(dt)
 	end
+end
+
+function tick(dt)
+	handle_input(dt)
 
 	if GetPlayerHealth() == 0 then
 		action_mode = false 

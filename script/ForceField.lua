@@ -272,7 +272,7 @@ function apply_bias(ff, dt)
     local points = flatten(ff.field)
     for i = 1, #points do
         local point = points[i]
-        local bias_component = VecScale(ff.bias, random_float_in_range(0, ff.bias_gain * FF.BIAS_CONST * dt))
+        local bias_component = VecScale(ff.bias, random_float_in_range(0, ff.bias_gain * FF.BIAS_CONST) * dt)
         local new_dir = VecNormalize(VecAdd(point.dir, bias_component))
         set_point_dir_mag(point, new_dir, point.mag)
     end
