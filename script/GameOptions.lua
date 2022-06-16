@@ -221,7 +221,7 @@ function create_bomb_option_set()
 	oSet.max_random_radius.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_random_radius
 
-	oSet.physical_damage_factor.value = 0.2
+	oSet.physical_damage_factor.value = 0.3
 
 	return oSet
 end
@@ -300,7 +300,7 @@ function create_thrower_option_set()
 	-- default values
 	oSet.flame_color_hot.value = Vec(7.5, 0.9, 0.6)
 	oSet.speed.value = 0.6
-	oSet.physical_damage_factor.value = 0.01
+	oSet.physical_damage_factor.value = 0.05
 
 	return oSet
 end

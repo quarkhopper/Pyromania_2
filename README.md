@@ -18,7 +18,7 @@ The HSV color of a flame when the controlling vector field force is at its minim
 #### Performance (boomness)
 Allows you to choose from parameters that match the kind of performance you need. The principle means of adjusting the scale and quality of fire and explosion effects. 
 #### Physical damage modifier (physical_damage_factor)
-Adjust the power of the explosion at the center of the bomb or rocket. (doesn't actually affect flamethrower) 0 is minimum, 1 is maximum. 
+Adjust how distructive the fire is on surfaces. 0 for not destructive. 1 for maximum destructive. Note: destruction will still occurr from initial primer explosion and rocket burrowing. Additionaly, objects that are hurled might cause physical destruction. 
 ### Bomb tool options
 #### Maximum radius of random explosions (max_random_radius)
 Sets a bounding box for where a random explosion can spawn to a box centered on the player with sides this far from the player.

@@ -15,8 +15,6 @@ PYRO.MAX_PLAYER_PUSH = 5
 PYRO.MAX_PLAYER_VEL = 10
 PYRO.MIN_IMPULSE = 50
 PYRO.MAX_IMPULSE = 800
-PYRO.MIN_HOLE_VOXELS = 2
-PYRO.MAX_HOLE_VOXELS = 20
 PYRO.GRAVITY = 0.5
 
 function inst_pyro()
@@ -67,7 +65,6 @@ function inst_pyro()
     inst.fire_ignition_radius = 1
     inst.fire_density = 1
     inst.physical_damage_factor = 0.5
-    inst.physical_damage_scale = 0.08
     -- The gretest proportion of player health that can be taken away in a tick
     inst.max_player_hurt = 0.5
     -- The flame color when based on a force field vector point just above dead force.
@@ -248,10 +245,9 @@ end
 function collision_fx(pyro)
     for i = 1, #pyro.ff.contacts do
         local contact = pyro.ff.contacts[i]
-        -- make holes
-        local voxels = fraction_to_range_value(contact.point.life_n, PYRO.MIN_HOLE_VOXELS, PYRO.MAX_HOLE_VOXELS) * pyro.physical_damage_factor * pyro.physical_damage_scale
-        if voxels > 2 then 
-            MakeHole(contact.hit_point, voxels, voxels/3, voxels/5, true)
+        Paint(contact.hit_point, random_float_in_range(0, 0.5), "explosion", random_float_in_range(0, 1))
+        if math.random() < pyro.physical_damage_factor then 
+            MakeHole(contact.hit_point, 1, 1/3, 1/5, true)
         end
     end
 end
@@ -287,7 +283,7 @@ function flame_tick(pyro, dt)
     end
 
     if (pyro.tick_count + 2) % 3 == 0 then 
-        -- collision_fx(pyro)
+        collision_fx(pyro)
         pyro.ff.contacts = {}
     elseif (pyro.tick_count + 1) % 3 == 0 then 
         impulse_fx(pyro)

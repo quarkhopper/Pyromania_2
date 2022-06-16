@@ -66,7 +66,6 @@ function init_pyro(tool)
             tool.explosion_fireball_radius = 1.5
             pyro.flames_per_spawn = 0
             pyro.max_flames = 0
-            pyro.physical_damage_scale = 0.08
             pyro.ff.max_sim_points = 100
             pyro.ff.bias_gain = 0.5
             pyro.ff.resolution = 0.5
@@ -86,7 +85,6 @@ function init_pyro(tool)
             tool.explosion_fireball_radius = 1.5
             pyro.flames_per_spawn = 2
             pyro.max_flames = 200
-            pyro.physical_damage_scale = 0.08
             pyro.ff.max_sim_points = 250
             pyro.ff.bias_gain = 0.5
             pyro.ff.resolution = 0.5
@@ -106,7 +104,6 @@ function init_pyro(tool)
             tool.explosion_fireball_radius = 1.5
             pyro.flames_per_spawn = 4
             pyro.max_flames = 400
-            pyro.physical_damage_scale = 0.08
             pyro.ff.max_sim_points = 300
             pyro.ff.bias_gain = 0.5
             pyro.ff.resolution = 0.5
@@ -128,7 +125,6 @@ function init_pyro(tool)
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 5
             pyro.max_flames = 600
-            pyro.physical_damage_scale = 0.02
             pyro.ff.max_sim_points = 500
             pyro.ff.bias_gain = 0.1
             pyro.ff.resolution = 0.3
@@ -148,10 +144,8 @@ function init_pyro(tool)
             tool.explosion_fireball_radius = 0.5
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.5
-            pyro.physical_damage_factor = 0.1
             pyro.flames_per_spawn = 5
             pyro.max_flames = 800
-            pyro.physical_damage_scale = 0.02
             pyro.ff.max_sim_points = 800
             pyro.ff.bias_gain = 0.15
             pyro.ff.resolution = 0.3
@@ -176,7 +170,6 @@ function init_pyro(tool)
             pyro.flame_jitter = 0.1
             pyro.flame_light_intensity = 5
             pyro.smoke_amount_n = 0.2
-            pyro.physical_damage_scale = 0.04
             pyro.ff.max_sim_points = 1000
             pyro.ff.bias_gain = 0.3
             pyro.ff.resolution = 0.5
@@ -215,7 +208,6 @@ function init_pyro(tool)
             pyro.flames_per_spawn = 0
             pyro.impulse_scale = 0.1
             pyro.max_flames = 0
-            pyro.physical_damage_scale = 0.08
             pyro.ff.max_sim_points = 100
             pyro.ff.resolution = 0.3
             pyro.ff.graph.curve = curve_type.linear
@@ -237,7 +229,6 @@ function init_pyro(tool)
             pyro.flames_per_spawn = 2
             pyro.impulse_scale = 0.1
             pyro.max_flames = 100
-            pyro.physical_damage_scale = 0.08
             pyro.ff.max_sim_points = 200
             pyro.ff.resolution = 0.3
             pyro.ff.graph.curve = curve_type.linear
@@ -259,7 +250,6 @@ function init_pyro(tool)
             pyro.flames_per_spawn = 4
             pyro.impulse_scale = 0.1
             pyro.max_flames = 400
-            pyro.physical_damage_scale = 0.08
             pyro.ff.max_sim_points = 300
             pyro.ff.resolution = 0.3
             pyro.ff.graph.curve = curve_type.linear
@@ -281,7 +271,6 @@ function init_pyro(tool)
             pyro.flames_per_spawn = 4
             pyro.impulse_scale = 0.2
             pyro.max_flames = 600
-            pyro.physical_damage_scale = 0.01
             pyro.ff.max_sim_points = 500
             pyro.ff.bias_gain = 0.2
             pyro.ff.resolution = 0.5
@@ -304,7 +293,6 @@ function init_pyro(tool)
             pyro.flames_per_spawn = 4
             pyro.impulse_scale = 0.28
             pyro.max_flames = 800
-            pyro.physical_damage_scale = 0.02
             pyro.ff.max_sim_points = 800
             pyro.ff.bias_gain = 0.2
             pyro.ff.resolution = 0.5
@@ -327,7 +315,6 @@ function init_pyro(tool)
             pyro.flames_per_spawn = 5
             pyro.impulse_scale = 0.28
             pyro.max_flames = 1000
-            pyro.physical_damage_scale = 0.04
             pyro.ff.max_sim_points = 1000
             pyro.ff.bias_gain = 0.12
             pyro.ff.resolution = 0.3
