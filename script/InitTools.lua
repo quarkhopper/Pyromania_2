@@ -489,7 +489,6 @@ function init_shock_field(intensity, damage_factor)
     pyro.ff.graph.curve = curve_type.sqrt
     pyro.ff.graph.extend_scale = 2
 
-    local intensity = TOOL.BOMB.boomness.value
     if intensity == boomness.invisible then 
         pyro.flames_per_spawn = 0
         pyro.impulse_radius = 10

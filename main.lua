@@ -42,7 +42,7 @@ function init()
 	load_option_sets()
 
 	-- init the field used for shock waves
-	init_shock_field()
+	init_shock_field(boomness.tactical, 0.01)
 
 	-- true while the player has the options editor open
 	editing_options = false
@@ -480,7 +480,7 @@ end
 function shock_at(pos, intensity, damage_factor)
 	init_shock_field(intensity, damage_factor)
     local force_mag = SHOCK_FIELD.ff.graph.max_force
-    local fireball_rad = 1
+    local fireball_rad = 0.5
     local explosion_seeds = 100
     for i = 1, explosion_seeds do
         local spawn_dir = VecNormalize(random_vec(1))
