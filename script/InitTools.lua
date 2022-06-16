@@ -24,7 +24,6 @@ function load_option_sets()
     PYRO.RAINBOW_MODE = TOOL.GENERAL.rainbow_mode.value == on_off.on
 	TOOL.BOMB = load_option_set("bomb", true)
     init_pyro(TOOL.BOMB)
-    init_shock_field()
 	TOOL.ROCKET = load_option_set("rocket", true)
     init_pyro(TOOL.ROCKET)
 	TOOL.THROWER = load_option_set("thrower", true)

@@ -52,6 +52,7 @@ function inst_force_field_ff()
     inst.extend_force = FF.LOW_MAG_LIMIT
     inst.transfer_loss = 0
     inst.point_max_life = 3
+    inst.max_sim_points = 500
     inst.graph = inst_graph()
     return inst
 end
