@@ -59,6 +59,12 @@ function migrate_option_set(option_set_ser)
         option_set_ser = join_strings(set_parts, DELIM.OPTION_SET)
     end
 
+    if version == "2.2" then 
+        -- change "performance" boomness to "economy"
+        version = "2.3"
+        option_set_ser = option_set_ser:gsub("performance", "economy")
+    end
+
     return option_set_ser
 end
 

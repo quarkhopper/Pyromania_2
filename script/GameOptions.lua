@@ -331,7 +331,7 @@ on_off = enum {
 
 boomness = enum {
 	"invisible",
-	"performance",
+	"economy",
 	"explody",
 	"tactical",
 	"vaporizing",

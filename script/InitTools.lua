@@ -80,11 +80,13 @@ function init_pyro(tool)
             pyro.ff.graph.cool_prop_angle = 35
             pyro.ff.graph.extend_scale = 1.5
 
-        elseif intensity == boomness.performance then 
+        elseif intensity == boomness.economy then 
             tool.explosion_seeds = 100
             tool.explosion_fireball_radius = 1.5
             pyro.flames_per_spawn = 2
             pyro.max_flames = 200
+            pyro.hot_particle_size = 0.3
+            pyro.cool_particle_size = 0.5
             pyro.ff.max_sim_points = 250
             pyro.ff.bias_gain = 0.5
             pyro.ff.resolution = 0.5
@@ -104,6 +106,8 @@ function init_pyro(tool)
             tool.explosion_fireball_radius = 1.5
             pyro.flames_per_spawn = 4
             pyro.max_flames = 400
+            pyro.hot_particle_size = 0.3
+            pyro.cool_particle_size = 0.5
             pyro.ff.max_sim_points = 300
             pyro.ff.bias_gain = 0.5
             pyro.ff.resolution = 0.5
@@ -122,7 +126,7 @@ function init_pyro(tool)
             tool.explosion_seeds = 100
             tool.explosion_fireball_radius = 0.5
             pyro.hot_particle_size = 0.3
-            pyro.cool_particle_size = 0.5
+            pyro.cool_particle_size = 0.6
             pyro.flames_per_spawn = 5
             pyro.max_flames = 600
             pyro.ff.max_sim_points = 500
@@ -143,7 +147,7 @@ function init_pyro(tool)
             tool.explosion_seeds = 100
             tool.explosion_fireball_radius = 0.5
             pyro.hot_particle_size = 0.3
-            pyro.cool_particle_size = 0.5
+            pyro.cool_particle_size = 0.6
             pyro.flames_per_spawn = 5
             pyro.max_flames = 800
             pyro.ff.max_sim_points = 800
@@ -164,7 +168,7 @@ function init_pyro(tool)
             tool.explosion_seeds = 100
             tool.explosion_fireball_radius = 1
             pyro.hot_particle_size = 0.5
-            pyro.cool_particle_size = 0.7
+            pyro.cool_particle_size = 0.6
             pyro.flames_per_spawn = 6
             pyro.max_flames = 1000
             pyro.flame_jitter = 0.1
@@ -221,11 +225,11 @@ function init_pyro(tool)
             pyro.ff.graph.cool_prop_angle = 45
             pyro.ff.graph.extend_scale = 1.5
 
-        elseif intensity == boomness.performance then 
+        elseif intensity == boomness.economy then 
             tool.explosion_seeds = 50
             tool.explosion_fireball_radius = 1
             pyro.hot_particle_size = 0.2
-            pyro.cool_particle_size = 0.4
+            pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 2
             pyro.impulse_scale = 0.1
             pyro.max_flames = 100
@@ -246,7 +250,7 @@ function init_pyro(tool)
             tool.explosion_seeds = 50
             tool.explosion_fireball_radius = 1
             pyro.hot_particle_size = 0.2
-            pyro.cool_particle_size = 0.4
+            pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 4
             pyro.impulse_scale = 0.1
             pyro.max_flames = 400
@@ -267,7 +271,7 @@ function init_pyro(tool)
             tool.explosion_seeds = 100
             tool.explosion_fireball_radius = 1
             pyro.hot_particle_size = 0.3
-            pyro.cool_particle_size = 0.5
+            pyro.cool_particle_size = 0.6
             pyro.flames_per_spawn = 4
             pyro.impulse_scale = 0.2
             pyro.max_flames = 600
@@ -289,7 +293,7 @@ function init_pyro(tool)
             tool.explosion_seeds = 100
             tool.explosion_fireball_radius = 1
             pyro.hot_particle_size = 0.3
-            pyro.cool_particle_size = 0.5
+            pyro.cool_particle_size = 0.6
             pyro.flames_per_spawn = 4
             pyro.impulse_scale = 0.28
             pyro.max_flames = 800
@@ -311,7 +315,7 @@ function init_pyro(tool)
             tool.explosion_seeds = 100
             tool.explosion_fireball_radius = 0.5
             pyro.hot_particle_size = 0.3
-            pyro.cool_particle_size = 0.5
+            pyro.cool_particle_size = 0.6
             pyro.flames_per_spawn = 5
             pyro.impulse_scale = 0.28
             pyro.max_flames = 1000
@@ -368,7 +372,7 @@ function init_pyro(tool)
             pyro.ff.graph.hot_prop_angle = 5
             pyro.ff.graph.cool_prop_angle = 60
 
-        elseif intensity == boomness.performance then 
+        elseif intensity == boomness.economy then 
             pyro.flames_per_spawn = 1
             pyro.flame_light_intensity = 1
             pyro.fire_ignition_radius = 1
@@ -501,7 +505,7 @@ function init_shock_field()
         pyro.ff.graph.hot_prop_angle = 45
         pyro.ff.graph.cool_prop_angle = 45
 
-    elseif intensity == boomness.performance then 
+    elseif intensity == boomness.economy then 
         pyro.flames_per_spawn = 2
         pyro.impulse_radius = 10
         pyro.max_flames = 100
