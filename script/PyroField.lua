@@ -287,7 +287,7 @@ function flame_tick(pyro, dt)
     end
 
     if (pyro.tick_count + 2) % 3 == 0 then 
-        collision_fx(pyro)
+        -- collision_fx(pyro)
         pyro.ff.contacts = {}
     elseif (pyro.tick_count + 1) % 3 == 0 then 
         impulse_fx(pyro)

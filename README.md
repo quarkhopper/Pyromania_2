@@ -17,6 +17,8 @@ The HSV color of a flame when the controlling vector field force is at its maxim
 The HSV color of a flame when the controlling vector field force is at its minimum (flame_dead_force).
 #### Performance (boomness)
 Allows you to choose from parameters that match the kind of performance you need. The principle means of adjusting the scale and quality of fire and explosion effects. 
+#### Physical damage modifier (physical_damage_factor)
+Allows you to adjust how much damage is inflicted from contact with the flame effects. This effectively controls how many "holes" are created in solid objects from collisions with the field. Damage will still occur due to shapes being thrown around and from fire. Rockets will still create a penetrator hole. 
 ### Bomb tool options
 #### Maximum radius of random explosions (max_random_radius)
 Sets a bounding box for where a random explosion can spawn to a box centered on the player with sides this far from the player.
