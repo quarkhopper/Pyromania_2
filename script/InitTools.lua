@@ -498,8 +498,8 @@ function init_shock_field()
         pyro.ff.max_sim_points = 100
         pyro.ff.graph.max_force = 10000
         pyro.ff.graph.dead_force = 10
-        pyro.ff.graph.hot_transfer = 1000
-        pyro.ff.graph.cool_transfer = 100
+        pyro.ff.graph.hot_transfer = 500
+        pyro.ff.graph.cool_transfer = 10
         pyro.ff.graph.hot_prop_split = 4
         pyro.ff.graph.cool_prop_split = 4
         pyro.ff.graph.hot_prop_angle = 45
@@ -512,10 +512,10 @@ function init_shock_field()
         pyro.ff.max_sim_points = 200
         pyro.ff.graph.max_force = 10000
         pyro.ff.graph.dead_force = 10
-        pyro.ff.graph.hot_transfer = 1000
-        pyro.ff.graph.cool_transfer = 100
-        pyro.ff.graph.hot_prop_split = 4
-        pyro.ff.graph.cool_prop_split = 4
+        pyro.ff.graph.hot_transfer = 500
+        pyro.ff.graph.cool_transfer = 10
+        pyro.ff.graph.hot_prop_split = 3
+        pyro.ff.graph.cool_prop_split = 3
         pyro.ff.graph.hot_prop_angle = 45
         pyro.ff.graph.cool_prop_angle = 45
 
@@ -526,10 +526,10 @@ function init_shock_field()
         pyro.ff.max_sim_points = 300
         pyro.ff.graph.max_force = 10000
         pyro.ff.graph.dead_force = 10
-        pyro.ff.graph.hot_transfer = 1000
-        pyro.ff.graph.cool_transfer = 100
-        pyro.ff.graph.hot_prop_split = 4
-        pyro.ff.graph.cool_prop_split = 4
+        pyro.ff.graph.hot_transfer = 500
+        pyro.ff.graph.cool_transfer = 10
+        pyro.ff.graph.hot_prop_split = 3
+        pyro.ff.graph.cool_prop_split = 3
         pyro.ff.graph.hot_prop_angle = 45
         pyro.ff.graph.cool_prop_angle = 45
 
