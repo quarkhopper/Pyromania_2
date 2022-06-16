@@ -60,6 +60,14 @@ function random_vec_component(magnitude)
     return (math.random() * magnitude * 2) - magnitude
 end
 
+function random_quat()
+    return QuatEuler(
+        math.random() * 360,
+        math.random() * 360,
+        math.random() * 360
+    )
+end
+
 function reflection_vector(vec, normal)
 	local u = VecScale((VecDot(vec, normal) / VecDot(normal, normal)), normal)
 	local w = VecSub(vec, u)
