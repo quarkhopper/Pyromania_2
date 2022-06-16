@@ -132,11 +132,11 @@ function init_pyro(tool)
             pyro.ff.graph.max_force = 100000
             pyro.ff.graph.dead_force = 0.15
             pyro.ff.graph.hot_transfer = 5000
-            pyro.ff.graph.cool_transfer = 1.5
+            pyro.ff.graph.cool_transfer = 1.55
             pyro.ff.graph.hot_prop_split = 3
             pyro.ff.graph.cool_prop_split = 2
             pyro.ff.graph.hot_prop_angle = 60
-            pyro.ff.graph.cool_prop_angle = 26
+            pyro.ff.graph.cool_prop_angle = 25
             pyro.ff.graph.extend_scale = 1.5
 
         elseif intensity == boomness.vaporizing then 
