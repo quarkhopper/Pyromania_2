@@ -326,11 +326,11 @@ function init_pyro(tool)
             pyro.ff.graph.max_force = 100000
             pyro.ff.graph.dead_force = 0.15
             pyro.ff.graph.hot_transfer = 10000
-            pyro.ff.graph.cool_transfer = 0.5
+            pyro.ff.graph.cool_transfer = 2
             pyro.ff.graph.hot_prop_split = 3
-            pyro.ff.graph.cool_prop_split = 5
+            pyro.ff.graph.cool_prop_split = 4
             pyro.ff.graph.hot_prop_angle = 60
-            pyro.ff.graph.cool_prop_angle = 24
+            pyro.ff.graph.cool_prop_angle = 26
             pyro.ff.graph.extend_scale = 2
 
         end
