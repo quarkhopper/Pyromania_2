@@ -75,6 +75,9 @@ function rocket_tick(dt)
         if rocket.fuse == 0 then 
             SetBodyDynamic(rocket, true)
             Explosion(rocket.trans.pos, 1)
+            if TOOL.ROCKET.boomness.value == boomness.nuclear then 
+                shock_at(rocket.trans.pos, boomness.tactical, TOOL.ROCKET.physical_damage_factor.value * 0.1)
+            end
             local force_mag = TOOL.ROCKET.pyro.ff.graph.max_force
             local fireball_rad = TOOL.ROCKET.explosion_fireball_radius
             local explosion_seeds = TOOL.ROCKET.explosion_seeds

@@ -476,3 +476,22 @@ function stop_all_flames()
 	reset_ff(TOOL.ROCKET.pyro.ff)
 	reset_ff(SHOCK_FIELD.ff)
 end
+
+function shock_at(pos, intensity, damage_factor)
+	init_shock_field(intensity, damage_factor)
+    local force_mag = SHOCK_FIELD.ff.graph.max_force
+    local fireball_rad = 1
+    local explosion_seeds = 100
+    for i = 1, explosion_seeds do
+        local spawn_dir = VecNormalize(random_vec(1))
+        local spark_offset = VecScale(spawn_dir, random_float_in_range(0, fireball_rad))
+        local spark_pos = VecAdd(pos, spark_offset)
+        local force_dir = VecNormalize(VecSub(spark_pos, pos))
+        local hit, dist = QueryRaycast(pos, force_dir, spark_offset, 0.025)
+        if hit then
+            local spark_pos = VecAdd(pos, VecScale(force_dir, dist - 0.1)) 
+        end
+        local spark_vec = VecScale(force_dir, force_mag)
+        apply_force(SHOCK_FIELD.ff, spark_pos, spark_vec)
+    end
+end

@@ -11,9 +11,6 @@ TOOL.ROCKET = {}
 -- The option set for the flamethrower tool
 TOOL.THROWER = {}
 
--- Stores a special pyro field for shock wave effects
-SHOCK_FIELD = {}
-
 function save_option_sets()
     -- Save the option sets from memory to the savegame.xml file
 	save_option_set(TOOL.GENERAL)
@@ -462,7 +459,9 @@ function init_pyro(tool)
     tool.pyro = pyro
 end
 
-function init_shock_field()
+-- Stores a special pyro field for shock wave effects
+SHOCK_FIELD = {}
+function init_shock_field(intensity, damage_factor)
     -- special parameters that make a shock wave field work
     local pyro = inst_pyro()
     pyro.fade_magnitude = 0
@@ -470,14 +469,14 @@ function init_shock_field()
     pyro.hot_particle_size = 1
     pyro.smoke_life = 0
     pyro.smoke_amount_n = 0
-    pyro.flame_puff_life = 0.5
+    pyro.flame_puff_life = 0.3
     pyro.flame_jitter = 2
     pyro.flame_tile = 0
     pyro.flame_opacity = 1
     pyro.impulse_scale = 1
     pyro.fire_ignition_radius = 0
     pyro.fire_density = 0
-    pyro.physical_damage_factor = TOOL.BOMB.physical_damage_factor.value * 0.01
+    pyro.physical_damage_factor = damage_factor
     pyro.max_player_hurt = 0.01
     pyro.rainbow_mode = false
     pyro.flame_light_intensity = 0
@@ -539,7 +538,7 @@ function init_shock_field()
         pyro.max_flames = 600
         pyro.ff.max_sim_points = 500
         pyro.ff.graph.max_force = 10000
-        pyro.ff.graph.dead_force = 10
+        pyro.ff.graph.dead_force = 50
         pyro.ff.graph.hot_transfer = 1000
         pyro.ff.graph.cool_transfer = 100
         pyro.ff.graph.hot_prop_split = 4
