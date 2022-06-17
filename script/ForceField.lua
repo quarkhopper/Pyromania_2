@@ -182,6 +182,7 @@ function propagate_field_forces(ff, dt)
             for i = 1, #prop_dirs do
                 -- propagate the force in the direction of radiation spokes
                 local prop_dir = prop_dirs[i]
+                point.trans_mag = point.trans_mag * VecDot(prop_dir, point.dir)
                 propagate_point_force(ff, point, prop_dir, dt)
             end
         else

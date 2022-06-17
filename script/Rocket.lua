@@ -76,7 +76,7 @@ function rocket_tick(dt)
             SetBodyDynamic(rocket, true)
             Explosion(rocket.trans.pos, 1)
             if TOOL.ROCKET.boomness.value == boomness.nuclear then 
-                shock_at(rocket.trans.pos, boomness.tactical, TOOL.ROCKET.physical_damage_factor.value * 0.1)
+                shock_at(rocket.trans.pos, boomness.vaporizing, TOOL.ROCKET.physical_damage_factor.value * 0.5)
             end
             local force_mag = TOOL.ROCKET.pyro.ff.graph.max_force
             local fireball_rad = TOOL.ROCKET.explosion_fireball_radius
@@ -86,7 +86,7 @@ function rocket_tick(dt)
                 local spark_dir = VecNormalize(random_vec(1))
                 local spark_offset = VecScale(spark_dir, random_float_in_range(0, fireball_rad))
                 local spark_pos = VecAdd(pos, spark_offset)
-                local force_dir = VecNormalize(random_vec(1)) -- VecNormalize(VecSub(spark_pos, pos))
+                local force_dir = VecNormalize(VecSub(spark_pos, pos))
                 local hit, dist = QueryRaycast(pos, force_dir, spark_offset, 0.025)
                 if hit then
                     local spark_pos = VecAdd(pos, VecScale(force_dir, dist - 0.1)) 

@@ -480,8 +480,8 @@ end
 function shock_at(pos, intensity, damage_factor)
 	init_shock_field(intensity, damage_factor)
     local force_mag = SHOCK_FIELD.ff.graph.max_force
-    local fireball_rad = 0.5
-    local explosion_seeds = 100
+    local fireball_rad = 2
+    local explosion_seeds = 1000
     for i = 1, explosion_seeds do
         local spawn_dir = VecNormalize(random_vec(1))
         local spark_offset = VecScale(spawn_dir, random_float_in_range(0, fireball_rad))

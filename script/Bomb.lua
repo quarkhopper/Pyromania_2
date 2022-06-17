@@ -28,7 +28,7 @@ function blast_at(pos)
         local spawn_dir = VecNormalize(random_vec(1))
         local spark_offset = VecScale(spawn_dir, random_float_in_range(0, fireball_rad))
         local spark_pos = VecAdd(pos, spark_offset)
-        force_dir = VecNormalize(random_vec(1))
+        local force_dir = VecNormalize(VecSub(spark_pos, pos))
         local hit, dist = QueryRaycast(pos, force_dir, spark_offset, 0.025)
         if hit then
             local spark_pos = VecAdd(pos, VecScale(force_dir, dist - 0.1)) 
@@ -40,7 +40,7 @@ function blast_at(pos)
         SpawnFire(VecAdd(pos, random_vec(1)))
     end
     Explosion(pos, 0.5)
-    shock_at(pos, TOOL.BOMB.boomness.value, TOOL.BOMB.physical_damage_factor.value * 0.1)
+    shock_at(pos, TOOL.BOMB.boomness.value, TOOL.BOMB.physical_damage_factor.value * 0.5)
     PlaySound(boom_sound, pos, 100)
     PlaySound(rumble_sound, pos, 100)
 end

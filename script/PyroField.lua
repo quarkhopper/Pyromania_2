@@ -49,7 +49,7 @@ function inst_pyro()
     -- shock wave effects.
     inst.render_flames = true
     -- The lifetime of flame diffusing smoke puffs.
-    inst.flame_puff_life = 1
+    inst.flame_puff_life = 0.5
     -- Jitter applied to the flame as the maximum magnitude of vector components
     -- added to the position of the flame.
     inst.flame_jitter = 0
