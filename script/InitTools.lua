@@ -146,19 +146,20 @@ function init_pyro(tool)
             pyro.cool_particle_size = 0.6
             pyro.flames_per_spawn = 5
             pyro.max_flames = 800
+            pyro.ff.dir_jitter = 0.3
             pyro.ff.max_sim_points = 800
-            pyro.ff.bias_gain = 0.15
+            pyro.ff.bias_gain = 0.5
             pyro.ff.resolution = 0.5
             pyro.ff.graph.curve = curve_type.square
-            pyro.ff.graph.max_force = 500000
-            pyro.ff.graph.dead_force = 0.1
+            pyro.ff.graph.max_force = 100000
+            pyro.ff.graph.dead_force = 0.2
             pyro.ff.graph.hot_transfer = 10000
-            pyro.ff.graph.cool_transfer = 1.6
+            pyro.ff.graph.cool_transfer = 0.8
             pyro.ff.graph.hot_prop_split = 3
             pyro.ff.graph.cool_prop_split = 2
-            pyro.ff.graph.hot_prop_angle = 60
-            pyro.ff.graph.cool_prop_angle = 26
-            pyro.ff.graph.extend_scale = 1.5
+            pyro.ff.graph.hot_prop_angle = 36
+            pyro.ff.graph.cool_prop_angle = 58
+            pyro.ff.graph.extend_scale = 1.6
 
         elseif intensity == boomness.nuclear then 
             tool.explosion_seeds = 100
@@ -316,6 +317,7 @@ function init_pyro(tool)
             pyro.flames_per_spawn = 5
             pyro.impulse_scale = 0.28
             pyro.max_flames = 1000
+            pyro.flame_light_intensity = 5
             pyro.ff.max_sim_points = 1000
             pyro.ff.bias_gain = 0.5
             pyro.ff.resolution = 0.5
