@@ -220,7 +220,7 @@ function init_pyro(tool)
             pyro.ff.max_sim_points = 100
             pyro.ff.resolution = 0.3
             pyro.ff.graph.curve = curve_type.linear
-            pyro.ff.graph.max_force = 10000 
+            pyro.ff.graph.max_force = 10000
             pyro.ff.graph.dead_force = 0.05
             pyro.ff.graph.hot_transfer = 1000
             pyro.ff.graph.cool_transfer = 0.05
@@ -309,17 +309,17 @@ function init_pyro(tool)
             pyro.smoke_amount_n = 0.05
             pyro.ff.max_sim_points = 800
             pyro.ff.bias_gain = 0.5
-            pyro.ff.resolution = 0.5
+            pyro.ff.resolution = 0.6
             pyro.ff.graph.curve = curve_type.square
             pyro.ff.graph.max_force = 100000
-            pyro.ff.graph.dead_force = 0.2
+            pyro.ff.graph.dead_force = 0.15
             pyro.ff.graph.hot_transfer = 10000
-            pyro.ff.graph.cool_transfer = 0.6
+            pyro.ff.graph.cool_transfer = 3
             pyro.ff.graph.hot_prop_split = 3
             pyro.ff.graph.cool_prop_split = 2
             pyro.ff.graph.hot_prop_angle = 36
-            pyro.ff.graph.cool_prop_angle = 48
-            pyro.ff.graph.extend_scale = 1.6
+            pyro.ff.graph.cool_prop_angle = 40
+            pyro.ff.graph.extend_scale = 1.5
 
         elseif intensity == boomness.nuclear then 
             tool.explosion_seeds = 100
@@ -336,9 +336,9 @@ function init_pyro(tool)
             pyro.ff.bias_gain = 0.5
             pyro.ff.resolution = 0.5
             pyro.ff.graph.curve = curve_type.linear
-            pyro.ff.graph.max_force = 100000
-            pyro.ff.graph.dead_force = 0.15
-            pyro.ff.graph.hot_transfer = 10000
+            pyro.ff.graph.max_force = 100000 
+            pyro.ff.graph.dead_force = 0.15 
+            pyro.ff.graph.hot_transfer = 10000 
             pyro.ff.graph.cool_transfer = 0.01
             pyro.ff.graph.hot_prop_split = 3
             pyro.ff.graph.cool_prop_split = 4

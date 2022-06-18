@@ -33,7 +33,7 @@ function inst_pyro()
     -- Intensity of a flame light point in its puff. Customization of this should be
     -- controlled through the HSV color rather than this value which function more 
     -- of a gain.
-    inst.flame_light_intensity = 3
+    inst.flame_light_intensity = 4
     -- When considering the base force field vector point, any vector below this magnitude
     -- changes the flame rendering mode from normal rules to "ember" rules. Ember rules will
     -- have the flame point light decreasing in intensity and the puff getting smaller and 
