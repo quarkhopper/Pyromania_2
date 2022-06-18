@@ -114,7 +114,7 @@ function make_flame_effect(pyro, flame, dt)
     local particle_size = fraction_to_range_value(life_n ^ 0.5, pyro.cool_particle_size, pyro.hot_particle_size)
     if flame.parent.mag < pyro.fade_magnitude then 
         local burnout_n = range_value_to_fraction(flame.parent.mag, 0, pyro.fade_magnitude)
-        puff_color_value = bracket_value(burnout_n, 1, 0.15)
+        puff_color_value = bracket_value(burnout_n, 1, 0.2)
         intensity = fraction_to_range_value(burnout_n, 0.2, intensity)
     end
     -- Put the light source in the middle of where the diffusing flame puff will be
@@ -122,7 +122,7 @@ function make_flame_effect(pyro, flame, dt)
     -- fire puff smoke particle generation
     ParticleReset()
     ParticleType("smoke")
-    ParticleAlpha(pyro.flame_opacity, 0, "easeout", 0, 0.5)
+    ParticleAlpha(pyro.flame_opacity, 0, "easeout", 0, 1)
     -- ParticleDrag(0.25)
     ParticleRadius(particle_size)
     local smoke_color = HSVToRGB(Vec(0, 0, puff_color_value))
@@ -140,7 +140,7 @@ function make_flame_effect(pyro, flame, dt)
         ParticleType("smoke")
         -- ParticleDrag(0)
         ParticleAlpha(0.5, 0.9, "linear", 0.05, 0.5)
-        ParticleRadius(particle_size)
+        ParticleRadius(particle_size + 0.15)
         if PYRO.RAINBOW_MODE then
             -- Rainbow mode: smoke puff is the universal color of the tick
             smoke_color = PYRO.RAINBOW
