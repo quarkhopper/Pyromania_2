@@ -64,7 +64,7 @@ function thrower_tick(dt)
                 fireball.pos = VecAdd(fireball.pos, advance)
                 fireball.dist_left = fireball.dist_left - fireball.speed
                 local point_force = VecScale(fireball.dir,  TOOL.THROWER.pyro.ff.graph.max_force) 
-                for j = 1, 5 do
+                for j = 1, 3 do
                     local fire_point = VecAdd(fireball.pos, VecScale(fireball.dir, -1 * (fireball.speed / j)))
                     apply_force(TOOL.THROWER.pyro.ff, fire_point, point_force)
                 end
