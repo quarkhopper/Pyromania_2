@@ -479,6 +479,43 @@ function init_pyro(tool)
     tool.pyro = pyro
 end
 
+THRUST_FIELD = {}
+function init_thrust_field()
+    local pyro = inst_pyro()
+    tool.gravity = 0.01
+    pyro.fade_magnitude = 2
+    pyro.hot_particle_size = 0.1
+    pyro.cool_particle_size = 0.2
+    pyro.impulse_radius = 0.5
+    pyro.impulse_scale = 0.01
+    pyro.fire_density = 10
+    pyro.smoke_life = 1
+    pyro.smoke_amount_n = 0
+    pyro.max_player_hurt = 0.1
+    pyro.flames_per_spawn = 1
+    pyro.flame_light_intensity = 1
+    pyro.fire_ignition_radius = 1.5
+    pyro.max_flames = 600
+    pyro.flame_puff_life = 0.3
+    pyro.ff.dir_jitter = 0
+    pyro.ff.bias = Vec(0, 1, 0)
+    pyro.ff.bias_gain = 0
+    pyro.ff.meta_resolution = 1
+    pyro.ff.max_sim_points = 500
+    pyro.ff.resolution = 0.1
+    pyro.ff.graph.curve = curve_type.linear
+    pyro.ff.graph.extend_scale = 1.5
+    pyro.ff.graph.max_force = 1000 
+    pyro.ff.graph.dead_force = 2
+    pyro.ff.graph.hot_transfer = 1000
+    pyro.ff.graph.cool_transfer = 2
+    pyro.ff.graph.hot_prop_split = 2
+    pyro.ff.graph.cool_prop_split = 3
+    pyro.ff.graph.hot_prop_angle = 30
+    pyro.ff.graph.cool_prop_angle = 30
+    THRUST_FIELD = pyro
+end
+
 -- Stores a special pyro field for shock wave effects
 SHOCK_FIELD = {}
 function init_shock_field(intensity, damage_factor)

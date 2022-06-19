@@ -29,6 +29,8 @@ function init()
 	-- rate per second you're allowed to plant bombs
 	plant_rate = 1
 	plant_timer = 0
+	thruster_spawn_rate = 1
+	thruster_timer = 0
 	boom_timer = 0
 	action_timer = 0
 	action_rate = 3
@@ -341,6 +343,7 @@ function update(dt)
 		flame_tick(SHOCK_FIELD, dt)
 		rocket_tick(dt)
 		thrower_tick(dt)
+		thruster_tick(dt)
 	end
 end
 
@@ -376,6 +379,7 @@ end
 function handle_input(dt)
 	if editing_options then return end
 	plant_timer = math.max(plant_timer - dt, 0)
+	thruster_timer = math.max(thruster_timer - dt, 0)
 	boom_timer = math.max(boom_timer - dt, 0)
 	action_timer = math.max(action_timer - dt, 0)
 	primary_shoot_timer = math.max(primary_shoot_timer - dt, 0)
@@ -469,6 +473,19 @@ end
 -------------------------------------------------
 -- Support functions
 -------------------------------------------------
+
+function spawn_thruster()
+	if thruster ~= nil then return end
+	local camera = GetPlayerCameraTransform()
+	local shootDir = TransformToParentVec(camera, Vec(0, 0, -1))
+	local rotx, roty, rotz = GetQuatEuler(camera.rot)
+	local hit, dist = QueryRaycast(camera.pos, shootDir, 100, 0.025, true)
+	if hit then
+		local hitPoint = VecAdd(camera.pos, VecScale(shootDir, dist))
+		local trans = Transform(hitPoint, QuatEuler(0, roty - 90,0))
+		thruster = inst_thruster(trans)
+	end
+end
 
 function stop_all_flames()
 	reset_ff(TOOL.BOMB.pyro.ff)
