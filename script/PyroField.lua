@@ -160,8 +160,14 @@ end
 
 function burn_fx(pyro)
     -- Start fires throught the native Teardown mechanism. Base these effects on the
-    -- lower resolution metafield for better performance. 
-    local points = flatten(pyro.ff.metafield)
+    -- lower resolution metafield for better performance (typically)
+    local base_field = nil
+    if pyro.ff.use_metafield then 
+        base_field = pyro.ff.metafield
+    else
+        base_field = pyro.ff.field
+    end
+    local points = flatten(base_field)
     local num_fires = round((pyro.fire_density / pyro.fire_ignition_radius)^3)
     for i = 1, #points do
         local point = points[i]
@@ -215,7 +221,13 @@ function spawn_flame_group(pyro, point, flame_table, pos)
 end
 
 function impulse_fx(pyro)
-    local points = flatten(pyro.ff.metafield)
+    local base_field = nil
+    if pyro.ff.use_metafield then 
+        base_field = pyro.ff.metafield
+    else
+        base_field = pyro.ff.field
+    end
+    local points = flatten(base_field)
     local player_trans = GetPlayerTransform()
     for i = 1, #points do
         local point = points[i]

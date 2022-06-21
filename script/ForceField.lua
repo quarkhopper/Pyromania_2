@@ -53,6 +53,7 @@ function inst_force_field_ff()
     inst.transfer_loss = 0
     inst.point_max_life = 3
     inst.max_sim_points = 500
+    inst.use_metafield = true
     inst.graph = inst_graph()
     return inst
 end
@@ -439,7 +440,9 @@ function force_field_ff_tick(ff, dt)
     propagate_field_forces(ff, dt)
     apply_bias(ff, dt)
     normalize_field(ff, dt)
-    refresh_metafield(ff)
+    if ff.use_metafield then 
+        refresh_metafield(ff)
+    end
 end
 
 point_type = enum {

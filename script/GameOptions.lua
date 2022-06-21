@@ -179,7 +179,7 @@ function create_mode_option_set(name, display_name)
 
 	oSet.boomness = create_mode_option(
 		option_type.enum,
-		boomness.	,
+		boomness.explody,
 		"boomness",
 		"Performance")
 	oSet.boomness.accepted_values = boomness

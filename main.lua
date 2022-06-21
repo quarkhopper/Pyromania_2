@@ -8,6 +8,7 @@
 #include "script/Bomb.lua"
 #include "script/Thrower.lua"
 #include "script/Rocket.lua"
+#include "script/Booster.lua"
 #include "script/Mapping.lua"
 
 ------------------------------------------------
@@ -45,6 +46,9 @@ function init()
 
 	-- init the field used for shock waves
 	init_shock_field(boomness.tactical, 0.01)
+
+	-- init the booster force field
+	init_boost_field()
 
 	-- true while the player has the options editor open
 	editing_options = false
@@ -341,9 +345,10 @@ function update(dt)
 		flame_tick(TOOL.THROWER.pyro, dt)
 		flame_tick(TOOL.ROCKET.pyro, dt)
 		flame_tick(SHOCK_FIELD, dt)
+		flame_tick(BOOST_FIELD, dt)
 		rocket_tick(dt)
 		thrower_tick(dt)
-		thruster_tick(dt)
+		booster_tick(dt)
 	end
 end
 
@@ -427,6 +432,15 @@ function handle_input(dt)
 					boom_timer = 1
 				end
 
+				-- spawn/launch booster
+				if InputPressed(KEY.BOOSTER.key) then
+					if P_BOOSTER.booster == nil then 
+						spawn_booster()
+					else
+						booster_ignition()
+					end
+				end
+
 				--primary fire
 				if not shoot_lock and
 				primary_shoot_timer == 0 and
@@ -474,16 +488,15 @@ end
 -- Support functions
 -------------------------------------------------
 
-function spawn_thruster()
-	if thruster ~= nil then return end
+function spawn_booster()
 	local camera = GetPlayerCameraTransform()
-	local shootDir = TransformToParentVec(camera, Vec(0, 0, -1))
+	local shoot_dir = TransformToParentVec(camera, Vec(0, 0, -1))
 	local rotx, roty, rotz = GetQuatEuler(camera.rot)
-	local hit, dist = QueryRaycast(camera.pos, shootDir, 100, 0.025, true)
+	local hit, dist = QueryRaycast(camera.pos, shoot_dir, 100, 0.025, true)
 	if hit then
-		local hitPoint = VecAdd(camera.pos, VecScale(shootDir, dist))
-		local trans = Transform(hitPoint, QuatEuler(0, roty - 90,0))
-		thruster = inst_thruster(trans)
+		local hit_point = VecAdd(camera.pos, VecScale(shoot_dir, dist))
+		local trans = Transform(hit_point, QuatEuler(0, roty - 90,0))
+		P_BOOSTER.booster = inst_booster(trans)
 	end
 end
 
@@ -492,6 +505,8 @@ function stop_all_flames()
 	reset_ff(TOOL.THROWER.pyro.ff)
 	reset_ff(TOOL.ROCKET.pyro.ff)
 	reset_ff(SHOCK_FIELD.ff)
+	reset_ff(BOOST_FIELD.ff)
+	P_BOOSTER.burn_timer = 0
 end
 
 function shock_at(pos, intensity, damage_factor)
