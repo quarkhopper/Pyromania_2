@@ -8,7 +8,6 @@ function init()
         KEY.STOP_FIRE, 
         KEY.OPTIONS, 
         KEY.RANDOM_BOOM, 
-        KEY.BOOSTER,
         KEY.ACTION_MOVIE, 
         KEY.DEBUG}
     updating_key = nil
