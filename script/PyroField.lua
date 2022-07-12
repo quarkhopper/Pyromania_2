@@ -239,7 +239,7 @@ function impulse_fx(pyro)
         for i = 1, #push_bodies do
             local push_body = push_bodies[i]
             local body_center = TransformToParentPoint(GetBodyTransform(push_body), GetBodyCenterOfMass(push_body))
-            local hit = QueryRaycast(point.pos, force_dir, pyro.impulse_radius, 0.025)
+            local hit = QueryRaycast(point.pos, force_dir, pyro.impulse_radius)
             if hit then 
                 local impulse_mag = fraction_to_range_value(point.life_n ^ 0.5, PYRO.MIN_IMPULSE, PYRO.MAX_IMPULSE) * pyro.impulse_scale
                 ApplyBodyImpulse(push_body, body_center, VecScale(force_dir, impulse_mag))
@@ -274,7 +274,7 @@ function check_hurt_player(pyro)
         local vec_to_player = VecSub(point.pos, player_pos)
         local dist_to_player = VecLength(vec_to_player)
         if dist_to_player < pyro.impulse_radius then
-            local hit = QueryRaycast(point.pos, VecNormalize(vec_to_player), dist_to_player, 0.025)
+            local hit = QueryRaycast(point.pos, VecNormalize(vec_to_player), dist_to_player)
             if not hit then             
                 local factor = 1 - (dist_to_player / pyro.impulse_radius)
                 factor = factor * (VecLength(point.vec) / pyro.ff.graph.max_force) + 0.01
