@@ -46,7 +46,7 @@ function thrower_tick(dt)
     for i = 1, #fireballs do
         local fireball = fireballs[i]
 		if fireball.dist_left > 0 then 
-			local hit, dist, normal = QueryRaycast(fireball.pos, fireball.dir, fireball.speed + 0.1, 0.025)
+			local hit, dist, normal = QueryRaycast(fireball.pos, fireball.dir, fireball.speed + 0.1)
             if hit then 
                 -- hit something - break apart
                 local new_dirs = radiate(fireball.dir, 45, fireball.splits_remaining)

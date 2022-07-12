@@ -202,7 +202,7 @@ function propagate_point_force(ff, point, trans_dir, dt)
         local point_prime = field_get(ff.field, coord_prime)
         if point_prime == nil then
             -- check if we're hitting something on the way to extending
-            local hit, dist, normal, shape = QueryRaycast(point.pos, trans_dir, 2 * ff.resolution * ff.extend_scale, 0.025)
+            local hit, dist, normal, shape = QueryRaycast(point.pos, trans_dir, 2 * ff.resolution * ff.extend_scale, 0.01)
             if hit then 
                 -- log the contact, don't create a new extension
                 local hit_point = VecAdd(point.pos, VecScale(trans_dir, dist))
