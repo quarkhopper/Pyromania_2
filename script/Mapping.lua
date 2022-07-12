@@ -104,7 +104,7 @@ function block_is_suitable(test_position)
 	-- a smerp
 
 	-- scan for clear level surface
-	local hit, dist = QueryRaycast(VecAdd(test_position, Vec(0, spawn_block_v_size, 0)), Vec(0, -1, 0), spawn_block_v_size)
+	local hit, dist = QueryRaycast(VecAdd(test_position, Vec(0, spawn_block_v_size, 0.025)), Vec(0, -1, 0), spawn_block_v_size)
 	if math.abs(dist - spawn_block_v_size) > 0.1 then return false end
 	local ref_height = dist
 	for x=1, 10, 1 do

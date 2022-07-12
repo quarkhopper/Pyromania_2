@@ -478,7 +478,6 @@ function stop_all_flames()
 	reset_ff(TOOL.THROWER.pyro.ff)
 	reset_ff(TOOL.ROCKET.pyro.ff)
 	reset_ff(SHOCK_FIELD.ff)
-	P_BOOSTER.burn_timer = 0
 end
 
 function shock_at(pos, intensity, damage_factor)
