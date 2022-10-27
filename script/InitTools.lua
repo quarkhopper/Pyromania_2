@@ -179,18 +179,18 @@ function init_pyro(tool)
             pyro.flame_light_intensity = 5
             pyro.flame_puff_life = 0.5
             pyro.ff.max_sim_points = 1000
-            pyro.ff.bias_gain = 0.4
+            pyro.ff.bias_gain = 0.45
             pyro.ff.resolution = 0.8
             pyro.ff.graph.curve = curve_type.sqrt
             pyro.ff.graph.max_force = 1000000
             pyro.ff.graph.dead_force = 0.32
-            pyro.ff.graph.hot_transfer = 26
+            pyro.ff.graph.hot_transfer = 30
             pyro.ff.graph.cool_transfer = 3.3
             pyro.ff.graph.hot_prop_split = 2
             pyro.ff.graph.cool_prop_split = 3
             pyro.ff.graph.hot_prop_angle = 20
-            pyro.ff.graph.cool_prop_angle = 15
-            pyro.ff.graph.extend_scale = 1.6
+            pyro.ff.graph.cool_prop_angle = 18
+            pyro.ff.graph.extend_scale = 1.8
         end
 
     elseif tool == TOOL.ROCKET then 
@@ -333,17 +333,17 @@ function init_pyro(tool)
             pyro.flame_light_intensity = 5
             pyro.smoke_amount_n = 0.03
             pyro.ff.max_sim_points = 1000
-            pyro.ff.bias_gain = 0.4
-            pyro.ff.resolution = 0.6
+            pyro.ff.bias_gain = 0.45
+            pyro.ff.resolution = 0.8
             pyro.ff.graph.curve = curve_type.sqrt
             pyro.ff.graph.max_force = 100000 
             pyro.ff.graph.dead_force = 0.32 
-            pyro.ff.graph.hot_transfer = 26 
+            pyro.ff.graph.hot_transfer = 30 
             pyro.ff.graph.cool_transfer = 3.3
             pyro.ff.graph.hot_prop_split = 2
             pyro.ff.graph.cool_prop_split = 3
             pyro.ff.graph.hot_prop_angle = 20
-            pyro.ff.graph.cool_prop_angle = 15
+            pyro.ff.graph.cool_prop_angle = 18
             pyro.ff.graph.extend_scale = 1.8
 
         end
