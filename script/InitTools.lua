@@ -54,7 +54,7 @@ function init_pyro(tool)
         pyro.smoke_amount_n = 0.2
         pyro.max_player_hurt = 0.55
         pyro.ff.point_max_life = 3
-        pyro.ff.dir_jitter = 0.3
+        pyro.ff.dir_jitter = 0.5
         pyro.ff.meta_resolution = 2
 
         if intensity == boomness.invisible then 
@@ -175,7 +175,7 @@ function init_pyro(tool)
             pyro.max_flames = 1000
             pyro.flame_jitter = 0.1
             pyro.smoke_amount_n = 0.05
-            pyro.flame_light_intensity = 8
+            pyro.flame_light_intensity = 10
             pyro.flame_puff_life = 0.2
             pyro.ff.max_sim_points = 1000
             pyro.ff.bias_gain = 0.45
@@ -194,7 +194,6 @@ function init_pyro(tool)
 
     elseif tool == TOOL.ROCKET then 
         pyro.fade_magnitude = 1
-
         pyro.impulse_radius = 5
         pyro.fire_ignition_radius = 5
         pyro.fire_density = 8
@@ -202,7 +201,7 @@ function init_pyro(tool)
         pyro.smoke_life = 1
         pyro.smoke_amount_n = 0.1
         pyro.max_player_hurt = 0.55
-        pyro.ff.point_max_life = 2
+        pyro.ff.point_max_life = 3
         pyro.ff.dir_jitter = 0.5
         pyro.ff.bias_gain = 0.3
         pyro.ff.meta_resolution = 2
@@ -325,11 +324,12 @@ function init_pyro(tool)
             tool.explosion_fireball_radius = 0.5
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.6
+            pyro.fade_magnitude = 0.5
             pyro.flames_per_spawn = 6
             pyro.impulse_scale = 0.28
             pyro.max_flames = 1000
             pyro.flame_puff_life = 0.2
-            pyro.flame_light_intensity = 8
+            pyro.flame_light_intensity = 10
             pyro.smoke_amount_n = 0.03
             pyro.ff.max_sim_points = 1000
             pyro.ff.bias_gain = 0.45
