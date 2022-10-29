@@ -179,7 +179,7 @@ function init_pyro(tool)
             pyro.flame_puff_life = 0.2
             pyro.ff.max_sim_points = 1000
             pyro.ff.bias_gain = 0.45
-            pyro.ff.resolution = 0.8
+            pyro.ff.resolution = 0.7
             pyro.ff.graph.curve = curve_type.sqrt
             pyro.ff.graph.max_force = 10000000
             pyro.ff.graph.dead_force = 0.3
