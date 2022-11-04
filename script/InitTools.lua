@@ -177,6 +177,7 @@ function init_pyro(tool)
             pyro.smoke_amount_n = 0.05
             pyro.flame_light_intensity = 10
             pyro.flame_puff_life = 0.2
+            pyro.ff.dir_jitter = 0.8
             pyro.ff.max_sim_points = 500
             pyro.ff.bias_gain = 0.45
             pyro.ff.resolution = 0.7
@@ -331,6 +332,7 @@ function init_pyro(tool)
             pyro.flame_puff_life = 0.2
             pyro.flame_light_intensity = 10
             pyro.smoke_amount_n = 0.03
+            pyro.ff.dir_jitter = 0.8
             pyro.ff.max_sim_points = 500
             pyro.ff.bias_gain = 0.45
             pyro.ff.resolution = 0.7
@@ -343,7 +345,7 @@ function init_pyro(tool)
             pyro.ff.graph.cool_prop_split = 2
             pyro.ff.graph.hot_prop_angle = 20
             pyro.ff.graph.cool_prop_angle = 18
-            pyro.ff.graph.extend_scale = 1.8
+            pyro.ff.graph.extend_scale = 1.6
 
         end
 
