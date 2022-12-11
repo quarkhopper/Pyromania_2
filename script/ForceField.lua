@@ -179,7 +179,12 @@ function propagate_field_forces(ff, dt)
             propagate_point_force(ff, point, point.dir, dt)
             -- propagate the force in a spread to other vectors around the direction it's pointing.
             -- See extension method above for details about radiate(). 
-            local prop_dirs = radiate(point.vec, point.prop_angle, point.prop_split, math.random() * 360)
+
+            local prop_angle = math.random() * 90
+            local prop_split = math.random(5)
+
+            -- local prop_dirs = radiate(point.vec, point.prop_angle, point.prop_split, math.random() * 360)
+            local prop_dirs = radiate(point.vec, prop_angle, prop_split, math.random() * 360)
             for i = 1, #prop_dirs do
                 -- propagate the force in the direction of radiation spokes
                 local prop_dir = prop_dirs[i]

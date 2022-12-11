@@ -26,10 +26,8 @@ function init()
 	thrower_sound = LoadLoop("MOD/snd/thrower.ogg")
 
 	-- rate per second you're allowed to plant bombs
-	plant_rate = 1
+	plant_rate = 2
 	plant_timer = 0
-	thruster_spawn_rate = 1
-	thruster_timer = 0
 	boom_timer = 0
 	action_timer = 0
 	action_rate = 3
@@ -388,7 +386,6 @@ end
 function handle_input(dt)
 	if editing_options then return end
 	plant_timer = math.max(plant_timer - dt, 0)
-	thruster_timer = math.max(thruster_timer - dt, 0)
 	boom_timer = math.max(boom_timer - dt, 0)
 	action_timer = math.max(action_timer - dt, 0)
 	primary_shoot_timer = math.max(primary_shoot_timer - dt, 0)
