@@ -2,7 +2,6 @@
 #include "script/Defs.lua"
 #include "script/Utils.lua"
 #include "script/GameOptions.lua"
-#include "script/Migrations.lua"
 #include "script/PyroField.lua"
 #include "script/InitTools.lua"
 #include "script/Bomb.lua"

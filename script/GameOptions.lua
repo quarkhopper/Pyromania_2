@@ -25,15 +25,14 @@ end
 
 function load_option_set(name, create_if_not_found)
 	local ser = GetString(REG.PREFIX_TOOL_OPTIONS.."."..name)
-	if ser == "" or not can_migrate(ser) then
+	if ser == "" then
 		if create_if_not_found then
-			local test = create_option_set_by_name(name)
-			return test
+			local oset = create_option_set_by_name(name)
+			return oset
 		else 
 			return nil
 		end
 	end
-	ser = migrate_option_set(ser)
 	local options = option_set_from_string(ser)
 	options.name = name
 	return options
@@ -244,6 +243,14 @@ end
 
 function create_rocket_option_set()
 	local oSet = create_mode_option_set("rocket", "Rocket settings")
+
+	oSet.shockwaves = create_mode_option(
+		option_type.enum,
+		on_off.off,
+		"shockwaves",
+		"Shockwaves")
+	oSet.shockwaves.accepted_values = on_off
+	oSet.options[#oSet.options + 1] = oSet.shockwaves
 
 	oSet.rate_of_fire = create_mode_option(
 		option_type.numeric, 
