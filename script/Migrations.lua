@@ -65,6 +65,36 @@ function migrate_option_set(option_set_ser)
         option_set_ser = option_set_ser:gsub("performance", "economy")
     end
 
+    if version == "2.3" then 
+        -- add options - impact explode and shockwaves
+        version = "2.4"
+        local set_parts = split_string(option_set_ser, DELIM.OPTION_SET)
+        set_parts[3] = version
+        local set_name = set_parts[1]
+        if set_name == "bomb" then 
+            local shockwaves = create_mode_option(
+                option_type.enum, 
+                on_off.off,
+                "shockwaves",
+                "Shockwaves")
+            shockwaves.accepted_values = on_off
+
+            local ser = mode_option_to_string(shockwaves)
+            set_parts[#set_parts + 1] = ser
+
+            local impact_explode = create_mode_option(
+                option_type.enum, 
+                on_off.off,
+                "impact_explode",
+                "impact_explode")
+            impact_explode.accepted_values = on_off
+
+            local ser = mode_option_to_string(impact_explode)
+            set_parts[#set_parts + 1] = ser
+        end
+        option_set_ser = join_strings(set_parts, DELIM.OPTION_SET)
+    end
+
     return option_set_ser
 end
 

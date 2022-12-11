@@ -40,7 +40,9 @@ function blast_at(pos)
         SpawnFire(VecAdd(pos, random_vec(1)))
     end
     Explosion(pos, 0.5)
-    shock_at(pos, TOOL.BOMB.boomness.value, TOOL.BOMB.physical_damage_factor.value * 0.5)
+    if TOOL.BOMB.shockwaves.value == on_off.on then
+        shock_at(pos, TOOL.BOMB.boomness.value, TOOL.BOMB.physical_damage_factor.value * 0.5)
+    end
     PlaySound(boom_sound, pos, 100)
     PlaySound(rumble_sound, pos, 100)
 end

@@ -201,6 +201,22 @@ end
 function create_bomb_option_set()
 	local oSet = create_mode_option_set("bomb", "Bomb settings")
 
+	oSet.shockwaves = create_mode_option(
+		option_type.enum,
+		on_off.off,
+		"shockwaves",
+		"Shockwaves")
+	oSet.shockwaves.accepted_values = on_off
+	oSet.options[#oSet.options + 1] = oSet.shockwaves
+
+	oSet.impact_explode = create_mode_option(
+		option_type.enum,
+		on_off.off,
+		"impact_explode",
+		"Explode when broken")
+	oSet.impact_explode.accepted_values = on_off
+	oSet.options[#oSet.options + 1] = oSet.impact_explode
+
 	oSet.min_random_radius = create_mode_option(
 		option_type.numeric, 
 		15,
