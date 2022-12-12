@@ -234,7 +234,6 @@ function impulse_fx(pyro)
         -- apply impulse
         local box = box_vec(point.pos, pyro.impulse_radius)
         local push_bodies = QueryAabbBodies(box[1], box[2])
-        -- local force_mag = VecLength(point.vec)
         local force_dir = VecNormalize(point.vec)
         for i = 1, #push_bodies do
             local push_body = push_bodies[i]

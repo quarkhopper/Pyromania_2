@@ -151,8 +151,8 @@ function update_point_calculations(point, ff, dt)
     -- continuous vars
     point.life_n = point.mag / point.graph.max_force
     local fraction = bracket_value(curve(point.life_n, ff), 1, 0)
-    point.prop_split = round(fraction_to_range_value(fraction, ff.graph.cool_prop_split, ff.graph.hot_prop_split))
-    point.prop_angle = fraction_to_range_value(fraction, ff.graph.cool_prop_angle, ff.graph.hot_prop_angle)
+    point.prop_split =  round(fraction_to_range_value(fraction, ff.graph.cool_prop_split, ff.graph.hot_prop_split))
+    point.prop_angle =  fraction_to_range_value(fraction, ff.graph.cool_prop_angle, ff.graph.hot_prop_angle)
 
     -- parameteric vars
     local transfer_factor = 0
@@ -181,9 +181,8 @@ function propagate_field_forces(ff, dt)
             -- See extension method above for details about radiate(). 
 
             local prop_angle = math.random() * 90
-            local prop_split = math.random(5)
+            local prop_split = math.random(6)
 
-            -- local prop_dirs = radiate(point.vec, point.prop_angle, point.prop_split, math.random() * 360)
             local prop_dirs = radiate(point.vec, prop_angle, prop_split, math.random() * 360)
             for i = 1, #prop_dirs do
                 -- propagate the force in the direction of radiation spokes
