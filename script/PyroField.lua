@@ -259,7 +259,7 @@ function collision_fx(pyro)
         Paint(contact.hit_point, random_float_in_range(0, 0.5), "explosion", random_float_in_range(0, 1))
         local body = GetShapeBody(contact.shape)
         local vel = GetBodyVelocity(body)
-        if VecLength(vel) < 0.1 and
+        if VecLength(vel) < 0.5 and
             math.random() < pyro.physical_damage_factor then 
             MakeHole(contact.hit_point, 1, 1/3, 1/5, true)
         end
