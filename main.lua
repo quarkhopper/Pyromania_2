@@ -368,7 +368,7 @@ function tick(dt)
 	end
 
 	-- check for broken bombs and blow them up
-	if TOOL.BOMB.impact_explode.value == on_off.on then
+	if TOOL.BOMB[impact_explode] and TOOL.BOMB.impact_explode.value == on_off.on then
 		for i = 1, #bombs do
 			local bomb = bombs[i]
 			if IsBodyBroken(GetShapeBody(bomb)) then

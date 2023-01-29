@@ -145,7 +145,8 @@ function init_pyro(tool)
 
         elseif intensity == boomness.vaporizing then 
             tool.explosion_seeds = 100
-            tool.explosion_fireball_radius = 0.5
+            tool.explosion_fireball_radius = 1
+            pyro.flame_puff_life = 1.8
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 5
