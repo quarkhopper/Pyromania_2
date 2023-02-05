@@ -202,7 +202,7 @@ function create_bomb_option_set()
 
 	oSet.shockwaves = create_mode_option(
 		option_type.enum,
-		on_off.off,
+		on_off.on,
 		"shockwaves",
 		"Shockwaves")
 	oSet.shockwaves.accepted_values = on_off
@@ -246,7 +246,7 @@ function create_rocket_option_set()
 
 	oSet.shockwaves = create_mode_option(
 		option_type.enum,
-		on_off.off,
+		on_off.on,
 		"shockwaves",
 		"Shockwaves")
 	oSet.shockwaves.accepted_values = on_off
