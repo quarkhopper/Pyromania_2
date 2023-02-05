@@ -340,6 +340,7 @@ function update(dt)
 		flame_tick(SHOCK_FIELD, dt)
 		rocket_tick(dt)
 		thrower_tick(dt)
+		-- shock_tick(dt)
 	end
 end
 

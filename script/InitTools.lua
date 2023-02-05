@@ -172,27 +172,28 @@ function init_pyro(tool)
             tool.explosion_seeds = 100
             tool.explosion_fireball_radius = 1
             pyro.hot_particle_size = 0.4
-            pyro.cool_particle_size = 0.8
+            pyro.cool_particle_size = 0.6
+            pyro.fade_magnitude = 0.5
             pyro.flames_per_spawn = 6
-            pyro.flame_puff_life = 1.4
+            pyro.impulse_scale = 0.28
             pyro.max_flames = 600
-            pyro.flame_jitter = 0.1
-            pyro.smoke_amount_n = 0.04
-            pyro.flame_light_intensity = 10
+            pyro.flame_jitter = 0.2
             pyro.flame_puff_life = 0.2
+            pyro.flame_light_intensity = 10
+            pyro.smoke_amount_n = 0.03
             pyro.ff.dir_jitter = 0.8
             pyro.ff.max_sim_points = 500
-            pyro.ff.bias_gain = 0.45
+            pyro.ff.bias_gain = 0.8
             pyro.ff.resolution = 0.7
             pyro.ff.graph.curve = curve_type.sqrt
             pyro.ff.graph.max_force = 10000000
-            pyro.ff.graph.dead_force = 0.3
-            pyro.ff.graph.hot_transfer = 30
-            pyro.ff.graph.cool_transfer = 1
+            pyro.ff.graph.dead_force = 0.06 
+            pyro.ff.graph.hot_transfer = 30 
+            pyro.ff.graph.cool_transfer = 0.5
             pyro.ff.graph.hot_prop_split = 2
             pyro.ff.graph.cool_prop_split = 2
             pyro.ff.graph.hot_prop_angle = 20
-            pyro.ff.graph.cool_prop_angle = 18
+            pyro.ff.graph.cool_prop_angle = 13
             pyro.ff.graph.extend_scale = 1.8
         end
 
@@ -202,7 +203,7 @@ function init_pyro(tool)
         pyro.fire_ignition_radius = 5
         pyro.fire_density = 8
         pyro.flame_light_intensity = 3
-        pyro.flame_puff_life = 1.8
+        pyro.flame_puff_life = 1
         pyro.smoke_life = 1
         pyro.smoke_amount_n = 0.1
         pyro.max_player_hurt = 0.55
@@ -326,31 +327,31 @@ function init_pyro(tool)
 
         elseif intensity == boomness.nuclear then 
             tool.explosion_seeds = 100
-            tool.explosion_fireball_radius = 0.5
-            pyro.hot_particle_size = 0.3
+            tool.explosion_fireball_radius = 1
+            pyro.hot_particle_size = 0.4
             pyro.cool_particle_size = 0.6
             pyro.fade_magnitude = 0.5
             pyro.flames_per_spawn = 6
             pyro.impulse_scale = 0.28
             pyro.max_flames = 600
+            pyro.flame_jitter = 0.2
             pyro.flame_puff_life = 0.2
             pyro.flame_light_intensity = 10
             pyro.smoke_amount_n = 0.03
             pyro.ff.dir_jitter = 0.8
             pyro.ff.max_sim_points = 500
-            pyro.ff.bias_gain = 0.45
+            pyro.ff.bias_gain = 0.8
             pyro.ff.resolution = 0.7
             pyro.ff.graph.curve = curve_type.sqrt
-            pyro.ff.graph.max_force = 10000000 
-            pyro.ff.graph.dead_force = 0.3 
+            pyro.ff.graph.max_force = 10000000
+            pyro.ff.graph.dead_force = 0.06 
             pyro.ff.graph.hot_transfer = 30 
-            pyro.ff.graph.cool_transfer = 1
+            pyro.ff.graph.cool_transfer = 0.5
             pyro.ff.graph.hot_prop_split = 2
             pyro.ff.graph.cool_prop_split = 2
             pyro.ff.graph.hot_prop_angle = 20
-            pyro.ff.graph.cool_prop_angle = 18
-            pyro.ff.graph.extend_scale = 1.6
-
+            pyro.ff.graph.cool_prop_angle = 13
+            pyro.ff.graph.extend_scale = 1.8
         end
 
     elseif tool == TOOL.THROWER then 
@@ -490,22 +491,23 @@ function init_shock_field(intensity, damage_factor)
     -- special parameters that make a shock wave field work
     local pyro = inst_pyro()
     pyro.fade_magnitude = 0
-    pyro.cool_particle_size = 1
-    pyro.hot_particle_size = 1
+    pyro.cool_particle_size = 0.8
+    pyro.hot_particle_size = 0.2
     pyro.smoke_life = 0
     pyro.smoke_amount_n = 0
-    pyro.flame_puff_life = 0.3
-    pyro.flame_jitter = 2
+    pyro.flame_puff_life = 3
+    pyro.flame_jitter = 4
     pyro.flame_tile = 0
-    pyro.flame_opacity = 1
+    pyro.flame_opacity = 0.8
     pyro.impulse_scale = 1
     pyro.fire_ignition_radius = 0
     pyro.fire_density = 0
-    pyro.physical_damage_factor = damage_factor
     pyro.max_player_hurt = 0.01
     pyro.rainbow_mode = false
     pyro.flame_light_intensity = 0
-    pyro.ff.point_max_life = 2
+    pyro.flame_only_hit = true
+    pyro.collision = false
+    pyro.ff.point_max_life = 1
     pyro.ff.resolution = 2
     pyro.ff.meta_resolution = 4
     pyro.ff.bias = Vec()
@@ -529,7 +531,7 @@ function init_shock_field(intensity, damage_factor)
         pyro.ff.graph.cool_prop_angle = 45
 
     elseif intensity == boomness.economy then 
-        pyro.flames_per_spawn = 5
+        pyro.flames_per_spawn = 10
         pyro.impulse_radius = 10
         pyro.max_flames = 400
         pyro.ff.max_sim_points = 300
@@ -543,12 +545,12 @@ function init_shock_field(intensity, damage_factor)
         pyro.ff.graph.cool_prop_angle = 45
 
     elseif intensity == boomness.explody then 
-        pyro.flames_per_spawn = 10
+        pyro.flames_per_spawn = 20
         pyro.impulse_radius = 10
         pyro.max_flames = 400
         pyro.ff.max_sim_points = 300
         pyro.ff.graph.max_force = 1000
-        pyro.ff.graph.dead_force = 100
+        pyro.ff.graph.dead_force = 10
         pyro.ff.graph.hot_transfer = 1000
         pyro.ff.graph.cool_transfer = 10
         pyro.ff.graph.hot_prop_split = 6
@@ -557,12 +559,12 @@ function init_shock_field(intensity, damage_factor)
         pyro.ff.graph.cool_prop_angle = 45
 
     elseif intensity == boomness.tactical then 
-        pyro.flames_per_spawn = 10
+        pyro.flames_per_spawn = 20
         pyro.impulse_radius = 10
         pyro.max_flames = 400
         pyro.ff.max_sim_points = 100
         pyro.ff.graph.max_force = 10000
-        pyro.ff.graph.dead_force = 10
+        pyro.ff.graph.dead_force = 5
         pyro.ff.graph.hot_transfer = 1000
         pyro.ff.graph.cool_transfer = 10
         pyro.ff.graph.hot_prop_split = 6
@@ -573,12 +575,12 @@ function init_shock_field(intensity, damage_factor)
 
 
     elseif intensity == boomness.vaporizing then 
-        pyro.flames_per_spawn = 10
+        pyro.flames_per_spawn = 20
         pyro.impulse_radius = 10
         pyro.max_flames = 600
         pyro.ff.max_sim_points = 100
         pyro.ff.graph.max_force = 50000
-        pyro.ff.graph.dead_force = 10
+        pyro.ff.graph.dead_force = 5
         pyro.ff.graph.hot_transfer = 1000
         pyro.ff.graph.cool_transfer = 10
         pyro.ff.graph.hot_prop_split = 6
@@ -587,13 +589,14 @@ function init_shock_field(intensity, damage_factor)
         pyro.ff.graph.cool_prop_angle = 45
 
     elseif intensity == boomness.nuclear then 
-        pyro.flames_per_spawn = 10
+        pyro.flame_puff_life = 5
+        pyro.flames_per_spawn = 20
         pyro.impulse_radius = 20
         pyro.max_flames = 400
         pyro.ff.max_sim_points = 200
         pyro.ff.graph.extend_scale = 2
         pyro.ff.graph.max_force = 1000000
-        pyro.ff.graph.dead_force = 10
+        pyro.ff.graph.dead_force = 1
         pyro.ff.graph.hot_transfer = 100
         pyro.ff.graph.cool_transfer = 10
         pyro.ff.graph.hot_prop_split = 7

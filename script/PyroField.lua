@@ -57,6 +57,7 @@ function inst_pyro()
     inst.flame_tile = 0
     -- Opacity of flame puffs. 
     inst.flame_opacity = 1
+    inst.flame_only_hit = false
     inst.impulse_scale = 1
     -- Effective radius that a force field vector can interact with a world body to apply
     -- impulse to it. 
@@ -74,6 +75,7 @@ function inst_pyro()
     inst.fade_magnitude = 20
     inst.max_flames = 400
     -- The force field wrapped by this pyro field.
+    inst.collision = true
     inst.ff = inst_force_field_ff()
 
     return inst
@@ -194,10 +196,12 @@ end
 function spawn_flames(pyro)
     -- Spawn flame instances to render based on the underlying base force field vectors.
     local new_flames = {}
-    local points = flatten(pyro.ff.field)
-    for i = 1, #points do
-        local point = points[i]
-        spawn_flame_group(pyro, point, new_flames)
+    if not pyro.flame_only_hit then
+        local points = flatten(pyro.ff.field)
+        for i = 1, #points do
+            local point = points[i]
+            spawn_flame_group(pyro, point, new_flames)
+        end
     end
     for i = 1, #pyro.ff.contacts do
         local contact = pyro.ff.contacts[i]
@@ -297,7 +301,9 @@ function flame_tick(pyro, dt)
     end
 
     if (pyro.tick_count + 2) % 3 == 0 then 
-        collision_fx(pyro)
+        if pyro.collision then
+            collision_fx(pyro)
+        end
         pyro.ff.contacts = {}
     elseif (pyro.tick_count + 1) % 3 == 0 then 
         impulse_fx(pyro)
