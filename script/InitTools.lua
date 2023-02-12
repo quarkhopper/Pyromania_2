@@ -501,7 +501,7 @@ function init_shock_field(intensity, damage_factor)
     pyro.flame_opacity = 0.8
     pyro.flames_per_spawn = 20
     pyro.impulse_scale = 0.5
-    pyro.impulse_radius = 20
+    pyro.impulse_radius = 10
     pyro.fire_ignition_radius = 0
     pyro.fire_density = 0
     pyro.max_player_hurt = 0.01
