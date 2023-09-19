@@ -236,7 +236,10 @@ function create_bomb_option_set()
 	oSet.max_random_radius.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_random_radius
 
-	oSet.physical_damage_factor.value = 0.3
+	oSet.flame_color_hot.value = Vec(214.2, 0.07, 0.91)
+	oSet.flame_color_cool.value = Vec(236.9, 0.75, 0.7)
+	oSet.physical_damage_factor.value = 1.0
+	oSet.boomness.value = boomness.nuclear
 
 	return oSet
 end
@@ -264,7 +267,7 @@ function create_rocket_option_set()
 
 	oSet.speed = create_mode_option(
 		option_type.numeric, 
-		2,
+		2.8,
 		"speed",
 		"Speed")
 	oSet.speed.range.lower = 0.1
@@ -282,7 +285,10 @@ function create_rocket_option_set()
 	oSet.max_dist.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
 
-	oSet.physical_damage_factor.value = 0.5
+	oSet.flame_color_hot.value = Vec(7.6, 0.6, 1)
+	oSet.flame_color_cool.value = Vec(7.7, 1, 0.8)
+	oSet.physical_damage_factor.value = 0.005
+	oSet.boomness.value = boomness.vaporizing
 
 	return oSet
 end
@@ -292,7 +298,7 @@ function create_thrower_option_set()
 
 	oSet.rate_of_fire = create_mode_option(
 		option_type.numeric, 
-		0.05,
+		0.01,
 		"rate_of_fire",
 		"Rate of fire")
 	oSet.rate_of_fire.range.lower = 0.01
@@ -302,7 +308,7 @@ function create_thrower_option_set()
 
 	oSet.speed = create_mode_option(
 		option_type.numeric, 
-		1,
+		10,
 		"speed",
 		"Spray velocity")
 	oSet.speed.range.lower = 0.1
@@ -321,9 +327,11 @@ function create_thrower_option_set()
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
 
 	-- default values
-	oSet.flame_color_hot.value = Vec(7.5, 0.9, 0.6)
-	oSet.speed.value = 0.6
-	oSet.physical_damage_factor.value = 0.05
+	oSet.flame_color_hot.value = Vec(142.2, 0.6, 0.76)
+	oSet.flame_color_cool.value = Vec(158.5, 0.6, 0.5)	
+	oSet.speed.value = 10
+	oSet.physical_damage_factor.value = 0.5
+	oSet.boomness.value = boomness.economy
 
 	return oSet
 end

@@ -27,7 +27,7 @@ function thrower_muzzle_flames()
 		local smoke_color = HSVToRGB(Vec(0, 0, 1))
 		ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
 		SpawnParticle(light_point, Vec(), 0.2)
-		PointLight(light_point, 1, 0.3, 0.1, 1)
+		PointLight(light_point, 0.3, 0.3, 0.3, 0.8)
 	end
 end
 
