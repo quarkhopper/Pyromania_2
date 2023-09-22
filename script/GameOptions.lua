@@ -267,7 +267,7 @@ function create_rocket_option_set()
 
 	oSet.speed = create_mode_option(
 		option_type.numeric, 
-		2.8,
+		3.0,
 		"speed",
 		"Speed")
 	oSet.speed.range.lower = 0.1

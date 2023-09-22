@@ -361,7 +361,7 @@ function init_pyro(tool)
         end
 
     elseif tool == TOOL.THROWER then 
-        tool.gravity = 0.01
+        tool.gravity = 0.0
         pyro.fade_magnitude = 2
         pyro.hot_particle_size = 0.2
         pyro.cool_particle_size = 0.25
