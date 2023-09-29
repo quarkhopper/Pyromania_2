@@ -242,7 +242,7 @@ function create_bomb_option_set()
 	-- red fire
 	oSet.flame_color_hot.value = Vec(7.6, 0.6, 1)
 	oSet.flame_color_cool.value = Vec(7.7, 1, 0.8)
-	oSet.physical_damage_factor.value = 1.0
+	oSet.physical_damage_factor.value = 0.05
 	oSet.boomness.value = boomness.nuclear
 
 	return oSet
@@ -253,7 +253,7 @@ function create_rocket_option_set()
 
 	oSet.shockwaves = create_mode_option(
 		option_type.enum,
-		on_off.on,
+		on_off.off,
 		"shockwaves",
 		"Shockwaves")
 	oSet.shockwaves.accepted_values = on_off
@@ -289,9 +289,9 @@ function create_rocket_option_set()
 	oSet.max_dist.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_dist	
 
-	oSet.flame_color_hot.value = Vec(7.6, 0.6, 1)
+	oSet.flame_color_hot.value = Vec(7.6, 0.6, 0.9)
 	oSet.flame_color_cool.value = Vec(7.7, 1, 0.8)
-	oSet.physical_damage_factor.value = 0.005
+	oSet.physical_damage_factor.value = 0.025
 	oSet.boomness.value = boomness.vaporizing
 
 	return oSet

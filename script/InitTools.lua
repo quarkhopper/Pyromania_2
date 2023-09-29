@@ -189,12 +189,12 @@ function init_pyro(tool)
             pyro.ff.resolution = 0.7
             pyro.ff.graph.curve = curve_type.sqrt
             pyro.ff.graph.max_force = 1000000
-            pyro.ff.graph.dead_force = 0.015
-            pyro.ff.graph.hot_transfer = 10 
+            pyro.ff.graph.dead_force = 0.017
+            pyro.ff.graph.hot_transfer = 17 
             pyro.ff.graph.cool_transfer = 0.5
-            pyro.ff.graph.hot_prop_split = 2
-            pyro.ff.graph.cool_prop_split = 5
-            pyro.ff.graph.hot_prop_angle = 10
+            pyro.ff.graph.hot_prop_split = 1
+            pyro.ff.graph.cool_prop_split = 2
+            pyro.ff.graph.hot_prop_angle = 0
             pyro.ff.graph.cool_prop_angle = 10
             pyro.ff.graph.extend_scale = 1.8
         end
