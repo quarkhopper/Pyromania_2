@@ -236,8 +236,12 @@ function create_bomb_option_set()
 	oSet.max_random_radius.step = 1
 	oSet.options[#oSet.options + 1] = oSet.max_random_radius
 
-	oSet.flame_color_hot.value = Vec(214.2, 0.07, 0.91)
-	oSet.flame_color_cool.value = Vec(236.9, 0.75, 0.7)
+	-- blue fire
+	-- oSet.flame_color_hot.value = Vec(214.2, 0.07, 0.91)
+	-- oSet.flame_color_cool.value = Vec(236.9, 0.75, 0.7)
+	-- red fire
+	oSet.flame_color_hot.value = Vec(7.6, 0.6, 1)
+	oSet.flame_color_cool.value = Vec(7.7, 1, 0.8)
 	oSet.physical_damage_factor.value = 1.0
 	oSet.boomness.value = boomness.nuclear
 

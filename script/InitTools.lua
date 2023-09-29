@@ -157,10 +157,10 @@ function init_pyro(tool)
             pyro.ff.dir_jitter = 0.8
             pyro.ff.resolution = 0.5
             pyro.ff.graph.curve = curve_type.square
-            pyro.ff.graph.max_force = 100000
+            pyro.ff.graph.max_force = 10000000
             pyro.ff.graph.dead_force = 0.2
             pyro.ff.graph.hot_transfer = 10000
-            pyro.ff.graph.cool_transfer = 5
+            pyro.ff.graph.cool_transfer = 3
             pyro.ff.graph.hot_prop_split = 3
             pyro.ff.graph.cool_prop_split = 2
             pyro.ff.graph.hot_prop_angle = 36
@@ -169,7 +169,7 @@ function init_pyro(tool)
 
         elseif intensity == boomness.nuclear then 
             tool.explosion_seeds = 800
-            tool.explosion_fireball_radius = 4
+            tool.explosion_fireball_radius = 6
             pyro.hot_particle_size = 0.4
             pyro.cool_particle_size = 0.6
             pyro.fade_magnitude = 0.5
@@ -185,17 +185,17 @@ function init_pyro(tool)
             pyro.fire_density = 10
             pyro.ff.dir_jitter = 0.8
             pyro.ff.max_sim_points = 500
-            pyro.ff.bias_gain = 1.2
+            pyro.ff.bias_gain = 1.5
             pyro.ff.resolution = 0.7
             pyro.ff.graph.curve = curve_type.sqrt
-            pyro.ff.graph.max_force = 1000
-            pyro.ff.graph.dead_force = 0.06 
-            pyro.ff.graph.hot_transfer = 50 
-            pyro.ff.graph.cool_transfer = 1.1
-            pyro.ff.graph.hot_prop_split = 4
-            pyro.ff.graph.cool_prop_split = 3
-            pyro.ff.graph.hot_prop_angle = 20
-            pyro.ff.graph.cool_prop_angle = 15
+            pyro.ff.graph.max_force = 1000000
+            pyro.ff.graph.dead_force = 0.015
+            pyro.ff.graph.hot_transfer = 10 
+            pyro.ff.graph.cool_transfer = 0.5
+            pyro.ff.graph.hot_prop_split = 2
+            pyro.ff.graph.cool_prop_split = 5
+            pyro.ff.graph.hot_prop_angle = 10
+            pyro.ff.graph.cool_prop_angle = 10
             pyro.ff.graph.extend_scale = 1.8
         end
 
@@ -318,10 +318,10 @@ function init_pyro(tool)
             pyro.ff.dir_jitter = 0.8
             pyro.ff.resolution = 0.5
             pyro.ff.graph.curve = curve_type.square
-            pyro.ff.graph.max_force = 100000
+            pyro.ff.graph.max_force = 10000000
             pyro.ff.graph.dead_force = 0.2
             pyro.ff.graph.hot_transfer = 10000
-            pyro.ff.graph.cool_transfer = 5
+            pyro.ff.graph.cool_transfer = 3
             pyro.ff.graph.hot_prop_split = 3
             pyro.ff.graph.cool_prop_split = 2
             pyro.ff.graph.hot_prop_angle = 36
@@ -330,7 +330,7 @@ function init_pyro(tool)
 
         elseif intensity == boomness.nuclear then 
             tool.explosion_seeds = 800
-            tool.explosion_fireball_radius = 4
+            tool.explosion_fireball_radius = 6
             pyro.hot_particle_size = 0.4
             pyro.cool_particle_size = 0.6
             pyro.fade_magnitude = 0.5
@@ -346,17 +346,17 @@ function init_pyro(tool)
             pyro.fire_density = 10
             pyro.ff.dir_jitter = 0.8
             pyro.ff.max_sim_points = 500
-            pyro.ff.bias_gain = 1.2
+            pyro.ff.bias_gain = 1.5
             pyro.ff.resolution = 0.7
             pyro.ff.graph.curve = curve_type.sqrt
-            pyro.ff.graph.max_force = 1000
-            pyro.ff.graph.dead_force = 0.06 
-            pyro.ff.graph.hot_transfer = 50 
-            pyro.ff.graph.cool_transfer = 1.1
-            pyro.ff.graph.hot_prop_split = 4
-            pyro.ff.graph.cool_prop_split = 3
-            pyro.ff.graph.hot_prop_angle = 20
-            pyro.ff.graph.cool_prop_angle = 15
+            pyro.ff.graph.max_force = 1000000
+            pyro.ff.graph.dead_force = 0.017
+            pyro.ff.graph.hot_transfer = 17 
+            pyro.ff.graph.cool_transfer = 0.5
+            pyro.ff.graph.hot_prop_split = 1
+            pyro.ff.graph.cool_prop_split = 2
+            pyro.ff.graph.hot_prop_angle = 0
+            pyro.ff.graph.cool_prop_angle = 10
             pyro.ff.graph.extend_scale = 1.8
         end
 
