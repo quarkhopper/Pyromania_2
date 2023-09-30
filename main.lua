@@ -340,6 +340,7 @@ function update(dt)
 		flame_tick(SHOCK_FIELD, dt)
 		rocket_tick(dt)
 		thrower_tick(dt)
+		bomb_tick(dt)
 		-- shock_tick(dt)
 	end
 end
@@ -364,17 +365,6 @@ function tick(dt)
 			if not hit then
 				blast_at(pos)
 				break
-			end
-		end
-	end
-
-	-- check for broken bombs and blow them up
-	if TOOL.BOMB[impact_explode] and TOOL.BOMB.impact_explode.value == on_off.on then
-		for i = 1, #bombs do
-			local bomb = bombs[i]
-			if IsBodyBroken(GetShapeBody(bomb)) then
-				detonate(bomb)
-				table.remove(bombs, i)
 			end
 		end
 	end

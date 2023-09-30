@@ -277,3 +277,12 @@ function blend_color(fraction, color_a, color_b)
     local color = Vec(a, b, c)
     return color
 end
+
+function indexOf(array, value)
+    for i, v in ipairs(array) do
+        if v == value then
+            return i
+        end
+    end
+    return nil
+end

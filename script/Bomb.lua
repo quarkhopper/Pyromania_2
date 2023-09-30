@@ -18,6 +18,7 @@ function detonate(bomb)
     local bomb_trans = GetShapeWorldTransform(bomb)
     local bomb_pos = VecAdd(bomb_trans.pos, Vec(0.1, 0.1, 0.1))
     blast_at(bomb_pos)
+    table.remove(bombs, indexOf(bombs, bomb))
 end
 
 function blast_at(pos)
@@ -47,4 +48,14 @@ function blast_at(pos)
     PlaySound(rumble_sound, pos, 100)
 end
 
+function bomb_tick(dt)
+    if TOOL.BOMB["impact_explode"] and TOOL.BOMB.impact_explode.value == on_off.on then
+		for i = 1, #bombs do
+			local bomb = bombs[i]
+			if IsBodyBroken(GetShapeBody(bomb)) then
+				detonate(bomb)
+			end
+		end
+	end
+end
 
