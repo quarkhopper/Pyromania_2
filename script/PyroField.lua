@@ -47,6 +47,7 @@ function inst_pyro()
     -- True if rendering flames. If this is false then only the flame "puffs" will be shown 
     -- and no black smoke will be generated. This is false when using the pyro Max field for
     -- shock wave effects.
+    inst.smoke_color = Vec(0, 0, 0.1)
     inst.render_flames = true
     -- The lifetime of flame diffusing smoke puffs.
     inst.flame_puff_life = 0.5
@@ -120,7 +121,7 @@ function make_flame_effect(pyro, flame, dt)
         intensity = fraction_to_range_value(burnout_n, 0.2, intensity)
     end
     -- Put the light source in the middle of where the diffusing flame puff will be
-    PointLight(flame.pos, color[1], color[2], color[3], intensity)
+    PointLight(flame.pos, color[1], color[2], color[3], bracket_value(intensity, 1, 0))
     -- fire puff smoke particle generation
     ParticleReset()
     ParticleType("smoke")
@@ -150,7 +151,7 @@ function make_flame_effect(pyro, flame, dt)
             smoke_color = HSVToRGB(smoke_color)
         else
             -- Normal mode: smoke color is a hard-coded dingy value
-            smoke_color = HSVToRGB(Vec(0, 0, 0.1))
+            smoke_color = HSVToRGB(pyro.smoke_color)
         end
         ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
         ParticleGravity(PYRO.GRAVITY)

@@ -11,7 +11,6 @@ function detonate_all()
         local bomb = bombs[i]
         detonate(bomb)
     end
-    bombs = {}
 end
 
 function detonate(bomb)
