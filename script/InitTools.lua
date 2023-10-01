@@ -123,34 +123,35 @@ function init_pyro(tool)
 
         elseif intensity == boomness.tactical then 
             tool.explosion_seeds = 100
-            tool.explosion_fireball_radius = 0.5
+            tool.explosion_fireball_radius = 1
             pyro.hot_particle_size = 0.3
-            pyro.cool_particle_size = 0.4
-            pyro.flames_per_spawn = 5
+            pyro.cool_particle_size = 0.6
+            pyro.flames_per_spawn = 4
+            pyro.impulse_scale = 0.2
             pyro.max_flames = 600
             pyro.smoke_amount_n = 0.05
-            pyro.ff.max_sim_points = 500
-            pyro.ff.bias_gain = 0.2
-            pyro.ff.resolution = 0.5
-            pyro.ff.graph.curve = curve_type.square
-            pyro.ff.graph.max_force = 100000
-            pyro.ff.graph.dead_force = 0.15
-            pyro.ff.graph.hot_transfer = 5000
-            pyro.ff.graph.cool_transfer = 1.5
+            pyro.ff.max_sim_points = 400
+            pyro.ff.bias_gain = 0.3
+            pyro.ff.resolution = 0.6
+            pyro.ff.graph.curve = curve_type.linear
+            pyro.ff.graph.max_force = 100000 
+            pyro.ff.graph.dead_force = 5
+            pyro.ff.graph.hot_transfer = 500
+            pyro.ff.graph.cool_transfer = 0.4
             pyro.ff.graph.hot_prop_split = 3
-            pyro.ff.graph.cool_prop_split = 3
-            pyro.ff.graph.hot_prop_angle = 45
-            pyro.ff.graph.cool_prop_angle = 35
+            pyro.ff.graph.cool_prop_split = 4
+            pyro.ff.graph.hot_prop_angle = 30
+            pyro.ff.graph.cool_prop_angle = 45
             pyro.ff.graph.extend_scale = 1.5
 
         elseif intensity == boomness.vaporizing then 
-            tool.explosion_seeds = 1000
+            tool.explosion_seeds = 800
             tool.explosion_fireball_radius = 2
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 3
             pyro.impulse_scale = 0.28
-            pyro.max_flames = 1000
+            pyro.max_flames = 800
             pyro.smoke_amount_n = 0.05
             pyro.ff.max_sim_points = 800
             pyro.ff.bias_gain = 0.3
@@ -296,8 +297,8 @@ function init_pyro(tool)
             pyro.ff.graph.curve = curve_type.linear
             pyro.ff.graph.max_force = 100000 
             pyro.ff.graph.dead_force = 5
-            pyro.ff.graph.hot_transfer = 5000
-            pyro.ff.graph.cool_transfer = 0.5
+            pyro.ff.graph.hot_transfer = 500
+            pyro.ff.graph.cool_transfer = 0.4
             pyro.ff.graph.hot_prop_split = 3
             pyro.ff.graph.cool_prop_split = 4
             pyro.ff.graph.hot_prop_angle = 30
@@ -305,13 +306,13 @@ function init_pyro(tool)
             pyro.ff.graph.extend_scale = 1.5
 
         elseif intensity == boomness.vaporizing then 
-            tool.explosion_seeds = 1000
+            tool.explosion_seeds = 800
             tool.explosion_fireball_radius = 2
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 3
             pyro.impulse_scale = 0.28
-            pyro.max_flames = 1000
+            pyro.max_flames = 800
             pyro.smoke_amount_n = 0.05
             pyro.ff.max_sim_points = 800
             pyro.ff.bias_gain = 0.3

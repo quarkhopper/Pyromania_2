@@ -26,7 +26,7 @@ function init()
 	thrower_sound = LoadLoop("MOD/snd/thrower.ogg")
 
 	-- rate per second you're allowed to plant bombs
-	plant_rate = 2
+	plant_rate = 0.3
 	plant_timer = 0
 	boom_timer = 0
 	action_timer = 0
@@ -397,10 +397,20 @@ function handle_input(dt)
 				if plant_timer == 0 and
 				InputPressed(KEY.PLANT_BOMB.key) then
 					local camera = GetPlayerCameraTransform()
-					local drop_pos = TransformToParentPoint(camera, Vec(0.2, -0.2, -1.25))
-					local bomb = Spawn("MOD/prefab/pyro_bomb.xml", Transform(drop_pos))[2]
-					table.insert(bombs, bomb)
-					plant_timer = plant_rate
+
+					local shoot_dir = TransformToParentVec(camera, Vec(0, 0, -1))
+					local hit, dist, normal, shape = QueryRaycast(camera.pos, shoot_dir, 100, 0.025, true)
+					if hit then 
+						local drop_pos = VecAdd(camera.pos, VecScale(shoot_dir, dist - 0.5))
+						local bomb = Spawn("MOD/prefab/pyro_bomb.xml", Transform(drop_pos), false, true)[2]
+						table.insert(bombs, bomb)
+						plant_timer = plant_rate
+					end
+
+					-- local drop_pos = TransformToParentPoint(camera, Vec(0.2, -0.2, -1.25))
+					-- local bomb = Spawn("MOD/prefab/pyro_bomb.xml", Transform(drop_pos))[2]
+					-- table.insert(bombs, bomb)
+					-- plant_timer = plant_rate
 				end
 				
 				-- end all flame effects
