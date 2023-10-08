@@ -41,21 +41,35 @@ function init_pyro(tool)
     local intensity = tool.boomness.value
 
     if tool == TOOL.BOMB then 
-        pyro.fade_magnitude = 0.5
-        pyro.hot_particle_size = 0.3
-        pyro.cool_particle_size = 0.5
+        -- pyro.fade_magnitude = 0.5
+        -- pyro.hot_particle_size = 0.3
+        -- pyro.cool_particle_size = 0.5
+        -- pyro.impulse_radius = 5
+        -- pyro.impulse_scale = 0.8
+        -- pyro.fire_ignition_radius = 7
+        -- pyro.fire_density = 8
+        -- pyro.flame_jitter = 0.5
+        -- pyro.flame_light_intensity = 3
+        -- pyro.smoke_life = 1
+        -- pyro.smoke_amount_n = 0.2
+        -- pyro.max_player_hurt = 0.55
+        -- pyro.ff.point_max_life = 3
+        -- pyro.ff.dir_jitter = 0.5
+        -- pyro.ff.meta_resolution = 2
+        pyro.fade_magnitude = 1
         pyro.impulse_radius = 5
-        pyro.impulse_scale = 0.8
-        pyro.fire_ignition_radius = 7
+        pyro.fire_ignition_radius = 5
         pyro.fire_density = 8
-        pyro.flame_jitter = 0.5
         pyro.flame_light_intensity = 3
+        pyro.flame_puff_life = 1
         pyro.smoke_life = 1
-        pyro.smoke_amount_n = 0.2
+        pyro.smoke_amount_n = 0.1
         pyro.max_player_hurt = 0.55
         pyro.ff.point_max_life = 3
         pyro.ff.dir_jitter = 0.5
+        pyro.ff.bias_gain = 0.3
         pyro.ff.meta_resolution = 2
+
 
         if intensity == boomness.invisible then 
             tool.explosion_seeds = 100
