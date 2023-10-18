@@ -242,7 +242,7 @@ function create_bomb_option_set()
 	-- red fire
 	oSet.flame_color_hot.value = Vec(36.9, 0.65, 1)
 	oSet.flame_color_cool.value = Vec(7.6, 1, 0.84)
-	oSet.physical_damage_factor.value = 1.0
+	oSet.physical_damage_factor.value = 0.358
 	oSet.boomness.value = boomness.nuclear
 
 	return oSet
@@ -291,7 +291,7 @@ function create_rocket_option_set()
 
 	oSet.flame_color_hot.value = Vec(36.9, 0.65, 1)
 	oSet.flame_color_cool.value = Vec(7.6, 1, 0.84)
-	oSet.physical_damage_factor.value = 0.05
+	oSet.physical_damage_factor.value = 0.358
 	oSet.boomness.value = boomness.vaporizing
 
 	return oSet

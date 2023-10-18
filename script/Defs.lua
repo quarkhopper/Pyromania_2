@@ -32,6 +32,7 @@ end
 
 KEY = {}
 KEY.PLANT_BOMB = setup_keybind("Plant bomb", "plant_bomb", "B")
+KEY.PLANT_GROUP = setup_keybind("Plant 50 bombs", "plant_group", "F4")
 KEY.DETONATE = setup_keybind("Detonate bomb", "detonate", "X")
 KEY.STOP_FIRE = setup_keybind("Stop fire", "stop_fire", "V")
 KEY.OPTIONS = setup_keybind("Options", "options", "O")

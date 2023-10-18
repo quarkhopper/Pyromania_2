@@ -24,6 +24,7 @@ function init()
 
 	rumble_sound = LoadSound("MOD/snd/rumble.ogg")
 	thrower_sound = LoadLoop("MOD/snd/thrower.ogg")
+	spawn_sound = LoadSound("MOD/snd/NinjaDead.ogg")
 
 	-- rate per second you're allowed to plant bombs
 	plant_rate = 0.3
@@ -46,6 +47,8 @@ function init()
 	-- true while the player has the options editor open
 	editing_options = false
 	option_page = 1
+
+	set_spawn_area_parameters()
 
 	DEBUG_MODE = false
 end
@@ -81,6 +84,7 @@ function draw(dt)
 		UiTextOutline(0,0,0,1,0.5)
 		UiColor(1,1,1)
 		UiText(KEY.PLANT_BOMB.key.." to plant bomb", true)
+		UiText(KEY.PLANT_GROUP.key.." to plant 10 bombs randomly around the map", true)
 		UiText(KEY.DETONATE.key.." to detonate", true)
 		UiText(KEY.OPTIONS.key.." for options", true)
 		UiText(KEY.STOP_FIRE.key.." to stop all flame effects", true)
@@ -396,8 +400,8 @@ function handle_input(dt)
 				-- plant bomb
 				if plant_timer == 0 and
 				InputPressed(KEY.PLANT_BOMB.key) then
+					-- sticky version
 					local camera = GetPlayerCameraTransform()
-
 					local shoot_dir = TransformToParentVec(camera, Vec(0, 0, -1))
 					local hit, dist, normal, shape = QueryRaycast(camera.pos, shoot_dir, 100, 0.025, true)
 					if hit then 
@@ -407,12 +411,29 @@ function handle_input(dt)
 						plant_timer = plant_rate
 					end
 
+					-- old drop version
 					-- local drop_pos = TransformToParentPoint(camera, Vec(0.2, -0.2, -1.25))
 					-- local bomb = Spawn("MOD/prefab/pyro_bomb.xml", Transform(drop_pos))[2]
 					-- table.insert(bombs, bomb)
 					-- plant_timer = plant_rate
 				end
-				
+
+				-- plant a group around the map
+				if InputPressed(KEY.PLANT_GROUP.key) then 
+					local player_trans = GetPlayerTransform()
+					PlaySound(spawn_sound, player_trans.pos, 50)
+					for i = 1, 10 do
+						local spawnPos = find_spawn_location()
+						if spawnPos ~= nil then 
+							local trans = Transform(spawnPos) -- , QuatEuler(0,math.random(0,359),0))
+							trans.pos = VecAdd(trans.pos, Vec(spawn_block_h_size/2,spawn_block_v_size/2,spawn_block_h_size/2))
+							local bomb = Spawn("MOD/prefab/pyro_bomb.xml", trans, false, true)[2]
+							table.insert(bombs, bomb)
+							plant_timer = plant_rate
+						end					
+					end
+				end
+
 				-- end all flame effects
 				if InputPressed(KEY.STOP_FIRE.key) then
 					stop_all_flames()

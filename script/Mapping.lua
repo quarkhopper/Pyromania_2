@@ -5,8 +5,8 @@ shape_scan_bounds = { Vec(-100, -50, -100), Vec(100, 100, 100) }
 -- instead of running the shape scan which creates a purely square zone
 -- spawnAreaBounds = { Vec(-31.80, 0, -33.50), Vec (26.00, 10, 31.80) } 
 
-spawn_block_h_size = 1
-spawn_block_v_size = 1.8
+spawn_block_h_size = 0.4
+spawn_block_v_size = 0.4
 
 -- what types of materials are acceptable to spawn on
 allowed_spawn_mats = {
@@ -14,7 +14,7 @@ allowed_spawn_mats = {
     ["metal"] = true,
     ["wood"] = true,
     ["masonry"] = true,
-    ["dirt"] = true,
+    ["dirt"] = true
 }
 uneven_floor_tolerance = 0.1 
 max_spawn_tries = 1000
@@ -105,13 +105,13 @@ function block_is_suitable(test_position)
 
 	-- scan for clear level surface
 	local hit, dist = QueryRaycast(VecAdd(test_position, Vec(0, spawn_block_v_size, 0.025)), Vec(0, -1, 0), spawn_block_v_size)
-	if math.abs(dist - spawn_block_v_size) > 0.1 then return false end
+	if math.abs(dist - spawn_block_v_size) > uneven_floor_tolerance then return false end
 	local ref_height = dist
 	for x=1, 10, 1 do
 		for z=1, 10, 1 do
 			local pos = VecAdd(test_position, Vec((x/10), spawn_block_v_size, (z/10)))
 			hit, dist = QueryRaycast(pos,  Vec(0, -1, 0), spawn_block_v_size)
-			if not hit or dist ~= ref_height then return false end
+			if not hit or math.abs(dist - ref_height) > uneven_floor_tolerance then return false end
 		end
 	end
 	
@@ -122,7 +122,7 @@ function get_random_spawn_area_point()
 	local pos = nil
 	-- try 5 times to get a sheltered (indoor) position before
 	-- giving an outdoor position
-	for i=1, 5 do
+	for i=1, 20 do
 		pos = Vec(math.random() * spawn_area_size[1] + spawn_area_bounds[1][1],
 			math.random() * spawn_area_size[2] + spawn_area_bounds[1][2],
 			math.random() * spawn_area_size[3] + spawn_area_bounds[1][3])

@@ -4,6 +4,7 @@
 function init()
     keybind_options = {
         KEY.PLANT_BOMB, 
+        KEY.PLANT_GROUP,
         KEY.DETONATE, 
         KEY.STOP_FIRE, 
         KEY.OPTIONS, 
