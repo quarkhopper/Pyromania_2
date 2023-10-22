@@ -429,7 +429,6 @@ function handle_input(dt)
 							trans.pos = VecAdd(trans.pos, Vec(spawn_block_h_size/2,spawn_block_v_size/2,spawn_block_h_size/2))
 							local bomb = Spawn("MOD/prefab/pyro_bomb.xml", trans, false, true)[2]
 							table.insert(bombs, bomb)
-							plant_timer = plant_rate
 						end					
 					end
 				end

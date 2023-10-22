@@ -5,8 +5,8 @@ shape_scan_bounds = { Vec(-100, -50, -100), Vec(100, 100, 100) }
 -- instead of running the shape scan which creates a purely square zone
 -- spawnAreaBounds = { Vec(-31.80, 0, -33.50), Vec (26.00, 10, 31.80) } 
 
-spawn_block_h_size = 0.4
-spawn_block_v_size = 0.4
+spawn_block_h_size = 0.3
+spawn_block_v_size = 0.3
 
 -- what types of materials are acceptable to spawn on
 allowed_spawn_mats = {

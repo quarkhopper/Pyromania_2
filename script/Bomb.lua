@@ -11,13 +11,13 @@ function detonate_all()
         local bomb = bombs[i]
         detonate(bomb)
     end
+    bombs = {}
 end
 
 function detonate(bomb)
     local bomb_trans = GetShapeWorldTransform(bomb)
-    local bomb_pos = VecAdd(bomb_trans.pos, Vec(0.1, 0.1, 0.1))
+    local bomb_pos = VecAdd(bomb_trans.pos, Vec(0.2, 0.2, 0.2))
     blast_at(bomb_pos)
-    table.remove(bombs, indexOf(bombs, bomb))
 end
 
 function blast_at(pos)
@@ -39,7 +39,7 @@ function blast_at(pos)
     for i = 1, 100 do
         SpawnFire(VecAdd(pos, random_vec(1)))
     end
-    Explosion(pos, 0.5)
+    MakeHole(pos, 0.2, 0.2, 0.2, true)
     if TOOL.BOMB.shockwaves.value == on_off.on then
         shock_at(pos, TOOL.BOMB.boomness.value, TOOL.BOMB.physical_damage_factor.value * 0.5)
     end
@@ -48,15 +48,18 @@ function blast_at(pos)
 end
 
 function bomb_tick(dt)
+    local new_bombs = {}
     for i = 1, #bombs do
         local bomb = bombs[i]
         if IsBodyBroken(GetShapeBody(bomb)) then
-            if TOOL.BOMB["impact_explode"] and TOOL.BOMB.impact_explode.value == on_off.on then
-				detonate(bomb)
-			else
-                table.remove(bombs, indexOf(bombs, bomb))
+            if TOOL.BOMB["impact_explode"] and 
+            TOOL.BOMB.impact_explode.value == on_off.on then
+                detonate(bomb)
             end
-		end
+        else
+            table.insert(new_bombs, bomb)
+        end
 	end
+    bombs = new_bombs
 end
 
