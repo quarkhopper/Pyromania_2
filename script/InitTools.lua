@@ -217,10 +217,10 @@ function init_pyro(tool)
         pyro.ff.dir_jitter = 0.5
         pyro.ff.bias_gain = 0.3
         pyro.ff.meta_resolution = 2
+        tool.explosion_fireball_radius = 1
 
         if intensity == boomness.invisible then 
             tool.explosion_seeds = sim_seeds
-            tool.explosion_fireball_radius = 1
             pyro.hot_particle_size = 0.2
             pyro.cool_particle_size = 0.4
             pyro.flames_per_spawn = 0
@@ -242,7 +242,6 @@ function init_pyro(tool)
 
         elseif intensity == boomness.economy then 
             tool.explosion_seeds = sim_seeds
-            tool.explosion_fireball_radius = 1
             pyro.hot_particle_size = 0.2
             pyro.cool_particle_size = 0.4
             pyro.flames_per_spawn = 2
@@ -263,7 +262,6 @@ function init_pyro(tool)
 
         elseif intensity == boomness.explody then 
             tool.explosion_seeds = sim_seeds
-            tool.explosion_fireball_radius = 1
             pyro.hot_particle_size = 0.2
             pyro.cool_particle_size = 0.4
             pyro.flames_per_spawn = 4
@@ -285,7 +283,6 @@ function init_pyro(tool)
 
         elseif intensity == boomness.tactical then 
             tool.explosion_seeds = sim_seeds
-            tool.explosion_fireball_radius = 1
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.6
             pyro.flames_per_spawn = 4
@@ -307,7 +304,6 @@ function init_pyro(tool)
 
         elseif intensity == boomness.vaporizing then 
             tool.explosion_seeds = sim_seeds
-            tool.explosion_fireball_radius = 2
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 3

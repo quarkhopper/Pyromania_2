@@ -180,7 +180,7 @@ function create_mode_option_set(name, display_name)
 		option_type.enum,
 		boomness.explody,
 		"boomness",
-		"Fireball temperature")
+		"Fireball style")
 	oSet.boomness.accepted_values = boomness
 	oSet.options[#oSet.options + 1] = oSet.boomness
 
@@ -252,7 +252,7 @@ function create_bomb_option_set()
 	-- red fire
 	oSet.flame_color_hot.value = Vec(36.9, 0.65, 1)
 	oSet.flame_color_cool.value = Vec(7.6, 1, 0.84)
-	oSet.physical_damage_factor.value = 0.003
+	oSet.physical_damage_factor.value = 0.1
 	oSet.boomness.value = boomness.vaporizing
 	oSet.fireball_scale.value = 0.5
 
@@ -290,6 +290,16 @@ function create_rocket_option_set()
 	oSet.speed.step = 0.1
 	oSet.options[#oSet.options + 1] = oSet.speed	
 
+	oSet.fuse = create_mode_option(
+		option_type.numeric, 
+		0.1,
+		"fuse",
+		"Fuse (seconds)")
+	oSet.fuse.range.lower = 0
+	oSet.fuse.range.upper = 1
+	oSet.fuse.step = 0.001
+	oSet.options[#oSet.options + 1] = oSet.fuse	
+
 	oSet.max_dist = create_mode_option(
 		option_type.numeric, 
 		200,
@@ -302,7 +312,7 @@ function create_rocket_option_set()
 
 	oSet.flame_color_hot.value = Vec(36.9, 0.65, 1)
 	oSet.flame_color_cool.value = Vec(7.6, 1, 0.84)
-	oSet.physical_damage_factor.value = 0.003
+	oSet.physical_damage_factor.value = 0.1
 	oSet.boomness.value = boomness.vaporizing
 	oSet.fireball_scale.value = 0.5
 
@@ -346,8 +356,8 @@ function create_thrower_option_set()
 	oSet.flame_color_hot.value = Vec(142.2, 0.6, 0.76)
 	oSet.flame_color_cool.value = Vec(158.5, 0.6, 0.5)	
 	oSet.speed.value = 10
-	oSet.physical_damage_factor.value = 0
-	oSet.boomness.value = boomness.economy
+	oSet.physical_damage_factor.value = 0.001
+	oSet.boomness.value = boomness.explody
 	oSet.fireball_scale.value = 0.1
 
 	return oSet

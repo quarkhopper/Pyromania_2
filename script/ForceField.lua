@@ -54,6 +54,7 @@ function inst_force_field_ff()
     inst.point_max_life = 3
     inst.max_sim_points = 500
     inst.use_metafield = true
+    inst.clip_factor_n = 0
     inst.graph = inst_graph()
     return inst
 end
@@ -244,6 +245,7 @@ function normalize_field(ff, dt)
 
     -- remove points until we're under the sim limit
     local points = flatten(ff.field)
+    ff.clip_factor_n = math.max(#points - ff.max_sim_points, 0) / #points
     if #points > ff.max_sim_points then
         while #points > ff.max_sim_points do
             local index = math.random(#points)

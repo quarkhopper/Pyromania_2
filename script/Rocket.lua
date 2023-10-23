@@ -38,13 +38,23 @@ function fire_rocket()
 end
 
 function rocket_tick(dt)
+    local default_fuse = 0.1
+    if TOOL.ROCKET.fuse ~= nil then 
+        default_fuse = TOOL.ROCKET.fuse.value
+    end
     local rockets_next_tick = {}
     for i = 1, #rockets do
         local rocket = rockets[i]
         local hit, dist = QueryRaycast(rocket.trans.pos, rocket.dir, rocket.speed, 0.025)
+        if rocket.fuse > 0 then -- > 0 means the fuse is lit
+            rocket.fuse = math.max(rocket.fuse - dt, 0)
+        end
         if hit then 
             -- break a hole and on the next tick explode
-            for i = 1, rocket.speed * 10 do
+            if rocket.fuse < 0 then 
+                rocket.fuse = default_fuse 
+            end
+            for i = 1, rocket.speed * 10 do -- make a train of holes
                 local offset = i * 0.1
                 MakeHole(VecAdd(rocket.trans.pos, VecScale(rocket.dir, offset)), 1, 1, 1)
             end
@@ -67,9 +77,6 @@ function rocket_tick(dt)
             if hit then 
                 -- just blow the charge. You can't bust this.
                 rocket.fuse = 0
-            elseif rocket.fuse == -1 then
-                -- fuse to allow penetration    
-                rocket.fuse = 2
             end
         end
         if rocket.fuse == 0 then 
@@ -118,7 +125,6 @@ function rocket_tick(dt)
                 SpawnParticle(smoke_point, Vec(), 3)
             end
             PointLight(light_point, 1, 0, 0, 0.1)
-            rocket.fuse = math.max(rocket.fuse - 1, -1)
         end
     end
     rockets = rockets_next_tick

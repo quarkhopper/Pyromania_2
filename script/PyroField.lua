@@ -134,7 +134,8 @@ function make_flame_effect(pyro, flame, dt)
     ParticleTile(pyro.flame_tile)
     -- Apply a little random jitter if specified by the options, for the specified lifetime
     -- in options.
-    SpawnParticle(VecAdd(flame.pos, random_vec(pyro.flame_jitter)), Vec(), pyro.flame_puff_life)
+    local puff_life = pyro.flame_puff_life * (1 - pyro.ff.clip_factor_n) -- to help free up resources
+    SpawnParticle(VecAdd(flame.pos, random_vec(pyro.flame_jitter)), Vec(), puff_life)
 
     -- if black smoke amount is set above 0, we're not in ember mode, and chance favors it...
     if math.random() < pyro.smoke_amount_n then
@@ -157,6 +158,7 @@ function make_flame_effect(pyro, flame, dt)
         ParticleGravity(PYRO.GRAVITY)
         -- apply a little random jitter to the smoke puff based on the flame position,
         -- for the specified lifetime of the particle.
+        local puff_life = pyro.smoke_life * (1 - pyro.ff.clip_factor_n) -- to help free up resources
         SpawnParticle(VecAdd(flame.pos, random_vec(0.1)), Vec(), pyro.smoke_life)
     end
 end
