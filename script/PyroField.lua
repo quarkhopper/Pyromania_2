@@ -77,6 +77,7 @@ function inst_pyro()
     inst.max_flames = 400
     -- The force field wrapped by this pyro field.
     inst.collision = true
+    inst.clip_choke_n = 0.8
     inst.ff = inst_force_field_ff()
 
     return inst
@@ -134,7 +135,7 @@ function make_flame_effect(pyro, flame, dt)
     ParticleTile(pyro.flame_tile)
     -- Apply a little random jitter if specified by the options, for the specified lifetime
     -- in options.
-    local puff_life = pyro.flame_puff_life * (1 - pyro.ff.clip_factor_n) -- to help free up resources
+    local puff_life = pyro.flame_puff_life * (1 - fraction_to_range_value(pyro.ff.clip_factor_n, 0, pyro.clip_choke_n)) -- to help free up resources
     SpawnParticle(VecAdd(flame.pos, random_vec(pyro.flame_jitter)), Vec(), puff_life)
 
     -- if black smoke amount is set above 0, we're not in ember mode, and chance favors it...
@@ -158,7 +159,7 @@ function make_flame_effect(pyro, flame, dt)
         ParticleGravity(PYRO.GRAVITY)
         -- apply a little random jitter to the smoke puff based on the flame position,
         -- for the specified lifetime of the particle.
-        local puff_life = pyro.smoke_life * (1 - pyro.ff.clip_factor_n) -- to help free up resources
+        local puff_life = pyro.smoke_life * (1 - fraction_to_range_value(pyro.ff.clip_factor_n, 0, pyro.clip_choke_n)) -- to help free up resources
         SpawnParticle(VecAdd(flame.pos, random_vec(0.1)), Vec(), pyro.smoke_life)
     end
 end
