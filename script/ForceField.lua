@@ -56,6 +56,7 @@ function inst_force_field_ff()
     inst.use_metafield = true
     inst.clip_factor_n = 0
     inst.graph = inst_graph()
+
     return inst
 end
 

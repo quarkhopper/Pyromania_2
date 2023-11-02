@@ -47,20 +47,20 @@ function init_pyro(tool)
     local sim_flames = sim_points * 0.7
 
     if tool == TOOL.BOMB then 
-        pyro.fade_magnitude = 1
+        pyro.fade_magnitude = 0.5
         pyro.impulse_radius = 5
         pyro.fire_ignition_radius = 5
         pyro.fire_density = 8
         pyro.flame_light_intensity = 3
-        pyro.flame_puff_life = 1
-        pyro.smoke_amount_n = 0.015
-        pyro.smoke_life = 1
+        pyro.flame_puff_life = 1.5
+        pyro.smoke_amount_n = 0.001
+        pyro.smoke_life = 3
         pyro.max_player_hurt = 0.55
         pyro.ff.point_max_life = 3
         pyro.ff.dir_jitter = 0.5
         pyro.ff.bias_gain = 0.3
         pyro.ff.meta_resolution = 2
-        pyro.clip_choke_n = 0.8
+        pyro.clip_choke_n = 0.2
 
 
         if intensity == boomness.invisible then 
@@ -173,6 +173,7 @@ function init_pyro(tool)
         elseif intensity == boomness.nuclear then 
             tool.explosion_seeds = sim_points
             tool.explosion_fireball_radius = 2
+            pyro.clip_choke_n = 0.0
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.6
             pyro.fade_magnitude = 1.5
@@ -205,20 +206,20 @@ function init_pyro(tool)
         end
 
     elseif tool == TOOL.ROCKET then 
-        pyro.fade_magnitude = 1
+        pyro.fade_magnitude = 0.5
         pyro.impulse_radius = 5
         pyro.fire_ignition_radius = 5
         pyro.fire_density = 8
         pyro.flame_light_intensity = 3
-        pyro.flame_puff_life = 1
-        pyro.smoke_amount_n = 0.015
-        pyro.smoke_life = 1
+        pyro.flame_puff_life = 1.5
+        pyro.smoke_amount_n = 0.001
+        pyro.smoke_life = 3
         pyro.max_player_hurt = 0.55
         pyro.ff.point_max_life = 3
         pyro.ff.dir_jitter = 0.5
         pyro.ff.bias_gain = 0.3
         pyro.ff.meta_resolution = 2
-        pyro.clip_choke_n = 0.8
+        pyro.clip_choke_n = 0.2
 
         if intensity == boomness.invisible then 
             tool.explosion_seeds = 100
@@ -330,6 +331,7 @@ function init_pyro(tool)
         elseif intensity == boomness.nuclear then 
             tool.explosion_seeds = sim_points
             tool.explosion_fireball_radius = 2
+            pyro.clip_choke_n = 0.0
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.6
             pyro.fade_magnitude = 1.5
@@ -498,6 +500,7 @@ SHOCK_FIELD = {}
 function init_shock_field(intensity, damage_factor)
     -- special parameters that make a shock wave field work
     local pyro = inst_pyro()
+    pyro.clip_choke_n = 0
     pyro.fade_magnitude = 0
     pyro.cool_particle_size = 1
     pyro.hot_particle_size = 0.6
@@ -554,6 +557,7 @@ function init_shock_field(intensity, damage_factor)
         pyro.ff.graph.dead_force = 10
 
     elseif intensity == boomness.vaporizing then 
+        pyro.flame_puff_life = 0.4
         pyro.max_flames = 800
         pyro.ff.graph.dead_force = 1
 
