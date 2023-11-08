@@ -313,7 +313,7 @@ function create_rocket_option_set()
 	oSet.flame_color_hot.value = Vec(36.9, 0.65, 1)
 	oSet.flame_color_cool.value = Vec(7.6, 1, 0.84)
 	oSet.physical_damage_factor.value = 0.1
-	oSet.boomness.value = boomness.vaporizing
+	oSet.boomness.value = boomness.tactical
 	oSet.fireball_scale.value = 0.5
 
 	return oSet
