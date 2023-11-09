@@ -149,7 +149,7 @@ function init_pyro(tool)
 
         elseif intensity == boomness.vaporizing then 
             tool.explosion_seeds = sim_points
-            tool.explosion_fireball_radius = 2
+            tool.explosion_fireball_radius = 1
             pyro.hot_particle_size = 0.4
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 3
@@ -171,21 +171,21 @@ function init_pyro(tool)
             pyro.ff.graph.extend_scale = 1.6
 
         elseif intensity == boomness.nuclear then 
-            tool.explosion_seeds = 10
-            tool.explosion_fireball_radius = 2
-            pyro.clip_choke_n = 0
+            tool.explosion_seeds = 100
+            tool.explosion_fireball_radius = 1
+            pyro.clip_choke_n = 0.4
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.7
-            pyro.fade_magnitude = 0.2
+            pyro.fade_magnitude = 0.3
             pyro.flames_per_spawn = 3
             pyro.impulse_radius = 7
             pyro.impulse_scale = 1
-            pyro.max_flames = sim_points * 1.5
+            pyro.max_flames = sim_points
             pyro.flame_jitter = 0.8
-            pyro.flame_puff_life = 0.05
+            pyro.flame_puff_life = 0.2
             pyro.flame_light_intensity = 100
-            pyro.smoke_amount_n = 0.002
-            pyro.smoke_life = 3            
+            pyro.smoke_amount_n = 0.02
+            pyro.smoke_life = 0.5            
             pyro.smoke_color = Vec(8, 0.8, 0.2)            
             pyro.fire_ignition_radius = 10
             pyro.fire_density = 10
@@ -307,7 +307,7 @@ function init_pyro(tool)
 
         elseif intensity == boomness.vaporizing then 
             tool.explosion_seeds = sim_points
-            tool.explosion_fireball_radius = 2
+            tool.explosion_fireball_radius = 1
             pyro.hot_particle_size = 0.4
             pyro.cool_particle_size = 0.5
             pyro.flames_per_spawn = 3
@@ -330,8 +330,8 @@ function init_pyro(tool)
 
         elseif intensity == boomness.nuclear then 
             tool.explosion_seeds = 100
-            tool.explosion_fireball_radius = 3
-            pyro.clip_choke_n = 0.3
+            tool.explosion_fireball_radius = 1
+            pyro.clip_choke_n = 0.4
             pyro.hot_particle_size = 0.3
             pyro.cool_particle_size = 0.7
             pyro.fade_magnitude = 0.3
