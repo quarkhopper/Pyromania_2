@@ -292,7 +292,7 @@ function create_rocket_option_set()
 
 	oSet.fuse = create_mode_option(
 		option_type.numeric, 
-		0.02,
+		0.014,
 		"fuse",
 		"Fuse (seconds)")
 	oSet.fuse.range.lower = 0

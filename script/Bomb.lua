@@ -25,7 +25,7 @@ function blast_at(pos)
 	local fireball_rad = TOOL.BOMB.explosion_fireball_radius
 	local explosion_seeds = TOOL.BOMB.explosion_seeds
     for i = 1, explosion_seeds do
-        local spawn_dir = VecNormalize(Vec(random_vec_component(10), random_float_in_range(0, 1), random_vec_component(10)))
+        local spawn_dir = VecNormalize(Vec(random_vec_component(10), random_float_in_range(0, 10), random_vec_component(10)))
         local spark_offset = VecScale(spawn_dir, random_float_in_range(0, fireball_rad))
         local spark_pos = VecAdd(pos, spark_offset)
         local force_dir = VecNormalize(VecSub(spark_pos, pos))
