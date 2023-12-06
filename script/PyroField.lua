@@ -54,8 +54,7 @@ function inst_pyro()
     -- Jitter applied to the flame as the maximum magnitude of vector components
     -- added to the position of the flame.
     inst.flame_jitter = 0
-    -- Built-in Teardown tile to use for the flame. 
-    inst.flame_tile = 0
+    inst.particle_tiles = {0,5,14}
     -- Opacity of flame puffs. 
     inst.flame_opacity = 1
     inst.flame_only_hit = false
@@ -119,10 +118,10 @@ function make_flame_effect(pyro, flame, dt)
     if flame.parent.mag < pyro.fade_magnitude then 
         local burnout_n = range_value_to_fraction(flame.parent.mag, 0, pyro.fade_magnitude)
         puff_color_value = bracket_value(burnout_n, 1, 0.2)
-        intensity = fraction_to_range_value(burnout_n, 0.2, intensity)
+        intensity = fraction_to_range_value(burnout_n, 0.2, intensity) ^ 2
     end
     -- Put the light source in the middle of where the diffusing flame puff will be
-    PointLight(flame.pos, color[1], color[2], color[3], bracket_value(intensity, 1, 0))
+    PointLight(flame.pos, color[1], color[2], color[3], bracket_value(intensity, 10, 0))
     -- fire puff smoke particle generation
     ParticleReset()
     ParticleType("smoke")
@@ -132,7 +131,8 @@ function make_flame_effect(pyro, flame, dt)
     local smoke_color = HSVToRGB(Vec(0, 0, puff_color_value))
     ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
     ParticleGravity(PYRO.GRAVITY)
-    ParticleTile(pyro.flame_tile)
+    ParticleTile(pyro.particle_tiles[math.random(#pyro.particle_tiles)])
+    ParticleRotation(random_float_in_range(-2,2))
     -- Apply a little random jitter if specified by the options, for the specified lifetime
     -- in options.
     local puff_life = pyro.flame_puff_life * (1 - fraction_to_range_value(pyro.ff.clip_factor_n, 0, pyro.clip_choke_n)) * (dt ^ 0.2) -- to help free up resources
@@ -146,6 +146,7 @@ function make_flame_effect(pyro, flame, dt)
         -- ParticleDrag(0)
         ParticleAlpha(0.5, 0.9, "linear", 0.05, 0.5)
         ParticleRadius(particle_size + 0.15)
+        ParticleRotation(random_float_in_range(-2,2))
         if PYRO.RAINBOW_MODE then
             -- Rainbow mode: smoke puff is the universal color of the tick
             smoke_color = PYRO.RAINBOW
@@ -157,6 +158,7 @@ function make_flame_effect(pyro, flame, dt)
         end
         ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
         ParticleGravity(PYRO.GRAVITY)
+        ParticleTile(pyro.particle_tiles[math.random(#pyro.particle_tiles)])
         -- apply a little random jitter to the smoke puff based on the flame position,
         -- for the specified lifetime of the particle.
         local puff_life = pyro.smoke_life * (1 - fraction_to_range_value(pyro.ff.clip_factor_n, 0, pyro.clip_choke_n)) -- to help free up resources

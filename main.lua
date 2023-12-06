@@ -14,6 +14,7 @@
 -------------------------------------------------
 function init()
 	RegisterTool(REG.TOOL_KEY, TOOL_NAME, "MOD/vox/thrower.vox", 5)
+	tool_body = GetToolBody
 	SetBool("game.tool."..REG.TOOL_KEY..".enabled", true)
 	SetFloat("game.tool."..REG.TOOL_KEY..".ammo", 1000)
 	
@@ -42,7 +43,7 @@ function init()
 	load_option_sets()
 
 	-- init the field used for shock waves
-	init_shock_field(boomness.tactical, 0.01)
+	init_shock_field(0.5)
 
 	-- true while the player has the options editor open
 	editing_options = false
@@ -51,6 +52,7 @@ function init()
 	set_spawn_area_parameters()
 
 	DEBUG_MODE = false
+	hiding_tool = false
 end
 
 -------------------------------------------------
@@ -372,12 +374,14 @@ function tick(dt)
 			end
 		end
 	end
+
+
 end
 
 -------------------------------------------------
 -- Input handler
 -------------------------------------------------
-
+debug_point = Vec()
 function handle_input(dt)
 	if editing_options then return end
 	plant_timer = math.max(plant_timer - dt, 0)
@@ -403,19 +407,13 @@ function handle_input(dt)
 					-- sticky version
 					local camera = GetPlayerCameraTransform()
 					local shoot_dir = TransformToParentVec(camera, Vec(0, 0, -1))
-					local hit, dist, normal, shape = QueryRaycast(camera.pos, shoot_dir, 100, 0.025, true)
+					local hit, dist, normal, shape = QueryRaycast(camera.pos, shoot_dir, 100, 0, true)
 					if hit then 
-						local drop_pos = VecAdd(camera.pos, VecScale(shoot_dir, dist - 0.5))
+						local drop_pos = VecAdd(camera.pos, VecScale(shoot_dir, dist))
 						local bomb = Spawn("MOD/prefab/pyro_bomb.xml", Transform(drop_pos), false, true)[2]
 						table.insert(bombs, bomb)
 						plant_timer = plant_rate
 					end
-
-					-- old drop version
-					-- local drop_pos = TransformToParentPoint(camera, Vec(0.2, -0.2, -1.25))
-					-- local bomb = Spawn("MOD/prefab/pyro_bomb.xml", Transform(drop_pos))[2]
-					-- table.insert(bombs, bomb)
-					-- plant_timer = plant_rate
 				end
 
 				-- plant a group around the map
@@ -425,8 +423,7 @@ function handle_input(dt)
 					for i = 1, 10 do
 						local spawnPos = find_spawn_location()
 						if spawnPos ~= nil then 
-							local trans = Transform(spawnPos) -- , QuatEuler(0,math.random(0,359),0))
-							trans.pos = VecAdd(trans.pos, Vec(spawn_block_h_size/2,spawn_block_v_size/2,spawn_block_h_size/2))
+							local trans = Transform(spawnPos) --, QuatEuler(math.random(0,359),math.random(0,359),math.random(0,359)))
 							local bomb = Spawn("MOD/prefab/pyro_bomb.xml", trans, false, true)[2]
 							table.insert(bombs, bomb)
 						end					
@@ -449,7 +446,6 @@ function handle_input(dt)
 					local player_trans = GetPlayerTransform()
 					set_spawn_area_parameters(player_trans.pos, TOOL.BOMB.max_random_radius.value)
 					local boom_pos = find_spawn_location(player_trans.pos, TOOL.BOMB.min_random_radius.value)
-					boom_pos = VecAdd(boom_pos, Vec(spawn_block_h_size/2,0,spawn_block_h_size/2))
 					blast_at(boom_pos)
 					boom_timer = 1
 				end
@@ -482,6 +478,14 @@ function handle_input(dt)
 					DEBUG_MODE = not DEBUG_MODE
 				end
 
+				-- hide weapon
+				if InputPressed("F10") then
+					hiding_tool = not hiding_tool
+				end
+				if hiding_tool then
+					SetToolTransform(Transform(Vec(0,-100,0), QuatEuler(0,0,0)))
+				end
+
 				-- shoot lock for when the player is grabbing and 
 				-- throwing things
 				if GetPlayerGrabShape() ~= 0 then
@@ -508,8 +512,8 @@ function stop_all_flames()
 	reset_ff(SHOCK_FIELD.ff)
 end
 
-function shock_at(pos, intensity, damage_factor)
-	init_shock_field(intensity, damage_factor)
+function shock_at(pos, fireball_scale)
+	init_shock_field(fireball_scale)
     local force_mag = SHOCK_FIELD.ff.graph.max_force
     local fireball_rad = 2
     local explosion_seeds = 1000

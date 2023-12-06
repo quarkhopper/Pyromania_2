@@ -83,7 +83,9 @@ function rocket_tick(dt)
             SetBodyDynamic(rocket, true)
             Explosion(rocket.trans.pos, 1)
             if TOOL.ROCKET.shockwaves.value == on_off.on then 
-                shock_at(rocket.trans.pos, TOOL.ROCKET.boomness.value, TOOL.ROCKET.physical_damage_factor.value * 0.5)
+                local scale = 0.5
+                if TOOL.ROCKET.fireball_scale ~= nil then scale = TOOL.ROCKET.fireball_scale.value end
+                shock_at(rocket.trans.pos, scale)
             end
             local force_mag = TOOL.ROCKET.pyro.ff.graph.max_force
             local fireball_rad = TOOL.ROCKET.explosion_fireball_radius
@@ -113,16 +115,16 @@ function rocket_tick(dt)
             rocket.dist_left = rocket.dist_left - rocket.speed
             table.insert(rockets_next_tick, rocket)
             local light_point = TransformToParentPoint(rocket.trans, Vec(0, 0, 2))
-            for i = 1, 10 do
+            for i = 1, 20 do
                 ParticleReset()
                 ParticleType("smoke")
                 ParticleAlpha(0.5, 0.9, "linear", 0.05, 0.5)
                 ParticleRadius(0.2, 0.5)
                 ParticleTile(5)
-                local smoke_color = HSVToRGB(Vec(0, 0, 0.4))
+                local smoke_color = HSVToRGB(Vec(0, 0, 0.5))
                 ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
                 local smoke_point = VecAdd(rocket.trans.pos, VecScale(rocket.dir, -1 * (rocket.speed / i)))
-                SpawnParticle(smoke_point, Vec(), 3)
+                SpawnParticle(smoke_point, Vec(), 0.3)
             end
             PointLight(light_point, 1, 0, 0, 0.1)
         end

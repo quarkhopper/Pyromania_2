@@ -41,7 +41,9 @@ function blast_at(pos)
     end
     MakeHole(pos, 0.2, 0.2, 0.2, true)
     if TOOL.BOMB.shockwaves.value == on_off.on then
-        shock_at(pos, TOOL.BOMB.boomness.value, TOOL.BOMB.physical_damage_factor.value * 0.5)
+        local scale = 0.5
+        if TOOL.BOMB.fireball_scale ~= nil then scale = TOOL.BOMB.fireball_scale.value end
+        shock_at(pos, scale)
     end
     PlaySound(boom_sound, pos, 100)
     PlaySound(rumble_sound, pos, 100)

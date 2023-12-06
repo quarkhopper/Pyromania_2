@@ -415,11 +415,11 @@ function debug_field(ff)
     local points = flatten(ff.field)
     for i = 1, #points do
         local point = points[i]
-        debug_point(ff, point)
+        draw_debug_point(ff, point)
     end
 end
 
-function debug_point(ff, point)
+function draw_debug_point(ff, point)
     local color = debug_color(ff, point)
     DebugCross(point.pos, color[1], color[2], color[3])
     local mag = point.mag
