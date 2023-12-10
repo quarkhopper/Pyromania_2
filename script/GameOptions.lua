@@ -254,7 +254,7 @@ function create_bomb_option_set()
 	oSet.flame_color_cool.value = Vec(7.6, 1, 0.84)
 	oSet.physical_damage_factor.value = 0.05
 	oSet.boomness.value = boomness.vaporizing
-	oSet.fireball_scale.value = 0.5
+	oSet.fireball_scale.value = 1
 
 	return oSet
 end

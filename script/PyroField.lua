@@ -111,7 +111,6 @@ function make_flame_effect(pyro, flame, dt)
             smoke_color = HSVToRGB(pyro.smoke_color)
         end
         puff_life = pyro.smoke_life
-        ParticleTile(0)
         ParticleAlpha(0.8)
         ParticleRadius(0.8)
     -- PATH B: a flame particle with light
@@ -143,9 +142,9 @@ function make_flame_effect(pyro, flame, dt)
         PointLight(flame.pos, color[1], color[2], color[3], bracket_value(intensity, 10, 0))
         ParticleAlpha(pyro.flame_opacity, 0, "easeout", 0, 1)
         ParticleRadius(particle_size)
-        ParticleTile(pyro.particle_tiles[math.random(#pyro.particle_tiles)])
         smoke_color = HSVToRGB(Vec(0, 0, puff_color_value))
     end
+    ParticleTile(pyro.particle_tiles[math.random(#pyro.particle_tiles)])
     ParticleType("smoke")
     ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
     ParticleGravity(PYRO.GRAVITY)
