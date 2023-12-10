@@ -53,8 +53,8 @@ function init_pyro(tool)
         pyro.fire_density = 8
         pyro.flame_light_intensity = 6
         pyro.flame_puff_life = 1.5
-        pyro.smoke_amount_n = 0.001
-        pyro.smoke_life = 3
+        pyro.smoke_amount_n = 0.02
+        pyro.smoke_life = 2          
         pyro.max_player_hurt = 0.55
         pyro.ff.resolution = 0.5
         pyro.ff.point_max_life = 3
@@ -151,6 +151,7 @@ function init_pyro(tool)
             pyro.flames_per_spawn = 1
             pyro.flame_puff_life = 1.2
             pyro.impulse_scale = 0.28
+            pyro.smoke_amount_n = 0.015
             pyro.max_flames = sim_flames
             pyro.ff.max_sim_points = sim_points
             pyro.ff.bias_gain = 0.5
@@ -175,11 +176,10 @@ function init_pyro(tool)
             pyro.flames_per_spawn = 1
             pyro.impulse_radius = 7
             pyro.impulse_scale = 1
+            pyro.smoke_amount_n = 0.005
             pyro.max_flames = sim_points
             pyro.flame_jitter = 0.5
             pyro.flame_puff_life = 0.2
-            pyro.smoke_amount_n = 0.02
-            pyro.smoke_life = 0.5            
             pyro.smoke_color = Vec(8.2, 0.8, 0.2)            
             pyro.fire_ignition_radius = 10
             pyro.fire_density = 10
@@ -204,8 +204,8 @@ function init_pyro(tool)
         pyro.fire_density = 8
         pyro.flame_light_intensity = 6
         pyro.flame_puff_life = 1.5
-        pyro.smoke_amount_n = 0.001
-        pyro.smoke_life = 3
+        pyro.smoke_amount_n = 0.02
+        pyro.smoke_life = 2          
         pyro.max_player_hurt = 0.55
         pyro.ff.resolution = 0.5
         pyro.ff.point_max_life = 3
@@ -301,6 +301,7 @@ function init_pyro(tool)
             pyro.flames_per_spawn = 1
             pyro.flame_puff_life = 1.2
             pyro.impulse_scale = 0.28
+            pyro.smoke_amount_n = 0.015
             pyro.max_flames = sim_flames
             pyro.ff.max_sim_points = sim_points
             pyro.ff.bias_gain = 0.5
@@ -311,9 +312,9 @@ function init_pyro(tool)
             pyro.ff.graph.hot_transfer = 10000
             pyro.ff.graph.cool_transfer = 4.3
             pyro.ff.graph.hot_prop_split = 3
-            pyro.ff.graph.cool_prop_split = 3            
+            pyro.ff.graph.cool_prop_split = 3
             pyro.ff.graph.hot_prop_angle = 36
-            pyro.ff.graph.cool_prop_angle = 20
+            pyro.ff.graph.cool_prop_angle = 40
 
         elseif intensity == boomness.nuclear then 
             tool.explosion_seeds = 100
@@ -325,11 +326,10 @@ function init_pyro(tool)
             pyro.flames_per_spawn = 1
             pyro.impulse_radius = 7
             pyro.impulse_scale = 1
+            pyro.smoke_amount_n = 0.005
             pyro.max_flames = sim_points
             pyro.flame_jitter = 0.5
             pyro.flame_puff_life = 0.2
-            pyro.smoke_amount_n = 0.02
-            pyro.smoke_life = 0.5            
             pyro.smoke_color = Vec(8.2, 0.8, 0.2)            
             pyro.fire_ignition_radius = 10
             pyro.fire_density = 10
