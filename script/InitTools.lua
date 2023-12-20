@@ -185,7 +185,7 @@ function init_pyro(tool)
             pyro.fire_density = 10
             pyro.ff.dir_jitter = 1
             pyro.ff.max_sim_points = sim_points * 1.5
-            pyro.ff.bias_gain = 1.0
+            pyro.ff.bias_gain = 1.3
             pyro.ff.graph.curve = curve_type.linear
             pyro.ff.graph.max_force = 1000000
             pyro.ff.graph.dead_force = 0.2
@@ -486,6 +486,7 @@ function init_shock_field(fireball_scale)
     pyro.smoke_life = 0
     pyro.smoke_amount_n = 0
     pyro.max_flames = sim_flames
+    pyro.flame_tile = 0
     pyro.flame_puff_life = sim_flame_life
     pyro.flames_per_spawn = 10
     pyro.flame_jitter = 10

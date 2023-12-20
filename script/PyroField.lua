@@ -55,6 +55,7 @@ function inst_pyro()
     -- added to the position of the flame.
     inst.flame_jitter = 0
     inst.particle_tiles = {0,5,14}
+    inst.particle_tile = nil -- override
     -- Opacity of flame puffs. 
     inst.flame_opacity = 1
     inst.flame_only_hit = false
@@ -144,7 +145,11 @@ function make_flame_effect(pyro, flame, dt)
         ParticleRadius(particle_size)
         smoke_color = HSVToRGB(Vec(0, 0, puff_color_value))
     end
-    ParticleTile(pyro.particle_tiles[math.random(#pyro.particle_tiles)])
+    if pyro.particle_tile ~= nil then 
+        ParticleTile(pyro.particle_tile) 
+    else 
+        ParticleTile(pyro.particle_tiles[math.random(#pyro.particle_tiles)])
+    end
     ParticleType("smoke")
     ParticleColor(smoke_color[1], smoke_color[2], smoke_color[3])
     ParticleGravity(PYRO.GRAVITY)
